@@ -89,6 +89,9 @@ export const RAIN = { none: 'Tidak hujan', some: 'Ada hujan', heavy: 'Hujan leba
 
 export const EMERGENCY_NUMBER = '119';
 
+/** First line of every shared text: forwarded without context, a claim reads as a hoax unless it says it is an estimate. */
+const SHARE_PREFIX = 'Perkiraan Bisa napas gak?\n';
+
 export const UI = {
   loadingHeadline: 'Mengecek udara…',
   brand: 'Bisa napas gak?',
@@ -198,9 +201,9 @@ export const UI = {
   storyTapAgain: 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.',
   storyFailed: 'Gambar belum bisa dibuat. Coba lagi.',
   shared: 'Link disalin. Tinggal tempel di grup.',
-  shareText: (city, day, level, headline) => `${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${headline}`,
-  shareGood: (city, day, level) => `${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${LEVELS[level].headline} Cek kotamu juga.`,
-  shareOverview: 'Kondisi asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.',
+  shareText: (city, day, level, headline) => `${SHARE_PREFIX}${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${headline}`,
+  shareGood: (city, day, level) => `${SHARE_PREFIX}${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${LEVELS[level].headline} Cek kotamu juga.`,
+  shareOverview: `${SHARE_PREFIX}Kondisi asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.`,
 
   preview: 'Pratinjau: level contoh untuk melihat tampilan, bukan data nyata.',
   stale: when => `Data lama: terakhir diperbarui ${when}. Cek juga angka resmi (ISPU).`,

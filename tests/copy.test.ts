@@ -169,12 +169,18 @@ describe('UI', () => {
     assert.equal(UI.levelLabel('Tidak Sehat', 3), 'Tidak Sehat · level 3 dari 5');
   });
 
+  it('starts every shared text with "Perkiraan"', () => {
+    assert.match(UI.shareText('Palembang', 'Rabu 10.00', 3, LEVELS[3].headline), /^Perkiraan/);
+    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), /^Perkiraan/);
+    assert.match(UI.shareOverview, /^Perkiraan/);
+  });
+
   it('dates shared messages with city, weekday, time, level name and "level X dari 5"', () => {
     assert.equal(
       UI.shareText('Palembang', 'Rabu 10.00', 3, LEVELS[3].headline),
-      'Palembang, Rabu 10.00: Tidak Sehat (level 3 dari 5). Kurangi aktivitas di luar.'
+      'Perkiraan Bisa napas gak?\nPalembang, Rabu 10.00: Tidak Sehat (level 3 dari 5). Kurangi aktivitas di luar.'
     );
-    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), /^Palembang, Rabu 10\.00: Baik \(level 1 dari 5\)\./);
+    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), /^Perkiraan Bisa napas gak\?\nPalembang, Rabu 10\.00: Baik \(level 1 dari 5\)\./);
   });
 
   it('words the new lines as agreed', () => {
