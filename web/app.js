@@ -165,6 +165,7 @@ function renderAnswer(loc, level) {
     $('answer').classList.add('hop');
   }
   // Official ISPU guidance, quoted as is. Level 1 has no separate sensitive-group line.
+  $('guide').open = level >= 3; // quiet on good days, open when the guidance matters
   $('guideSensitive').hidden = !official.sensitive;
   $('guideSensitive').lastElementChild.textContent = official.sensitive ?? '';
   $('guideEveryone').lastElementChild.textContent = official.everyone;
