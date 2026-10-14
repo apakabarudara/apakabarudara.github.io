@@ -245,7 +245,6 @@ describe('hedge first', () => {
     assert.equal(UI.eyebrow, 'Perkiraan hari ini');
     assert.equal(UI.overviewTitle, 'Perkiraan asap hari ini');
     assert.match(UI.outlookSub, /^Perkiraan beberapa hari ke depan\./);
-    assert.equal(UI.reasonsTitle, 'Yang mungkin berpengaruh');
     assert.equal(STORY.stamp('Rabu 10.00'), 'Diperbarui Rabu 10.00');
   });
 });
@@ -313,11 +312,16 @@ describe('UI', () => {
 
   it('words the satellite photo lines humbly', () => {
     assert.equal(UI.satCaption('14 Oktober 2026'), 'Foto satelit NASA, 14 Oktober 2026. Titik merah: titik panas. Kalau berawan, asap bisa tertutup awan.');
+    assert.equal(UI.satPin, 'Pin: pusat kota.');
+    assert.equal(UI.satWind('Timur'), 'Angin dari Timur.');
+    assert.equal(UI.satLink, 'Buka di NASA Worldview ↗');
+    assert.equal(UI.rainDay, 'ada hujan');
+    assert.ok(UI.explain(10).includes('Perkiraan ini untuk titik pusat kota. Di kecamatan lain di sekitarnya, asap bisa lebih tebal atau lebih tipis.'));
     assert.equal(UI.satNote, 'Foto diambil saat satelit lewat, bukan saat ini.');
     assert.equal(UI.satAlt('Palangkaraya'), 'Foto satelit NASA untuk Palangkaraya');
     assert.equal(UI.creditGibs, 'NASA GIBS / Worldview (VIIRS)');
     assert.ok(UI.methodSources.some(l => /^Foto satelit: .*NASA GIBS/.test(l)));
-    for (const line of [UI.satCaption('x'), UI.satNote, UI.satAlt('x'), UI.satTitle]) assert.doesNotMatch(line, /aman|akurat|pasti/i);
+    for (const line of [UI.satCaption('x'), UI.satPin, UI.satWind('Timur'), UI.satNote, UI.satAlt('x'), UI.satTitle]) assert.doesNotMatch(line, /aman|akurat|pasti/i);
   });
 
   it('credits the data sources', () => {

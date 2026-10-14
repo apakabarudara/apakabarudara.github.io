@@ -10,7 +10,7 @@ Residents living in the smoke, opening the page in the morning before going out.
 
 | Topic | Decision |
 | --- | --- |
-| Structure | "Answer first": one answer card on the first screen, then the outlook, then "Kenapa begini?" and the light extras, both folded. |
+| Structure | "Answer first": one answer card on the first screen, then the outlook, then the light extras, folded. |
 | Tone | Scales with severity. Levels 1–2 are light, levels 3–5 plain and direct; no jokes from level 3. |
 | Framework | **Ionic 9 (`@ionic/core` 9.0.5), chosen by the owner after the live A/B** against the plain native page ("feels more expensive"). Bundled with Vite 8.3.1 (the only two devDependencies, pinned), custom elements imported one by one from `@ionic/core/components`, no CDN. Plus Jakarta Sans self-hosted (variable woff2, latin, OFL). A hand-written service worker precaches the shell for offline use. The spike and `/coba/` are removed. |
 | Visual direction | Option C: clean, warm, playful. ISPU hue order (green, blue, yellow, red, dark) tuned on a warm grey ground, soft shadows instead of thick outlines, Plus Jakarta Sans, blob mascot. |

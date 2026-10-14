@@ -144,6 +144,7 @@ export const UI = {
     'Level ini perkiraan komputer dari data satelit dan cuaca, bukan hasil alat ukur di kota ini.',
     'Di dekat kebakaran gambut, asap bisa lebih tebal dari perkiraan. Kalau asap di sekitar terlihat tebal, ikuti yang terlihat.',
     `PM2.5 adalah partikel asap yang sangat halus dan bisa masuk sampai ke paru-paru. Rata-rata 24 jam terakhir: ${pm} µg/m³ (mikrogram per meter kubik udara).`,
+    'Perkiraan ini untuk titik pusat kota. Di kecamatan lain di sekitarnya, asap bisa lebih tebal atau lebih tipis.',
     'Level 1 sampai 5 memakai batas resmi pemerintah (ISPU).'
   ],
   explainMethod: 'Lihat metode & sumber',
@@ -197,12 +198,7 @@ export const UI = {
 
   outlookTitle: 'Besok gimana?',
   outlookSub: 'Perkiraan beberapa hari ke depan. Pilih hari untuk lihat detail.',
-  reasonsTitle: 'Yang mungkin berpengaruh',
-  hotspots: km => `Titik panas dalam ${km} km (24 jam terakhir)`,
-  wind: 'Angin datang dari',
-  rainDays: days => `Hari hujan, ${days} hari ke depan`,
-  rainDaysValue: (wet, days) => `${wet} dari ${days}`,
-  source: when => `Titik panas dari satelit NASA, ${when}. Angin dan hujan dari prakiraan cuaca.`,
+  rainDay: 'ada hujan',
 
   installButton: 'Pasang di layar utama',
   installHide: 'Sembunyikan',
@@ -244,6 +240,9 @@ export const UI = {
   satThumbLabel: 'Foto satelit NASA',
   satAlt: kota => `Foto satelit NASA untuk ${kota}`,
   satCaption: tanggal => `Foto satelit NASA, ${tanggal}. Titik merah: titik panas. Kalau berawan, asap bisa tertutup awan.`,
+  satPin: 'Pin: pusat kota.',
+  satWind: arah => `Angin dari ${arah}.`,
+  satLink: 'Buka di NASA Worldview ↗',
   satNote: 'Foto diambil saat satelit lewat, bukan saat ini.',
   factsTitle: 'Fakta singkat',
   factsNext: 'Fakta lain',

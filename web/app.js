@@ -2,7 +2,7 @@ import './ionic.js';
 import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, OFFICIAL_ISPU, RAIN, STORY, UI } from './copy.js';
 import {
   activityStatuses, ago, bestWindow, cityLink, dailyQuip, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
-  nearest, normalizeWatch, previewOverride, rainKind, outlookLines, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom, WET_DAY_MM
+  nearest, normalizeWatch, previewOverride, rainKind, outlookLines, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worldviewUrl, worsenedFrom, WET_DAY_MM
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
@@ -207,6 +207,8 @@ let satIndex = null; // Promise of the entries, or null before the fold was firs
 let foldOpen = false;
 const getSatIndex = () => (satIndex ??= fetch('./sat/index.json', { cache: 'no-cache' }).then(res => (res.ok ? res.json() : [])).catch(() => []));
 
+const satLines = (loc, entry) => `${UI.satCaption(satDay.format(new Date(`${entry.date}T00:00:00Z`)))} ${UI.satPin} ${UI.satWind(loc.wind_dir)}`;
+
 // The thumbnail on the answer card: one small round photo, tap for the full photo in a sheet. Missing data hides it.
 async function renderSatThumb(loc) {
   const btn = $('satThumb');
@@ -222,7 +224,8 @@ async function renderSatThumb(loc) {
   img.alt = '';
   if (img.getAttribute('src') !== src) img.src = src;
   btn.dataset.src = src;
-  btn.dataset.caption = UI.satCaption(satDay.format(new Date(`${entry.date}T00:00:00Z`)));
+  btn.dataset.caption = satLines(loc, entry);
+  btn.dataset.link = worldviewUrl(entry.bbox, entry.date) ?? '';
   btn.dataset.alt = UI.satAlt(cityName(loc));
   btn.hidden = false;
 }
@@ -240,7 +243,7 @@ async function renderSat(loc) {
   const src = `./sat/${loc.id}.jpg?d=${entry.date}`;
   img.onerror = () => { block.hidden = true; };
   img.alt = UI.satAlt(cityName(loc));
-  $('satCaption').textContent = UI.satCaption(satDay.format(new Date(`${entry.date}T00:00:00Z`)));
+  $('satCaption').textContent = satLines(loc, entry);
   if (img.getAttribute('src') !== src) img.src = src;
   block.hidden = false;
 }
@@ -296,26 +299,24 @@ function renderOutlook(loc) {
   $('outlook').hidden = days.length === 0;
   $('days').style.setProperty('--n', String(days.length));
   $('days').replaceChildren(...days.map((day, i) => {
+    const wet = rainKind(day.rain_mm) !== 'none';
     const chip = el('button', 'day', el('span', 'd', weekdayShort.format(dateOf(day.date))), el('span', 'n', LEVELS[day.band].name));
+    if (wet) {
+      const drop = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      drop.setAttribute('class', 'ic drop');
+      drop.setAttribute('aria-hidden', 'true');
+      drop.innerHTML = '<use href="#i-drop"/>';
+      chip.append(drop);
+    }
     chip.type = 'button';
     chip.dataset.level = String(day.band);
     chip.setAttribute('aria-pressed', 'false');
-    chip.setAttribute('aria-label', `${dayLong.format(dateOf(day.date))}, ${levelText(day.band)}`);
+    chip.setAttribute('aria-label', `${dayLong.format(dateOf(day.date))}, ${levelText(day.band)}${wet ? `, ${UI.rainDay}` : ''}`);
     chip.addEventListener('click', () => showDay(days, i));
     return chip;
   }));
   if (days.length > 0) showDay(days, Math.min(dayIndex, days.length - 1));
   return days;
-}
-
-function renderReasons(loc, days) {
-  const rainDays = days.slice(0, 3);
-  $('hotLabel').textContent = UI.hotspots(loc.hotspots_24h.radius_km);
-  $('hot').textContent = num.format(loc.hotspots_24h.count);
-  $('wind').textContent = loc.wind_dir;
-  $('rainLabel').textContent = UI.rainDays(rainDays.length);
-  $('rain').textContent = UI.rainDaysValue(rainDays.filter(d => rainKind(d.rain_mm) !== 'none').length, rainDays.length);
-  $('source').textContent = UI.source(when(loc.hotspots_24h.updated_at));
 }
 
 function render() {
@@ -345,7 +346,7 @@ function render() {
   $('select').value = loc.id;
   renderAnswer(loc, level);
   renderToday(loc, level);
-  renderReasons(loc, renderOutlook(loc));
+  renderOutlook(loc);
   renderWatch();
   prepareStory();
   if (!preview) {
@@ -755,9 +756,12 @@ $('satThumb').addEventListener('click', () => {
   $('satBig').src = d.src;
   $('satBig').alt = d.alt;
   $('satBigCaption').textContent = d.caption;
+  $('satLink').href = d.link || '#';
+  $('satLink').hidden = !d.link;
   count('foto-satelit');
   $('satSheet').present();
 });
+$('satLink').addEventListener('click', () => count('peta-nasa'));
 $('satClose').addEventListener('click', () => $('satSheet').dismiss());
 
 // A daily calendar reminder at 07:00 for 30 days, made on the device: no account and no server.

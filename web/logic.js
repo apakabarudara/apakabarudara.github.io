@@ -81,6 +81,14 @@ export function rainKind(mm) {
   return mm >= HEAVY_RAIN_MM ? 'heavy' : 'some';
 }
 
+const WORLDVIEW = 'https://worldview.earthdata.nasa.gov/';
+const WORLDVIEW_LAYERS = 'VIIRS_NOAA20_CorrectedReflectance_TrueColor,VIIRS_NOAA20_Thermal_Anomalies_375m_All';
+
+/** Interactive NASA Worldview link for the same box, day and layers as the photo; null when the index entry has no box. */
+export function worldviewUrl(bbox, date) {
+  return bbox && date ? `${WORLDVIEW}?v=${bbox}&l=${WORLDVIEW_LAYERS}&t=${date}` : null;
+}
+
 /** Greeting for the viewer's local hour. */
 export function greeting(hour) {
   if (hour >= 4 && hour < 11) return 'Pagi!';

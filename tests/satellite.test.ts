@@ -3,8 +3,8 @@ import { describe, it } from 'node:test';
 import { candidateDates, isUsableImage, MIN_IMAGE_BYTES, satBbox } from '../ingest/satellite.ts';
 
 describe('satBbox', () => {
-  it('is 3 degrees wide, west,south,east,north, around the city', () => {
-    assert.equal(satBbox(-2.20833, 113.91667), '112.4167,-3.7083,115.4167,-0.7083');
+  it('is 5 degrees wide, west,south,east,north, around the city', () => {
+    assert.equal(satBbox(-2.20833, 113.91667), '111.4167,-4.7083,116.4167,0.2917');
   });
 });
 

@@ -6,7 +6,7 @@ const WMS_URL = 'https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi';
 // Same satellite as the FIRMS hotspots; the thermal-anomaly layer draws the detections as red marks on the photo.
 const LAYERS = 'VIIRS_NOAA20_CorrectedReflectance_TrueColor,VIIRS_NOAA20_Thermal_Anomalies_375m_All';
 export const SOURCE_LABEL = 'NASA GIBS (VIIRS NOAA-20)';
-const SPAN_DEG = 3;
+const SPAN_DEG = 5;
 const SIZE_PX = 480;
 // A day without coverage comes back as a ~1.6 KB near-uniform image (or as an XML error); real scenes are 15 KB or more.
 export const MIN_IMAGE_BYTES = 8000;
@@ -20,6 +20,8 @@ export interface SatEntry {
   id: string;
   date: string;
   source: string;
+  /** West,south,east,north of the photo; the page builds the Worldview link from it. */
+  bbox: string;
 }
 
 /** WMS 1.1.1 EPSG:4326 box (west,south,east,north) of SPAN_DEG degrees around the point. */
@@ -89,7 +91,7 @@ async function main(): Promise<void> {
       const target = new URL(`${loc.id}.jpg`, OUT_DIR);
       await writeFile(new URL(`${loc.id}.jpg.tmp`, OUT_DIR), photo.body);
       await rename(new URL(`${loc.id}.jpg.tmp`, OUT_DIR), target);
-      entries.set(loc.id, { id: loc.id, date: photo.date, source: SOURCE_LABEL });
+      entries.set(loc.id, { id: loc.id, date: photo.date, source: SOURCE_LABEL, bbox: satBbox(loc.lat, loc.lon) });
       fresh++;
       console.log(`${loc.id}: ${photo.date}, ${(photo.body.length / 1024).toFixed(1)} KB`);
     } catch (err) {

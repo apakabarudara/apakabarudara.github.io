@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import { LEVELS, STORY } from '../web/copy.js';
 import {
   activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
-  icsReminder, outlookLines, previewOverride, rainKind, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom
+  icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom
 } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
@@ -402,5 +402,17 @@ describe('icsReminder', () => {
     assert.ok(ics.includes('DESCRIPTION:Satu\\; dua\r\n'));
     assert.match(ics, /TRIGGER:PT0S/);
     assert.ok(ics.startsWith('BEGIN:VCALENDAR\r\n') && ics.endsWith('END:VCALENDAR\r\n'));
+  });
+});
+
+describe('worldviewUrl', () => {
+  it('links the same box, day and layers as the photo', () => {
+    assert.equal(
+      worldviewUrl('111.4167,-4.7083,116.4167,0.2917', '2026-10-14'),
+      'https://worldview.earthdata.nasa.gov/?v=111.4167,-4.7083,116.4167,0.2917&l=VIIRS_NOAA20_CorrectedReflectance_TrueColor,VIIRS_NOAA20_Thermal_Anomalies_375m_All&t=2026-10-14'
+    );
+  });
+  it('is null without a box', () => {
+    assert.equal(worldviewUrl(undefined, '2026-10-14'), null);
   });
 });

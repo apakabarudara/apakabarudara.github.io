@@ -38,6 +38,7 @@ addEventListener('error', e => {
   <symbol id="i-share" viewBox="0 0 24 24"><path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M8.7 10.7l6.6 -3.4"/><path d="M8.7 13.3l6.6 3.4"/></symbol>
   <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M8.5 4l-5 2.8 1.9 3.6 2.1-1V20h9V9.4l2.1 1 1.9-3.6-5-2.8c-.6 1.3-2 2.2-3.5 2.2s-2.9-.9-3.5-2.2z"/></symbol>
   <symbol id="i-window" viewBox="0 0 24 24"><rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M12 3.5v17M4.5 12h15"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5c3.2 4 5.5 6.8 5.5 10a5.5 5.5 0 0 1 -11 0c0 -3.2 2.3 -6 5.5 -10z"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></symbol>
@@ -146,22 +147,6 @@ addEventListener('error', e => {
           <div id="days" class="days" role="group" aria-labelledby="outlookTitle"></div>
           <p id="dayDetail" class="day-detail" aria-live="polite"></p>
         </ion-card>
-
-        <ion-card class="fold">
-          <ion-accordion-group>
-            <ion-accordion value="reasons">
-              <ion-item slot="header" lines="none"><ion-label><h2 data-copy="reasonsTitle"></h2></ion-label></ion-item>
-              <div slot="content" class="fold-body">
-                <dl class="rows">
-                  <div class="row"><dt id="hotLabel"></dt><dd id="hot"></dd></div>
-                  <div class="row"><dt data-copy="wind"></dt><dd id="wind"></dd></div>
-                  <div class="row"><dt id="rainLabel"></dt><dd id="rain"></dd></div>
-                </dl>
-                <p id="source" class="small"></p>
-              </div>
-            </ion-accordion>
-          </ion-accordion-group>
-        </ion-card>
       </div>
 
       <div id="shareBlock" hidden>
@@ -181,7 +166,7 @@ addEventListener('error', e => {
             <div slot="content" class="fold-body more-body">
               <figure id="satBlock" class="sat" hidden>
                 <h3 data-copy="satTitle"></h3>
-                <img id="satImg" width="480" height="480" loading="lazy" alt="">
+                <div class="sat-frame"><img id="satImg" width="480" height="480" loading="lazy" alt=""><span class="pin" aria-hidden="true"></span></div>
                 <figcaption><p id="satCaption"></p><p class="note" data-copy="satNote"></p></figcaption>
               </figure>
               <div id="factsBlock">
@@ -241,8 +226,9 @@ addEventListener('error', e => {
         <h2 id="satSheetTitle" data-copy="satTitle"></h2>
         <ion-button id="satClose" fill="clear"><span data-copy="close"></span></ion-button>
       </div>
-      <img id="satBig" class="sat-big" width="480" height="480" alt="">
+      <div class="sat-frame"><img id="satBig" class="sat-big" width="480" height="480" alt=""><span class="pin" aria-hidden="true"></span></div>
       <p id="satBigCaption" class="small"></p>
+      <a id="satLink" class="small" target="_blank" rel="noopener" hidden data-copy="satLink"></a>
       <p class="small" data-copy="satNote"></p>
     </div>
   </ion-modal>
