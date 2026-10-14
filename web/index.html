@@ -25,17 +25,33 @@
     <span class="beta">BETA</span>
   </header>
 
-  <div class="city">
-    <label class="sr-only" for="city">Pilih kota</label>
-    <div class="select-wrap"><select id="city" class="select" disabled><option>Memuat kota…</option></select></div>
-    <button type="button" id="locate" class="icon-btn" aria-label="Kota terdekat">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
-      <span class="label">Terdekat</span>
-    </button>
+  <div id="cityBar" class="city-bar">
+    <div class="city">
+      <label class="sr-only" for="city">Pilih kota</label>
+      <div class="select-wrap"><select id="city" class="select" disabled><option>Memuat kota…</option></select></div>
+      <button type="button" id="locate" class="icon-btn" aria-label="Kota terdekat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
+        <span class="label">Terdekat</span>
+      </button>
+    </div>
+    <div class="city-meta">
+      <p id="hint" class="hint" aria-live="polite"></p>
+      <button type="button" id="allCities" class="linkbtn" hidden>Lihat semua kota</button>
+    </div>
   </div>
-  <p id="hint" class="hint" aria-live="polite" hidden></p>
 
   <div id="banner" class="banner" role="status" hidden></div>
+
+  <section id="overview" class="panel overview" aria-labelledby="overviewTitle" hidden>
+    <h1 id="overviewTitle" class="overview-title">Asap hari ini</h1>
+    <p id="overviewSub" class="sub"></p>
+    <button type="button" id="locateOverview" class="btn btn--brand btn--wide">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
+      Pakai lokasiku
+    </button>
+    <p id="overviewHint" class="note" aria-live="polite"></p>
+    <ul id="cityList" class="city-list"></ul>
+  </section>
 
   <section id="answer" class="answer" data-level="0" aria-live="polite" aria-busy="true">
     <div id="confetti" class="confetti" aria-hidden="true"></div>

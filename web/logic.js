@@ -11,11 +11,16 @@ export function freshness(generatedAt, now) {
   return age < STALE_MS ? 'fresh' : 'stale';
 }
 
-/** Which city to show: the one in the link, else the one saved on this device, else the first. */
+/** Which city to show: the one in the link, else the one saved on this device, else none, which opens the overview. */
 export function resolveCity(ids, hashId, savedId) {
   if (ids.includes(hashId)) return { id: hashId, source: 'hash' };
   if (ids.includes(savedId)) return { id: savedId, source: 'saved' };
-  return { id: ids[0], source: 'default' };
+  return { id: null, source: 'none' };
+}
+
+/** Worst air first; within a level, higher PM2.5 first. */
+export function rankByLevel(locations) {
+  return [...locations].sort((a, b) => b.pm25_model.band - a.pm25_model.band || b.pm25_model.value - a.pm25_model.value);
 }
 
 /** YYYY-MM-DD of `now` in the viewer's time zone. */

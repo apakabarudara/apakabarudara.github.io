@@ -24,7 +24,7 @@ The page follows a small design system, described in `docs/superpowers/specs/202
 - `web/copy.js` holds every line of copy per level. Level 3–5 safety copy is a draft until the health reviewer signs off.
 - `web/logic.js` holds the pure rules (freshness, city choice, outlook from tomorrow); `web/app.js` renders.
 
-The answer card's tone follows the level: jokes at 1–2, plain at 3 with a small quip, calm and direct at 4–5. From level 3 it offers "Cari faskes terdekat" (a Google Maps search; the page sends no position), and from level 4 "Telepon 119" ([Kemenkes](https://kemkes.go.id/id/terjadi-darurat-kesehatan-saat-mudik-hubungi-119)). The chosen city is remembered on the device; a `#city` link wins over it.
+The answer card's tone follows the level: jokes at 1–2, plain at 3 with a small quip, calm and direct at 4–5. From level 3 it offers "Cari faskes terdekat" (a Google Maps search; the page sends no position), and from level 4 "Telepon 119" ([Kemenkes](https://kemkes.go.id/id/terjadi-darurat-kesehatan-saat-mudik-hubungi-119)). A first visit opens "Asap hari ini", every city ranked worst first with a "Pakai lokasiku" button, so nobody sees a verdict for a city they did not pick. The chosen city is remembered on the device and opens directly next time; a `#city` link wins over it, and "Lihat semua kota" returns to the overview.
 
 The page refetches `data/latest.json` every 15 minutes and whenever it comes back into view. When data is over 3 hours old it shows a "Data lama" banner. Over 12 hours, or when the fetch fails, it hides the verdict and points to the official ISPU. "Kota terdekat" picks the nearest city in the browser; the position is never stored or sent. `#<city id>` in the URL selects a city, which is what "Lempar ke grup" shares.
 

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { ago, freshness, mapsSearchUrl, nearest, resolveCity, upcomingDays } from '../web/logic.js';
+import { ago, freshness, mapsSearchUrl, nearest, rankByLevel, resolveCity, upcomingDays } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
 const hoursAgo = (h: number): string => new Date(NOW.getTime() - h * 3600e3).toISOString();
@@ -22,14 +22,22 @@ describe('freshness', () => {
 describe('resolveCity', () => {
   const ids = ['pekanbaru', 'pontianak', 'palangkaraya'];
 
-  it('prefers the city in the link, then the saved one, then the first', () => {
+  it('prefers the city in the link, then the saved one, then none (the overview)', () => {
     assert.deepEqual(resolveCity(ids, 'palangkaraya', 'pontianak'), { id: 'palangkaraya', source: 'hash' });
     assert.deepEqual(resolveCity(ids, '', 'pontianak'), { id: 'pontianak', source: 'saved' });
-    assert.deepEqual(resolveCity(ids, '', null), { id: 'pekanbaru', source: 'default' });
+    assert.deepEqual(resolveCity(ids, '', null), { id: null, source: 'none' });
   });
 
-  it('ignores ids that are not in the data', () => {
-    assert.deepEqual(resolveCity(ids, 'jakarta', 'bandung'), { id: 'pekanbaru', source: 'default' });
+  it('never falls back to a city nobody chose', () => {
+    assert.deepEqual(resolveCity(ids, 'jakarta', 'bandung'), { id: null, source: 'none' });
+  });
+});
+
+describe('rankByLevel', () => {
+  it('puts the worst air first and breaks ties by PM2.5', () => {
+    const loc = (id: string, band: number, value: number) => ({ id, pm25_model: { band, value } });
+    const ranked = rankByLevel([loc('a', 3, 60), loc('b', 5, 1133), loc('c', 3, 117), loc('d', 2, 30)]);
+    assert.deepEqual(ranked.map(l => l.id), ['b', 'c', 'a', 'd']);
   });
 });
 

@@ -1,5 +1,5 @@
 import { EMERGENCY_NUMBER, LEVELS, POLLS, TWISTS, UI } from './copy.js';
-import { ago, freshness, localDate, mapsSearchUrl, nearest, resolveCity, upcomingDays } from './logic.js';
+import { ago, freshness, localDate, mapsSearchUrl, nearest, rankByLevel, resolveCity, upcomingDays } from './logic.js';
 
 const DATA_URL = 'data/latest.json';
 const CITY_KEY = 'bisanapasgak.city';
@@ -31,6 +31,8 @@ const savedCity = {
 
 let report = null;
 let currentId = null;
+// 'overview' lists every city (first visit, or "Lihat semua kota"); 'city' is one city's answer card.
+let view = 'city';
 let lastTwist = -1;
 let bubbleTimer = 0;
 
@@ -58,8 +60,34 @@ function showMessage(headline, text) {
   $('bubble').hidden = true;
   $('mascot').tabIndex = -1;
   $('banner').hidden = true;
+  $('overview').hidden = true;
+  $('answer').hidden = false;
   $('outlook').hidden = true;
   $('reasons').hidden = true;
+}
+
+function renderOverview() {
+  $('cityBar').hidden = true;
+  $('answer').hidden = true;
+  $('outlook').hidden = true;
+  $('reasons').hidden = true;
+  $('overview').hidden = false;
+  $('overviewSub').textContent = UI.overviewSub(report.locations.length);
+  $('cityList').replaceChildren(...rankByLevel(report.locations).map(loc => {
+    const [city, province = ''] = loc.name.split(',').map(s => s.trim());
+    const level = loc.pm25_model.band;
+    const name = el('span', null, 'name');
+    name.append(el('b', city), el('small', province));
+    const chip = el('span', `Level ${level} · ${LEVELS[level].name}`, 'chip');
+    chip.dataset.level = String(level);
+    const row = el('button', null, 'city-row');
+    row.type = 'button';
+    row.append(name, chip);
+    row.addEventListener('click', () => choose(loc.id));
+    const item = el('li');
+    item.append(row);
+    return item;
+  }));
 }
 
 function burst() {
@@ -163,13 +191,21 @@ function render() {
     showMessage(UI.expiredHeadline, UI.expiredText);
     return;
   }
-  const loc = selected();
-  currentId = loc.id;
   $('banner').hidden = state !== 'stale';
   $('banner').textContent = UI.stale(when(report.generated_at));
+  $('camsCredit').textContent = `Contains modified Copernicus Atmosphere Monitoring Service information ${report.generated_at.slice(0, 4)}`;
+  if (view === 'overview') {
+    renderOverview();
+    return;
+  }
+  const loc = selected();
+  currentId = loc.id;
+  $('overview').hidden = true;
+  $('cityBar').hidden = false;
+  $('allCities').hidden = false;
+  $('answer').hidden = false;
   renderAnswer(loc);
   renderReasons(loc, renderOutlook(loc));
-  $('camsCredit').textContent = `Contains modified Copernicus Atmosphere Monitoring Service information ${report.generated_at.slice(0, 4)}`;
 }
 
 function fillPicker() {
@@ -184,25 +220,33 @@ function fillPicker() {
     select.dataset.ids = ids.join();
     select.disabled = false;
   }
-  if (!currentId) {
+  if (!currentId && view === 'city') {
     const pick = resolveCity(ids, decodeURIComponent(location.hash.slice(1)), savedCity.get());
     currentId = pick.id;
-    if (pick.source === 'default') showHint(UI.hintPickCity);
+    if (!pick.id) view = 'overview';
   }
-  select.value = selected().id;
+  if (currentId) select.value = selected().id;
 }
 
 function showHint(text) {
-  $('hint').textContent = text;
-  $('hint').hidden = !text;
+  $(view === 'overview' ? 'overviewHint' : 'hint').textContent = text;
 }
 
 function choose(id) {
+  view = 'city';
   currentId = id;
   $('city').value = id;
   history.replaceState(null, '', `#${id}`);
   savedCity.set(id);
   render();
+}
+
+function showAllCities() {
+  view = 'overview';
+  showHint('');
+  history.replaceState(null, '', location.pathname);
+  render();
+  window.scrollTo(0, 0);
 }
 
 async function load() {
@@ -248,9 +292,10 @@ $('city').addEventListener('change', e => {
   showHint('');
   choose(e.target.value);
 });
+$('overviewTitle').textContent = UI.overviewTitle;
+$('allCities').textContent = UI.allCities;
 
-if (!('geolocation' in navigator)) $('locate').hidden = true;
-$('locate').addEventListener('click', () => {
+function useLocation() {
   if (!report) return;
   showHint(UI.locating);
   navigator.geolocation.getCurrentPosition(
@@ -258,11 +303,20 @@ $('locate').addEventListener('click', () => {
       const { location: loc, km } = nearest(report.locations, pos.coords.latitude, pos.coords.longitude);
       choose(loc.id);
       showHint(UI.nearest(cityName(loc), num.format(Math.round(km))));
+      window.scrollTo(0, 0);
     },
     () => showHint(UI.locateFailed),
     { enableHighAccuracy: false, maximumAge: 600000, timeout: 10000 }
   );
-});
+}
+
+if (!('geolocation' in navigator)) {
+  $('locate').hidden = true;
+  $('locateOverview').hidden = true;
+}
+$('locate').addEventListener('click', useLocation);
+$('locateOverview').addEventListener('click', useLocation);
+$('allCities').addEventListener('click', showAllCities);
 
 $('mascot').addEventListener('click', () => {
   const lines = report ? LEVELS[selected().pm25_model.band].bubble : null;
@@ -276,11 +330,11 @@ $('mascot').addEventListener('click', () => {
 
 $('share').addEventListener('click', async () => {
   if (!report) return;
-  const loc = selected();
-  const level = loc.pm25_model.band;
-  const url = `${location.origin}${location.pathname}#${loc.id}`;
   const fresh = freshness(report.generated_at, new Date()) !== 'expired';
-  const text = fresh ? UI.shareText(cityName(loc), level, LEVELS[level].headline) : document.title;
+  const cityView = view === 'city' && fresh;
+  const loc = cityView ? selected() : null;
+  const url = `${location.origin}${location.pathname}${loc ? `#${loc.id}` : ''}`;
+  const text = loc ? UI.shareText(cityName(loc), loc.pm25_model.band, LEVELS[loc.pm25_model.band].headline) : fresh ? UI.shareOverview : document.title;
   try {
     if (navigator.share) {
       await navigator.share({ title: document.title, text, url });

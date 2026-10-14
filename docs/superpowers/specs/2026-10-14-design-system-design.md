@@ -13,7 +13,8 @@ Residents living in the smoke, opening the page in the morning before going out.
 | Structure | "Answer first": one answer card on the first screen, then the outlook, then why, then the light extras folded under "Lainnya". |
 | Tone | Scales with severity. Levels 1–2 joke, level 3 is plain with a small quip, levels 4–5 are calm and direct. |
 | Visual direction | Option C: clean, warm, playful. ISPU hue order (green, blue, yellow, red, dark) tuned on a warm grey ground, soft shadows instead of thick outlines, Plus Jakarta Sans, blob mascot. |
-| City | Remembered on the device (localStorage). Precedence: `#city` in the link, then the saved city, then the first city with a hint. GPS position is never stored or sent. |
+| City | Remembered on the device (localStorage). Precedence: `#city` in the link, then the saved city, then the overview. GPS position is never stored or sent. |
+| First visit | Overview "Asap hari ini": every city ranked worst first, "Pakai lokasiku" on top, tap a row to open and remember it. Never a verdict for a city nobody picked. "Lihat semua kota" returns to it. Added after a UX review on 2026-10-14. |
 | Health access | "Cari faskes terdekat" from level 3 opens a Google Maps search; the page sends no position. "Telepon 119" from level 4 ([Kemenkes](https://kemkes.go.id/id/terjadi-darurat-kesehatan-saat-mudik-hubungi-119)). |
 | Outlook | Starts tomorrow, because the answer card covers today. |
 

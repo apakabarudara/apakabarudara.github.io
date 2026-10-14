@@ -60,7 +60,11 @@ export const EMERGENCY_NUMBER = '119';
 
 export const UI = {
   loadingHeadline: 'Lagi ngecek udara…',
-  hintPickCity: 'Bukan kotamu? Pilih dari daftar, atau tap Terdekat.',
+  overviewTitle: 'Asap hari ini',
+  overviewSub: count => `${count} kota di Sumatra & Kalimantan, dari yang terparah. Tap kotamu.`,
+  useLocation: 'Pakai lokasiku',
+  allCities: 'Lihat semua kota',
+  shareOverview: 'Asap hari ini di Sumatra & Kalimantan. Cek kotamu sebelum keluar.',
   locating: 'Lagi cari posisimu…',
   locateFailed: 'Posisi nggak bisa diambil. Pilih kota dari daftar aja.',
   nearest: (city, km) => `Kota terdekat: ${city}, sekitar ${km} km. Posisimu nggak disimpan atau dikirim.`,
