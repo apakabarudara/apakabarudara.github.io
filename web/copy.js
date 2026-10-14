@@ -91,7 +91,7 @@ export const RAIN = { none: 'Tidak hujan', some: 'Ada hujan', heavy: 'Hujan leba
 export const EMERGENCY_NUMBER = '119';
 
 /** The public address, written once. The Open Graph tags in index.html and the README repeat it as static text. */
-export const SITE_HOST = 'bisanapasgak.github.io';
+export const SITE_HOST = 'apakabarudara.github.io';
 
 /** First line of every shared text: forwarded without context, a claim reads as a hoax unless it says it is an estimate. */
 /** Shared texts and the Story card carry the level and this pointer, never our own advice. */

@@ -231,7 +231,7 @@ describe('storyLines', () => {
     assert.equal(lines.guide, 'Panduan resmi ISPU ada di link.');
     assert.ok(!('headline' in lines));
     assert.equal(lines.stamp, 'Diperbarui Rabu 10.00');
-    assert.equal(lines.url, 'bisanapasgak.github.io');
+    assert.equal(lines.url, 'apakabarudara.github.io');
     assert.doesNotMatch(JSON.stringify(lines), /µg|PM2/);
   });
 
@@ -300,7 +300,7 @@ describe('feedbackUrl', () => {
 
 describe('cityLink', () => {
   it('is the page address plus the encoded city id', () => {
-    assert.equal(cityLink('https://bisanapasgak.github.io/', 'palangkaraya'), 'https://bisanapasgak.github.io/#palangkaraya');
+    assert.equal(cityLink('https://apakabarudara.github.io/', 'palangkaraya'), 'https://apakabarudara.github.io/#palangkaraya');
     assert.equal(cityLink('http://127.0.0.1:8792/', 'a b'), 'http://127.0.0.1:8792/#a%20b');
   });
 });

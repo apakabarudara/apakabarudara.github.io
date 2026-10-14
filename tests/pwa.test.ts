@@ -43,7 +43,7 @@ describe('page head', () => {
   const html = read('index.html');
   it('carries the tagline in the title and Open Graph tags with a 1200×630 image', () => {
     assert.match(html, /<title>Apa Kabar Udara · Perkiraan asap & kualitas udara hari ini<\/title>/);
-    for (const tag of ['og:title', 'og:description', 'og:type" content="website', 'og:url" content="https://bisanapasgak.github.io/', 'og:locale" content="id_ID', 'og:image" content="https://bisanapasgak.github.io/og-image.png']) {
+    for (const tag of ['og:title', 'og:description', 'og:type" content="website', 'og:url" content="https://apakabarudara.github.io/', 'og:locale" content="id_ID', 'og:image" content="https://apakabarudara.github.io/og-image.png']) {
       assert.ok(html.includes(`property="${tag}"`), tag);
     }
     assert.match(html, /twitter:card" content="summary_large_image"/);

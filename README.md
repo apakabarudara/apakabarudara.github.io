@@ -2,7 +2,7 @@
 
 A playful, mobile-first page that tells people in Indonesia whether the air is safe to go out in during the karhutla (forest and land fire) season.
 
-Live: https://bisanapasgak.github.io/
+Live: https://apakabarudara.github.io/
 
 Status: the Ionic version is the main site (chosen by the owner after a live A/B). Hosting, the health review of the level 3–5 copy and the beta are still to come.
 
