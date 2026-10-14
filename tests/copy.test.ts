@@ -114,6 +114,13 @@ describe('OFFICIAL_ISPU', () => {
   });
 });
 
+describe('satellite map caption', () => {
+  it('does not claim hotspots on the map', () => {
+    assert.doesNotMatch(UI.satMapCaption, /Titik merah/);
+    assert.match(UI.satMapCaption, /hanya terlihat di foto/);
+  });
+});
+
 describe('reminder', () => {
   it('words the link and the confirmation plainly', () => {
     assert.equal(UI.remind, 'Ingatkan tiap pagi');

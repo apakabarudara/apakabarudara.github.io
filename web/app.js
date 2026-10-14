@@ -769,6 +769,7 @@ $('satClose').addEventListener('click', () => $('satSheet').dismiss());
 // Interactive map: Leaflet and its CSS are a separate chunk, fetched only on this tap. Any failure puts the photo back with a note.
 let satMap = null;
 function showPhoto(note = '') {
+  if ($('satThumb').dataset.caption) $('satBigCaption').textContent = $('satThumb').dataset.caption;
   satMap?.destroy();
   satMap = null;
   $('satMap').hidden = true;
@@ -788,6 +789,7 @@ $('satExplore').addEventListener('click', async () => {
   $('satBack').hidden = false;
   document.querySelector('#satSheet .sat-frame').hidden = true;
   $('satMap').hidden = false;
+  $('satBigCaption').textContent = UI.satMapCaption;
   $('satMap').setAttribute('aria-label', UI.satMapLabel(cityName(loc)));
   try {
     const { createSatMap } = await import('./satmap.js');
