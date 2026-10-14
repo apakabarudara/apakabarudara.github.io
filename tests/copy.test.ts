@@ -58,8 +58,8 @@ describe('LEVELS', () => {
   }
 
   it('words the quips as agreed: non-health only', () => {
-    assert.deepEqual(LEVELS[1].quips, ['Langit lagi bersih-bersihnya.', 'Jemuran lagi senang hari ini.', 'Si Kapas lagi senyum lebar.', 'Awan putih, langit biru.']);
-    assert.deepEqual(LEVELS[2].quips, ['Langit agak berkabut tipis.', 'Si Kapas masih senyum.', 'Langit belum sebersih kemarin, tapi masih cerah.']);
+    assert.deepEqual(LEVELS[1].quips, ['Langit lagi bersih-bersihnya.', 'Jemuran lagi senang hari ini.', 'Awan putih, langit biru.']);
+    assert.deepEqual(LEVELS[2].quips, ['Langit agak berkabut tipis.', 'Langit belum sebersih kemarin, tapi masih cerah.']);
   });
 });
 
@@ -299,7 +299,7 @@ describe('UI', () => {
 
   it('words the batch 3 Fun lines as agreed', () => {
     assert.equal(UI.betterSince('Sedang'), 'Perkiraannya membaik sejak terakhir kamu cek (sebelumnya Sedang).');
-    assert.ok(LEVELS[1].quips.includes('Awan putih, langit biru.') && LEVELS[2].quips.includes('Si Kapas masih senyum.'));
+    assert.ok(LEVELS[1].quips.includes('Awan putih, langit biru.'));
   });
 
   it('credits the data sources', () => {
