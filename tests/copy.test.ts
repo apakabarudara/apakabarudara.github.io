@@ -129,7 +129,7 @@ describe('reminder', () => {
 
 describe('satellite thumbnail', () => {
   it('labels the thumbnail plainly', () => {
-    assert.equal(UI.satThumbLabel, 'Foto satelit NASA');
+    assert.equal(UI.satThumbLabel, 'Lihat asap dari satelit');
   });
 });
 
@@ -305,8 +305,8 @@ describe('UI', () => {
 
   it('words the batch 3 P1 lines as agreed', () => {
     assert.equal(UI.stamp('11.00 WIB'), 'Diperbarui 11.00 WIB · bisa meleset ·');
-    assert.equal(UI.moreTitle, 'Cek langit & fakta asap');
-    assert.equal(UI.moreTitleNoFacts, 'Cek langit hari ini');
+    assert.equal(UI.moreTitle, 'Fakta asap');
+    assert.ok(!('moreTitleNoFacts' in UI));
     assert.ok(FACTS.includes('El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.'));
     assert.ok(!FACTS.some(f => /berhari-hari di bawah permukaan/.test(f)));
     assert.equal(UI.storyLinkCopied, 'Link kota ini sudah disalin. Di Instagram, tambahkan stiker Link lalu tempel.');
@@ -329,8 +329,9 @@ describe('UI', () => {
     assert.equal(UI.creditGibs, 'NASA GIBS / Worldview (VIIRS)');
     assert.ok(UI.methodSources.some(l => /^Foto satelit: .*NASA GIBS/.test(l)));
     assert.ok(UI.methodSources.some(l => /^Foto satelit: .*gibs\.earthdata\.nasa\.gov.*tidak ada data lain/.test(l)));
-    assert.deepEqual([UI.satExplore, UI.satBack], ['Jelajahi peta', 'Kembali ke foto']);
-    for (const line of [UI.satExplore, UI.satBack, UI.satMapFail, UI.satMapLabel('x'), UI.privacy, ...UI.methodSources]) assert.doesNotMatch(line, /\b(aman|akurat|pasti|gratis|boleh|harus)\b/i);
+    assert.equal(UI.satHint, 'Geser & cubit untuk perbesar');
+    assert.ok(!('satExplore' in UI) && !('satBack' in UI));
+    for (const line of [UI.satThumbLabel, UI.satHint, UI.moreTitle, UI.satMapCaption, UI.satMapFail, UI.satMapLabel('x'), UI.privacy, ...UI.methodSources]) assert.doesNotMatch(line, /\b(aman|akurat|pasti|gratis|boleh|harus)\b/i);
     for (const line of [UI.satCaption('x'), UI.satPin, UI.satWind('Timur'), UI.satNote, UI.satAlt('x'), UI.satTitle]) assert.doesNotMatch(line, /aman|akurat|pasti/i);
   });
 

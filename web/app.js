@@ -55,6 +55,7 @@ const savedCity = {
 };
 
 // Pinned family cities and the "install" dismissal: also device-only, also optional.
+const MAP_HINT_KEY = 'akud-map-hint'; // set once the map's gesture hint has been shown
 const SOLIDARITY_KEY = 'akud-solidarity-day'; // the day it was closed; it returns the next day
 const today = () => new Date().toLocaleDateString('en-CA');
 // Anonymous, aggregate counting through GoatCounter: no cookie, no per-person profile. Off with Do Not Track and in preview.
@@ -107,10 +108,8 @@ function show(view) {
   else $('city').after($('shareBlock'));
   $('shareBlock').hidden = view === 'message' || (view === 'city' && Boolean(preview));
   if (view !== 'city') {
-    $('satBlock').hidden = true;
     $('watchSolo').hidden = true;
     $('factsBlock').hidden = false;
-    $('moreTitle').textContent = UI.moreTitle;
   }
 }
 
@@ -196,20 +195,18 @@ function renderAnswer(loc, level) {
   $('explain').replaceChildren(...UI.explain(num.format(Math.round(loc.pm25_model.value))).map(text => el('p', null, text)));
   $('official').href = loc.ispu?.source_url ?? ISPU_URL;
   $('factsBlock').hidden = level >= 4; // no jokes or trivia at levels 4–5
-  $('moreTitle').textContent = level >= 4 ? UI.moreTitleNoFacts : UI.moreTitle;
-  renderSat(loc);
+  $('more').hidden = level >= 4; // the card only holds the facts
   renderSatThumb(loc);
 }
 
-// Satellite photo: sat/index.json is fetched only once the fold has been opened. Missing index, entry or file hides the block.
+// Satellite photo: sat/index.json is fetched on the first city view. Missing index, entry or file hides the thumbnail.
 const satDay = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
-let satIndex = null; // Promise of the entries, or null before the fold was first opened
-let foldOpen = false;
+let satIndex = null; // Promise of the entries, or null before the first fetch
 const getSatIndex = () => (satIndex ??= fetch('./sat/index.json', { cache: 'no-cache' }).then(res => (res.ok ? res.json() : [])).catch(() => []));
 
 const satLines = (loc, entry) => `${UI.satCaption(satDay.format(new Date(`${entry.date}T00:00:00Z`)))} ${UI.satPin} ${UI.satWind(loc.wind_dir)}`;
 
-// The thumbnail on the answer card: one small round photo, tap for the full photo in a sheet. Missing data hides it.
+// The thumbnail row on the answer card: one small round photo, tap for the satellite map in a sheet. Missing data hides it.
 async function renderSatThumb(loc) {
   const btn = $('satThumb');
   const entry = (await getSatIndex()).find?.(e => e.id === loc.id);
@@ -230,33 +227,6 @@ async function renderSatThumb(loc) {
   btn.dataset.date = entry.date;
   btn.hidden = false;
 }
-
-async function renderSat(loc) {
-  const block = $('satBlock');
-  if (!foldOpen) return;
-  const entry = (await getSatIndex()).find?.(e => e.id === loc.id);
-  if (selected()?.id !== loc.id || $('city').hidden) return;
-  if (!entry) {
-    block.hidden = true;
-    return;
-  }
-  const img = $('satImg');
-  const src = `./sat/${loc.id}.jpg?d=${entry.date}`;
-  img.onerror = () => { block.hidden = true; };
-  img.alt = UI.satAlt(cityName(loc));
-  $('satCaption').textContent = satLines(loc, entry);
-  if (img.getAttribute('src') !== src) img.src = src;
-  block.hidden = false;
-}
-
-document.querySelector('#more ion-accordion-group').addEventListener('ionChange', e => {
-  foldOpen = e.detail.value === 'more';
-  const loc = selected();
-  if (foldOpen && loc && !$('city').hidden) {
-    renderSat(loc);
-    count('foto-satelit');
-  }
-});
 
 function renderToday(loc, level) {
   $('todayTitle').textContent = UI.todayTitle;
@@ -756,50 +726,65 @@ $('satThumb').addEventListener('click', () => {
   const d = $('satThumb').dataset;
   $('satBig').src = d.src;
   $('satBig').alt = d.alt;
-  $('satBigCaption').textContent = d.caption;
   $('satLink').href = d.link || '#';
   $('satLink').hidden = !d.link;
   count('foto-satelit');
-  showPhoto();
+  satOpen = true;
+  showMap();
   $('satSheet').present();
 });
 $('satLink').addEventListener('click', () => count('peta-nasa'));
 $('satClose').addEventListener('click', () => $('satSheet').dismiss());
 
-// Interactive map: Leaflet and its CSS are a separate chunk, fetched only on this tap. Any failure puts the photo back with a note.
+// Interactive map: Leaflet and its CSS are a separate chunk, fetched when the sheet opens. Any failure puts the photo back with a note.
 let satMap = null;
-function showPhoto(note = '') {
-  if ($('satThumb').dataset.caption) $('satBigCaption').textContent = $('satThumb').dataset.caption;
+let satOpen = false; // the sheet is open or opening; guards the async mount against a quick dismiss
+let hintTimer = 0;
+function hideHint() {
+  clearTimeout(hintTimer);
+  $('satHint').hidden = true;
+}
+function showMap() {
+  $('satStage').hidden = false;
+  document.querySelector('#satSheet .sat-frame').hidden = true;
+  $('satMapNote').hidden = true;
+  $('satBigCaption').textContent = UI.satMapCaption;
+}
+function showPhoto(note) {
   satMap?.destroy();
   satMap = null;
-  $('satMap').hidden = true;
-  $('satBack').hidden = true;
+  hideHint();
+  $('satStage').hidden = true;
   document.querySelector('#satSheet .sat-frame').hidden = false;
-  $('satExplore').hidden = false;
-  $('satMapNote').hidden = !note;
+  $('satMapNote').hidden = false;
   $('satMapNote').textContent = note;
+  $('satBigCaption').textContent = $('satThumb').dataset.caption;
 }
-$('satExplore').addEventListener('click', async () => {
+async function mountSatMap() {
   const loc = selected();
   const date = $('satThumb').dataset.date;
   if (!loc || !date) return;
-  count('peta-interaktif');
-  $('satMapNote').hidden = true;
-  $('satExplore').hidden = true;
-  $('satBack').hidden = false;
-  document.querySelector('#satSheet .sat-frame').hidden = true;
-  $('satMap').hidden = false;
-  $('satBigCaption').textContent = UI.satMapCaption;
   $('satMap').setAttribute('aria-label', UI.satMapLabel(cityName(loc)));
   try {
     const { createSatMap } = await import('./satmap.js');
-    satMap = createSatMap($('satMap'), { lat: loc.lat, lon: loc.lon, date, credit: UI.satMapCredit, onFail: () => showPhoto(UI.satMapFail) });
+    if (!satOpen) return;
+    satMap = createSatMap($('satMap'), { lat: loc.lat, lon: loc.lon, date, credit: UI.satMapCredit, onFail: () => showPhoto(UI.satMapFail), onInteract: hideHint });
+    if (store.read(MAP_HINT_KEY) !== '1') {
+      store.write(MAP_HINT_KEY, '1');
+      $('satHint').hidden = false;
+      hintTimer = setTimeout(hideHint, 3000);
+    }
   } catch {
     showPhoto(UI.satMapFail);
   }
+}
+$('satSheet').addEventListener('didPresent', mountSatMap);
+$('satSheet').addEventListener('didDismiss', () => {
+  satOpen = false;
+  satMap?.destroy();
+  satMap = null;
+  hideHint();
 });
-$('satBack').addEventListener('click', () => showPhoto());
-$('satSheet').addEventListener('didDismiss', () => showPhoto());
 
 // A daily calendar reminder at 07:00 for 30 days, made on the device: no account and no server.
 $('remind').addEventListener('click', () => {

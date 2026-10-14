@@ -128,7 +128,7 @@ addEventListener('error', e => {
           <div class="foot">
             <span id="stamp"></span>
             <ion-button id="aboutBtn" class="about" fill="clear"><span class="q" slot="start" aria-hidden="true">?</span><span data-copy="explainTitle"></span></ion-button>
-            <button id="satThumb" class="sat-thumb" type="button" hidden><img id="satThumbImg" width="40" height="40" decoding="async" alt=""><span data-copy="satThumbLabel"></span></button>
+            <button id="satThumb" class="sat-thumb" type="button" hidden><img id="satThumbImg" width="40" height="40" decoding="async" alt=""><span data-copy="satThumbLabel"></span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
           </div>
         </ion-card>
 
@@ -162,13 +162,8 @@ addEventListener('error', e => {
       <ion-card id="more" class="fold">
         <ion-accordion-group>
           <ion-accordion value="more">
-            <ion-item slot="header" lines="none"><ion-label><h2 id="moreTitle"></h2></ion-label></ion-item>
+            <ion-item slot="header" lines="none"><ion-label><h2 data-copy="moreTitle"></h2></ion-label></ion-item>
             <div slot="content" class="fold-body more-body">
-              <figure id="satBlock" class="sat" hidden>
-                <h3 data-copy="satTitle"></h3>
-                <div class="sat-frame"><img id="satImg" width="480" height="480" loading="lazy" alt=""><span class="pin" aria-hidden="true"></span></div>
-                <figcaption><p id="satCaption"></p><p class="note" data-copy="satNote"></p></figcaption>
-              </figure>
               <div id="factsBlock">
                 <div class="facts-head"><h3 data-copy="factsTitle"></h3><ion-button id="factsNext" fill="clear" class="small-btn"><span data-copy="factsNext"></span></ion-button></div>
                 <p id="fact"></p>
@@ -226,10 +221,8 @@ addEventListener('error', e => {
         <h2 id="satSheetTitle" data-copy="satTitle"></h2>
         <ion-button id="satClose" fill="clear"><span data-copy="close"></span></ion-button>
       </div>
-      <div class="sat-frame"><img id="satBig" class="sat-big" width="480" height="480" alt=""><span class="pin" aria-hidden="true"></span></div>
-      <div id="satMap" class="sat-map" role="application" hidden></div>
-      <ion-button id="satExplore" fill="outline" size="small"><span data-copy="satExplore"></span></ion-button>
-      <ion-button id="satBack" fill="outline" size="small" hidden><span data-copy="satBack"></span></ion-button>
+      <div class="sat-frame" hidden><img id="satBig" class="sat-big" width="480" height="480" alt=""><span class="pin" aria-hidden="true"></span></div>
+      <div id="satStage" class="sat-stage"><div id="satMap" class="sat-map" role="application"></div><p id="satHint" class="sat-hint" role="status" hidden data-copy="satHint"></p></div>
       <p id="satMapNote" class="small" role="status" hidden></p>
       <p id="satBigCaption" class="small"></p>
       <a id="satLink" class="small" target="_blank" rel="noopener" hidden data-copy="satLink"></a>
