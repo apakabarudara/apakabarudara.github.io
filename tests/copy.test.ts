@@ -109,6 +109,7 @@ describe('OFFICIAL_ISPU', () => {
     assert.equal(UI.guideSensitive, 'Kelompok sensitif:');
     assert.equal(UI.guideEveryone, 'Setiap orang:');
     assert.match(UI.guideSource, /ISPU, Kementerian Lingkungan Hidup/);
+    assert.match(UI.guideRegulation, /Permen LHK No\. 14 Tahun 2020/);
   });
 });
 
