@@ -237,6 +237,7 @@ export const UI = {
   moreTitle: 'Cek langit & fakta asap',
   moreTitleNoFacts: 'Cek langit hari ini',
   satTitle: 'Foto satelit',
+  satThumbLabel: 'Foto satelit NASA',
   satAlt: kota => `Foto satelit NASA untuk ${kota}`,
   satCaption: tanggal => `Foto satelit NASA, ${tanggal}. Titik merah: titik panas. Kalau berawan, asap bisa tertutup awan.`,
   satNote: 'Foto diambil saat satelit lewat, bukan saat ini.',

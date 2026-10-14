@@ -198,18 +198,39 @@ function renderAnswer(loc, level) {
   $('factsBlock').hidden = level >= 4; // no jokes or trivia at levels 4–5
   $('moreTitle').textContent = level >= 4 ? UI.moreTitleNoFacts : UI.moreTitle;
   renderSat(loc);
+  renderSatThumb(loc);
 }
 
 // Satellite photo: sat/index.json is fetched only once the fold has been opened. Missing index, entry or file hides the block.
 const satDay = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 let satIndex = null; // Promise of the entries, or null before the fold was first opened
 let foldOpen = false;
+const getSatIndex = () => (satIndex ??= fetch('./sat/index.json', { cache: 'no-cache' }).then(res => (res.ok ? res.json() : [])).catch(() => []));
+
+// The thumbnail on the answer card: one small round photo, tap for the full photo in a sheet. Missing data hides it.
+async function renderSatThumb(loc) {
+  const btn = $('satThumb');
+  const entry = (await getSatIndex()).find?.(e => e.id === loc.id);
+  if (selected()?.id !== loc.id || $('city').hidden) return;
+  if (!entry) {
+    btn.hidden = true;
+    return;
+  }
+  const src = `./sat/${loc.id}.jpg?d=${entry.date}`;
+  const img = $('satThumbImg');
+  img.onerror = () => { btn.hidden = true; };
+  img.alt = '';
+  if (img.getAttribute('src') !== src) img.src = src;
+  btn.dataset.src = src;
+  btn.dataset.caption = UI.satCaption(satDay.format(new Date(`${entry.date}T00:00:00Z`)));
+  btn.dataset.alt = UI.satAlt(cityName(loc));
+  btn.hidden = false;
+}
 
 async function renderSat(loc) {
   const block = $('satBlock');
   if (!foldOpen) return;
-  satIndex ??= fetch('./sat/index.json', { cache: 'no-cache' }).then(res => (res.ok ? res.json() : [])).catch(() => []);
-  const entry = (await satIndex).find?.(e => e.id === loc.id);
+  const entry = (await getSatIndex()).find?.(e => e.id === loc.id);
   if (selected()?.id !== loc.id || $('city').hidden) return;
   if (!entry) {
     block.hidden = true;
@@ -745,3 +766,13 @@ $('solidarityClose').addEventListener('click', () => {
 renderSolidarity();
 
 $('feedbackBtn').addEventListener('click', () => count('masukan'));
+
+$('satThumb').addEventListener('click', () => {
+  const d = $('satThumb').dataset;
+  $('satBig').src = d.src;
+  $('satBig').alt = d.alt;
+  $('satBigCaption').textContent = d.caption;
+  count('foto-satelit');
+  $('satSheet').present();
+});
+$('satClose').addEventListener('click', () => $('satSheet').dismiss());

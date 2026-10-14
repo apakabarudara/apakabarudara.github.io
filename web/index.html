@@ -127,6 +127,7 @@ addEventListener('error', e => {
           <div class="foot">
             <span id="stamp"></span>
             <ion-button id="aboutBtn" class="about" fill="clear"><span class="q" slot="start" aria-hidden="true">?</span><span data-copy="explainTitle"></span></ion-button>
+            <button id="satThumb" class="sat-thumb" type="button" hidden><img id="satThumbImg" width="40" height="40" decoding="async" alt=""><span data-copy="satThumbLabel"></span></button>
           </div>
         </ion-card>
 
@@ -236,6 +237,17 @@ addEventListener('error', e => {
       <p class="small" data-copy="medicalNote"></p>
       <button id="methodFromAbout" class="sheet-link" type="button" data-copy="explainMethod"></button>
       <ion-button id="official" class="wide" expand="block" fill="outline" target="_blank" rel="noopener"><span data-copy="official"></span><svg class="ic" slot="end" aria-hidden="true"><use href="#i-arrow"/></svg></ion-button>
+    </div>
+  </ion-modal>
+  <ion-modal id="satSheet" class="sheet" aria-labelledby="satSheetTitle">
+    <div class="sheet-body">
+      <div class="sheet-head">
+        <h2 id="satSheetTitle" data-copy="satTitle"></h2>
+        <ion-button id="satClose" fill="clear"><span data-copy="close"></span></ion-button>
+      </div>
+      <img id="satBig" class="sat-big" width="480" height="480" alt="">
+      <p id="satBigCaption" class="small"></p>
+      <p class="small" data-copy="satNote"></p>
     </div>
   </ion-modal>
   <ion-modal id="method" class="sheet" aria-labelledby="methodTitle">

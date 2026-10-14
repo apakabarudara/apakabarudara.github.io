@@ -114,6 +114,12 @@ describe('OFFICIAL_ISPU', () => {
   });
 });
 
+describe('satellite thumbnail', () => {
+  it('labels the thumbnail plainly', () => {
+    assert.equal(UI.satThumbLabel, 'Foto satelit NASA');
+  });
+});
+
 describe('solidarity strip', () => {
   it('says it plainly, with no level and no promise', () => {
     assert.equal(UI.solidarity, 'Turut prihatin untuk warga yang terdampak asap.');
