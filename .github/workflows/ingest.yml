@@ -29,18 +29,24 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      # Exits non-zero without touching data/latest.json when any source fails or validation rejects the report,
-      # so nothing below runs and the site keeps serving the last good deployment.
-      - run: npm run ingest
+      # Exits non-zero without touching data/latest.json when any source fails or validation rejects the report.
+      # That must not hold back new code: the build below then ships with the previous data/latest.json.
+      - id: ingest
+        run: npm run ingest
+        continue-on-error: true
         env:
           FIRMS_MAP_KEY: ${{ secrets.FIRMS_MAP_KEY }}
+      - name: Warn that the ingest failed
+        if: steps.ingest.outcome == 'failure'
+        run: echo "::warning::ingest failed; deployed with the previous data"
       - name: Commit latest.json
+        if: steps.ingest.outcome == 'success'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/latest.json
           git diff --cached --quiet || { git commit -m "data: refresh latest.json" && git push; }
-      # Vite bundle + service worker into dist/. A failed build stops here, so nothing is deployed.
+      # Vite bundle + service worker into dist/. A failed build (or failed tests above) stops here, so nothing is deployed.
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

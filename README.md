@@ -8,7 +8,7 @@ Status: the Ionic version is the main site (chosen by the owner after a live A/B
 
 ## How it works
 
-An hourly GitHub Actions job installs dependencies (`npm ci`), runs the tests, fetches three sources, builds one report, validates it, commits `data/latest.json`, builds the site with Vite and deploys `dist/` to GitHub Pages. The page only reads that file. If any step fails (tests, a source, validation, the build), the job stops before deploying, so the site keeps the last good deployment and the page's own staleness banner takes over.
+An hourly GitHub Actions job installs dependencies (`npm ci`), runs the tests, fetches three sources, builds one report, validates it, commits `data/latest.json`, builds the site with Vite and deploys `dist/` to GitHub Pages. The page only reads that file. If the tests or the build fail, the job stops before deploying and the site keeps the last good deployment. If only the ingest fails (a source error or validation), the run logs a warning, skips the data commit and still builds and deploys the new code with the previous `data/latest.json`; the page's own staleness banner takes over as that data ages.
 
 ```
 npm ci                                # two devDependencies only: @ionic/core 9.0.5 and vite 8.3.1, pinned exactly
