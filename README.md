@@ -31,7 +31,16 @@ Node 22.18 or newer runs the ingest TypeScript directly (type stripping); Vite i
 
 ### Size (first visit, gzip, as GitHub Pages serves it)
 
-HTML 3.6 KB, CSS 8.4 KB, JS 121.6 KB, font 27.4 KB, data 3.2 KB: about 164 KB in total (raw 13.7 + 36.9 + 538 + 27.3 + 44.3 KB). Later visits and offline reloads come from the service worker cache.
+HTML 4.3 KB, CSS 9.0 KB, JS 126.5 KB, font 27.4 KB, data 3.2 KB: about 170 KB in total (raw 17.4 + 40.0 + 547 + 27.3 + 44.3 KB). Icons and the manifest (about 25 KB) are precached by the service worker, not part of the first load; the link-preview image is only fetched by crawlers. Later visits and offline reloads come from the service worker cache.
+
+### Brand, install, family cities, Story card
+
+- **Senja** is the brand colour (plum `#6B4E71` on a sand page `#F6F1EA`; dark `#D2B4D8` on `#171218`), used only in chrome, never on level cards or chips.
+- **Level scale**: the answer card shows the level name and a five-segment scale (current one solid and taller); "level X dari 5" stays in the aria-label and in shared text. **Kapan membaik?** (levels 3–5) is one hedged line from the outlook (`improvement()` in `web/logic.js`).
+- **Pasang di layar utama**: `web/public/manifest.webmanifest` and icons in `web/public/icons/` (192, 512, 512 maskable, 180 apple-touch; rendered from `assets/*.svg` with a browser). The control uses `beforeinstallprompt` on Chromium and a two-step sheet on iOS Safari; hidden when standalone or dismissed (localStorage). `vite.config.js` adds the public app files to the service worker precache and to its version hash.
+- **Pantau kota lain**: up to 3 pinned cities (localStorage) as level-coloured chips above the answer card; the city on screen is left out of the row.
+- **Bagikan ke Story**: `web/story.js` draws a 1080×1920 PNG on a canvas (text from `storyLines()` and `STORY` in copy) inside Instagram's safe zones and shares it as a file, else downloads it. Loaded on first tap, no extra chunk.
+- Tagline "Cek asap dan kualitas udara hari ini" in the title, header, manifest and Open Graph tags; `web/public/og-image.png` is 1200×630.
 
 ### Copy rules
 

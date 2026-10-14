@@ -26,7 +26,7 @@ Residents living in the smoke, opening the page in the morning before going out.
 
 ## Design tokens (`web/tokens.css`)
 
-- Neutrals: background, surface, ink, secondary ink, line, brand indigo, light and dark.
+- Neutrals: background, surface, ink, secondary ink, line, brand **Senja** (plum on sand: light brand #6B4E71, page #F6F1EA, chip #EEE4EF/#5A3F60, mascot #B9A9BD; dark brand #D2B4D8, page #171218, chip #35283A/#E6D0EA, mascot #8F7C95; chrome only, never on level cards), light and dark.
 - Level 1–5, each: `solid`, `surface`, `ink`, `label`, `soft`, `soft-ink`, `btn`, `btn-ink`, `mascot`, `eye`. A `[data-level]` scope maps them onto `--lv-*` roles, so one attribute recolours a component.
 - Level colours mean air quality only. Neutral components never use them.
 - Type: Plus Jakarta Sans (self-hosted); weights body 500, label 600, strong 700, display 800 (headlines only). Scale 13 · 15 · 17 · 20 · 24 · 30: a 13px floor for older readers, 17px body, inputs 16px.
@@ -54,13 +54,22 @@ Voice, after a UX-writer review and a plain-language research pass on 2026-10-14
 - Level 3 work line: "Kalau bisa, kurangi kerja berat di luar. Kalau harus, istirahat lebih sering."
 - The level reads "Tidak Sehat · level 3 dari 5"; shared messages carry city, weekday, time and level.
 
+## Batch 2 (owner approved)
+
+- **Level scale**: level name plus a 5-segment scale in the answer card; the segment of the current level is solid and taller, the others sit at 30% opacity; at level 5 the active segment uses the level-5 accent. The visible "· level X dari 5" is gone; it stays in the aria-label and shared text.
+- **Kapan membaik?**: levels 3–5, first later outlook day with a lower band ("Diperkirakan mulai membaik Jumat.") or "Belum ada tanda membaik dalam n hari ke depan."; nothing at levels 1–2.
+- **PWA install**: manifest plus icons, install control in the welcome card and under the city view, dismissible; iOS Safari gets a two-step sheet.
+- **Pantau kota lain**: up to 3 pinned cities as chips at the top of the city view, picked in a sheet with checkboxes; works offline.
+- **Bagikan ke Story**: canvas card, Web Share with a file, download fallback; text kept between 14% and 80% of the height.
+- **Tagline** in title, header, manifest and Open Graph tags.
+
 ## States
 
 Loading skeleton; "Data lama" banner past 3 hours; past 12 hours or on a failed first load a neutral card with the official ISPU link; a failed refresh keeps the last data.
 
 ## Files
 
-`web/index.html` markup · `tokens.css` · `app.css` (Ionic themed to the tokens) · `fonts.css` + `fonts/` · `copy.js` · `logic.js` (pure functions) · `ionic.js` (CSS and the custom elements in use) · `app.js` (fetch and render) · `sw.js` (service worker template) · `public/robots.txt`. `vite.config.js` bundles them and adds `data/latest.json` and the final `sw.js` to `dist/`.
+`web/index.html` markup · `story.js` (Story card canvas) · `public/` (manifest, icons, og image) · `tokens.css` · `app.css` (Ionic themed to the tokens) · `fonts.css` + `fonts/` · `copy.js` · `logic.js` (pure functions) · `ionic.js` (CSS and the custom elements in use) · `app.js` (fetch and render) · `sw.js` (service worker template) · `public/robots.txt`. `vite.config.js` bundles them and adds `data/latest.json` and the final `sw.js` to `dist/`.
 
 ## Testing
 
@@ -71,4 +80,4 @@ Loading skeleton; "Data lama" banner past 3 hours; past 12 hours or on a failed 
 
 ## Budget
 
-First visit transfers about 164 KB gzip: HTML 3.6 + CSS 8.4 + JS 121.6 + font 27.4 + data 3.2 (raw 13.7 + 36.9 + 538 + 27.3 + 44.3). Most of the JS is Ionic's components (both platform styles are included per component). Budget, a little above the measurement: **175 KB gzip for a first visit, of which JS 130 KB**. The earlier native page was 21 KB gzip without fonts; the owner accepted the larger payload for the Ionic look, and the service worker makes every later visit and offline open free.
+First visit transfers about 170 KB gzip after batch 2: HTML 4.3 + CSS 9.0 + JS 126.5 + font 27.4 + data 3.2 (raw 17.4 + 40.0 + 547 + 27.3 + 44.3). Most of the JS is Ionic's components (both platform styles are included per component). Budget, a little above the measurement: **175 KB gzip for a first visit, of which JS 130 KB**. The earlier native page was 21 KB gzip without fonts; the owner accepted the larger payload for the Ionic look, and the service worker makes every later visit and offline open free.
