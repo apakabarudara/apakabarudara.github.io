@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import { LEVELS, STORY } from '../web/copy.js';
 import {
   activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
-  previewOverride, rainKind, rankByLevel, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow
+  outlookLines, previewOverride, rainKind, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom
 } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
@@ -333,5 +333,60 @@ describe('improvedFrom ("Membaik sejak terakhir kamu cek")', () => {
     assert.equal(improvedFrom(5, 3), null);
     assert.equal(improvedFrom(undefined, 1), null);
     assert.equal(improvedFrom('3', 1), null);
+  });
+});
+
+describe('worsenedFrom', () => {
+  it('returns the earlier level only when the level got worse, at every level', () => {
+    for (const [previous, level] of [[1, 2], [2, 3], [3, 4], [4, 5], [1, 5]]) assert.equal(worsenedFrom(previous, level), previous);
+    assert.equal(worsenedFrom(3, 3), null);
+    assert.equal(worsenedFrom(4, 2), null);
+  });
+
+  it('is null without a stored level', () => {
+    assert.equal(worsenedFrom(undefined, 4), null);
+    assert.equal(worsenedFrom('3', 4), null);
+  });
+});
+
+describe('Story outlook and ranking cards', () => {
+  const day = (date: string, band: number) => ({ date, band, pm25_mean: 1, rain_mm: 0 });
+  const loc = (id: string, name: string, band: number, value: number) => ({ id, name: `${name}, Sumatera`, pm25_model: { band, value } });
+  const names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
+  const locations = names.map((n, i) => loc(n.toLowerCase(), `Kota ${n}`, (i % 5) + 1, i));
+  const levelName = (band: number): string => LEVELS[band].name;
+  const outlook = outlookLines({
+    city: 'Palembang', level: 3, copy: LEVELS[3], story: STORY, levelName, weekday: (d: string) => `H${d.slice(-2)}`, day: 'Rabu 10.00',
+    days: [day('2026-10-15', 2), day('2026-10-16', 4), day('2026-10-17', 5), day('2026-10-18', 1)]
+  });
+  const ranking = rankingLines({ locations, currentId: 'c', levelName, cityName: (l: { name: string }) => l.name.split(',')[0], story: STORY, day: 'Rabu 10.00' });
+
+  it('outlook: city, "Perkiraan:" level, 3 tiles with weekday and level name', () => {
+    assert.equal(outlook.kind, 'outlook');
+    assert.equal(outlook.levelName, 'Perkiraan: Tidak Sehat');
+    assert.deepEqual(outlook.tiles, [
+      { label: 'H15', level: 2, name: 'Sedang' }, { label: 'H16', level: 4, name: 'Sangat Tidak Sehat' }, { label: 'H17', level: 5, name: 'Berbahaya' }
+    ]);
+    assert.equal(outlook.heading, 'Perkiraan 3 hari ke depan');
+  });
+
+  it('ranking: all rows thickest smoke first, the viewer city marked', () => {
+    assert.equal(ranking.rows.length, 13);
+    const levels = ranking.rows.map((r: { level: number }) => r.level);
+    assert.deepEqual(levels, [...levels].sort((a, b) => b - a));
+    assert.deepEqual(ranking.rows.filter((r: { current: boolean }) => r.current).map((r: { city: string }) => r.city), ['Kota C']);
+    assert.equal(ranking.title, 'Perkiraan asap hari ini');
+  });
+
+  it('rankRowHeight: 13 rows fit between y 270 and 1360, whole pixels', () => {
+    const h = rankRowHeight(13);
+    assert.equal(Number.isInteger(h), true);
+    assert.ok(h * 13 <= 1360 - 270 && (h + 1) * 13 > 1360 - 270);
+  });
+
+  it('no line on the new cards has a banned word, advice or "Panduan"', () => {
+    const text = JSON.stringify([outlook, ranking]);
+    assert.doesNotMatch(text, /Panduan|\baman\b|akurat|pasti|gratis|boleh|harus/i);
+    assert.doesNotMatch(text, /µg|PM2/);
   });
 });

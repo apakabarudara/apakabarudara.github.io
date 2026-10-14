@@ -119,6 +119,7 @@ export const UI = {
   levelLabel: (name, level) => `${name} · level ${level} dari 5`,
   scaleLabel: level => `level ${level} dari 5`,
   betterSince: previous => `Perkiraannya membaik sejak terakhir kamu cek (sebelumnya ${previous}).`,
+  worseSince: previous => `Perkiraannya memburuk sejak terakhir kamu cek (sebelumnya ${previous}).`,
   improveOn: weekday => `Diperkirakan mulai membaik ${weekday}.`,
   improveNone: days => `Perkiraan ${days} hari ke depan belum menunjukkan perbaikan.`,
   guideTitle: 'Kalau levelnya memang begini, panduan ISPU-nya:',
@@ -213,6 +214,9 @@ export const UI = {
 
   share: 'Bagikan',
   storyButton: 'Story',
+  storyChoiceToday: 'Kota ini hari ini',
+  storyChoice3d: 'Kota ini 3 hari ke depan',
+  storyChoiceRank: 'Peringkat 13 kota',
   storySaved: 'Gambar diunduh. Unggah ke Story dari galeri. Kalau tidak muncul, buka halaman ini di Safari atau Chrome.',
   storyLinkCopied: 'Link kota ini sudah disalin. Di Instagram, tambahkan stiker Link lalu tempel.',
   storyTapAgain: 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.',
@@ -267,6 +271,8 @@ export const STORY = {
   levelName: name => `Perkiraan: ${name}`,
   stamp: day => `Diperbarui ${day}`,
   guide: GUIDE_IN_LINK,
+  outlookHeading: days => `Perkiraan ${days} hari ke depan`,
+  rankTitle: 'Perkiraan asap hari ini',
   footer: 'Cek kota sebelum keluar',
   footerLight: 'Cek kotamu sebelum keluar',
   url: SITE_HOST

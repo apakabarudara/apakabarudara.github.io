@@ -119,6 +119,81 @@ function scale(ctx, centerX, baseY, level) {
   ctx.globalAlpha = 1;
 }
 
+const INK = '#261F27';
+// Content stays between y = 270 and y = 1340: the 240 px above Instagram's bottom band is left empty for the Link sticker.
+const RANK_TOP = 395;
+const RANK_BOTTOM = 1295;
+
+function centered(ctx, value, y, size, weight, color) {
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.font = `${weight} ${size}px ${FONT}`;
+  ctx.fillText(value, W / 2, y);
+}
+
+/** The 3-day outlook card: city, today's level and scale, then one level-coloured tile per upcoming day. */
+function drawOutlook(ctx, lines) {
+  const c = LEVEL[lines.level];
+  let size = 104;
+  ctx.font = `800 ${size}px ${FONT}`;
+  while (ctx.measureText(lines.city).width > 880 && size > 60) ctx.font = `800 ${--size}px ${FONT}`;
+  centered(ctx, lines.city, 360, size, 800, INK);
+  centered(ctx, lines.levelName, 450, 56, 800, c.label);
+  scale(ctx, W / 2, 540, lines.level);
+  centered(ctx, lines.heading, 690, 44, 700, INK_2);
+  const gap = 30;
+  const tw = 300;
+  const x0 = (W - (3 * tw + 2 * gap)) / 2;
+  lines.tiles.forEach((tile, i) => {
+    const x = x0 + i * (tw + gap);
+    const t = LEVEL[tile.level];
+    ctx.fillStyle = t.mascot;
+    roundRect(ctx, x, 750, tw, 400, 48);
+    ctx.fill();
+    ctx.fillStyle = t.eye;
+    ctx.textAlign = 'center';
+    ctx.font = `800 60px ${FONT}`;
+    ctx.fillText(tile.label, x + tw / 2, 850);
+    ctx.font = `700 40px ${FONT}`;
+    const rows = wrap(ctx, tile.name, tw - 48);
+    rows.forEach((row, r) => ctx.fillText(row, x + tw / 2, 1010 + r * 50));
+  });
+  centered(ctx, lines.stamp, 1230, 34, 600, INK_2);
+  centered(ctx, lines.url, 1290, 38, 600, BRAND);
+}
+
+/** The ranking card: all cities in rows of equal height, a ring on the viewer's city. */
+function drawRanking(ctx, lines) {
+  centered(ctx, lines.title, 320, 60, 800, INK);
+  centered(ctx, lines.stamp, 366, 32, 600, INK_2);
+  const h = Math.floor((RANK_BOTTOM - RANK_TOP) / lines.rows.length);
+  lines.rows.forEach((row, i) => {
+    const y = RANK_TOP + i * h;
+    const mid = y + h / 2;
+    if (row.current) {
+      ctx.strokeStyle = BRAND;
+      ctx.lineWidth = 5;
+      roundRect(ctx, 64, y + 3, W - 128, h - 6, (h - 6) / 2);
+      ctx.stroke();
+    }
+    ctx.fillStyle = LEVEL[row.level].mascot;
+    ctx.beginPath();
+    ctx.arc(116, mid, 17, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = INK;
+    ctx.font = `700 38px ${FONT}`;
+    ctx.fillText(row.city, 160, mid);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = row.level === 5 ? INK : LEVEL[row.level].label; // level 5's label is made for the dark card
+    ctx.font = `600 34px ${FONT}`;
+    ctx.fillText(row.name, W - 112, mid);
+    ctx.textBaseline = 'alphabetic';
+  });
+  centered(ctx, lines.url, 1335, 38, 600, BRAND);
+}
+
 /** Waits for the self-hosted font, draws the card and resolves with a PNG blob. */
 export async function renderStory(lines) {
   await Promise.all(WEIGHTS.map(w => document.fonts.load(`${w} 60px "Plus Jakarta Sans"`)));
@@ -126,12 +201,20 @@ export async function renderStory(lines) {
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext('2d');
-  const c = LEVEL[lines.level];
-  const mid = W / 2;
   ctx.fillStyle = PAGE;
   ctx.fillRect(0, 0, W, H);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'alphabetic';
+  if (lines.kind === 'outlook') drawOutlook(ctx, lines);
+  else if (lines.kind === 'ranking') drawRanking(ctx, lines);
+  else drawCity(ctx, lines);
+  return new Promise((resolve, reject) => canvas.toBlob(blob => (blob ? resolve(blob) : reject(new Error('no blob'))), 'image/png'));
+}
+
+/** The default card: city, level, scale, quip, stamp. */
+function drawCity(ctx, lines) {
+  const c = LEVEL[lines.level];
+  const mid = W / 2;
 
   // Levels 1–2 have a quip and room to spare: a taller card and a bigger mascot fill the top and bottom bands, text still inside the safe zones.
   const light = lines.level <= 2;
@@ -169,5 +252,4 @@ export async function renderStory(lines) {
 
   text(lines.footer, at.footer, 48, 800, BRAND);
   text(lines.url, at.url, 38, 600, INK_2);
-  return new Promise((resolve, reject) => canvas.toBlob(blob => (blob ? resolve(blob) : reject(new Error('no blob'))), 'image/png'));
 }

@@ -182,6 +182,12 @@ export function dailyQuip(quips, today) {
 /** The level seen last time when this check is better and good (level 1–2); otherwise null. */
 export const improvedFrom = (previous, level) => (Number.isInteger(previous) && level < previous && level <= 2 ? previous : null);
 
+/** The level seen last time when this check is worse; otherwise null. Any level. */
+export const worsenedFrom = (previous, level) => (Number.isInteger(previous) && level > previous ? previous : null);
+
+/** Row height for `count` ranking rows between two y positions (whole pixels, so rows never run past `bottom`). */
+export const rankRowHeight = (count, top = 270, bottom = 1360) => Math.floor((bottom - top) / count);
+
 /** Cache key for a drawn Story card: everything printed on it. */
 export function storyKey(lines) {
   return JSON.stringify(lines);
@@ -191,6 +197,7 @@ export function storyKey(lines) {
 export function storyLines({ city, level, copy, story, quip, improve, day }) {
   const light = level <= 2;
   return {
+    kind: 'city',
     city,
     level,
     levelName: story.levelName(copy.name),
@@ -216,4 +223,30 @@ export const relativeDay = (iso, now) => (localDate(new Date(iso)) === localDate
 export function feedbackUrl(base, param, cityName) {
   if (!param || !cityName) return base;
   return `${base}${base.includes('?') ? '&' : '?'}${param}=${encodeURIComponent(cityName)}`;
+}
+
+/** The 3-day outlook card: today's level, then up to 3 upcoming days. `weekday` turns a YYYY-MM-DD into a short name. No advice. */
+export function outlookLines({ city, level, copy, story, days, weekday, levelName, day }) {
+  const next = days.slice(0, 3);
+  return {
+    kind: 'outlook',
+    city,
+    level,
+    levelName: story.levelName(copy.name),
+    heading: story.outlookHeading(next.length),
+    tiles: next.map(d => ({ label: weekday(d.date), level: d.band, name: levelName(d.band) })),
+    stamp: story.stamp(day),
+    url: story.url
+  };
+}
+
+/** The ranking card: every city, thickest smoke first, with the viewer's city marked. */
+export function rankingLines({ locations, currentId, levelName, cityName, story, day }) {
+  return {
+    kind: 'ranking',
+    title: story.rankTitle,
+    rows: rankByLevel(locations).map(loc => ({ city: cityName(loc), level: loc.pm25_model.band, name: levelName(loc.pm25_model.band), current: loc.id === currentId })),
+    stamp: story.stamp(day),
+    url: story.url
+  };
 }

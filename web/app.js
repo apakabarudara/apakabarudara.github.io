@@ -2,7 +2,7 @@ import './ionic.js';
 import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, OFFICIAL_ISPU, POLLS, RAIN, STORY, UI } from './copy.js';
 import {
   activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
-  nearest, normalizeWatch, previewOverride, rainKind, rankByLevel, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, WET_DAY_MM
+  nearest, normalizeWatch, previewOverride, rainKind, outlookLines, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom, WET_DAY_MM
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
@@ -157,6 +157,9 @@ function renderAnswer(loc, level) {
   const before = improvedFrom(readSeen()[loc.id]?.level, level);
   $('better').textContent = before ? UI.betterSince(LEVELS[before].name) : '';
   $('better').hidden = !before;
+  const worse = preview ? null : worsenedFrom(readSeen()[loc.id]?.level, level);
+  $('worse').textContent = worse ? UI.worseSince(LEVELS[worse].name) : '';
+  $('worse').hidden = !worse;
   $('answer').classList.remove('hop');
   if (before) {
     void $('answer').offsetWidth; // restart the hop
@@ -383,56 +386,79 @@ async function share() {
   }
 }
 
-// The Story card, drawn ahead of the tap: iOS only lets navigator.share run while the tap's user activation is still live.
-let storyJob = { key: null, promise: null };
-let storyFile = { key: null, file: null };
+// The Story cards, drawn ahead of the tap: iOS only lets navigator.share run while the tap's user activation is still live.
+const storyJobs = new Map(); // key -> Promise<File>, while drawing
+const storyFiles = new Map(); // key -> File, drawn
 
-function storyInput(loc) {
+/** The three cards for a city, in the order of the chooser. The outlook card is left out when no later day is known. */
+function storyCards(loc) {
   const level = loc.pm25_model.band;
   const day = dayTime.format(new Date(loc.pm25_model.updated_at));
-  return storyLines({ city: cityName(loc), level, copy: LEVELS[level], story: STORY, quip: quipFor(level), improve: improveText(loc, level), day });
+  const days = upcomingDays(loc.outlook, localDate(new Date()));
+  const cards = [{ label: UI.storyChoiceToday, lines: storyLines({ city: cityName(loc), level, copy: LEVELS[level], story: STORY, quip: quipFor(level), improve: improveText(loc, level), day }) }];
+  if (days.length > 0) {
+    cards.push({
+      label: UI.storyChoice3d,
+      lines: outlookLines({ city: cityName(loc), level, copy: LEVELS[level], story: STORY, days, weekday: date => weekdayShort.format(dateOf(date)), levelName: band => LEVELS[band].name, day })
+    });
+  }
+  cards.push({
+    label: UI.storyChoiceRank,
+    lines: rankingLines({ locations: report.locations, currentId: loc.id, levelName: band => LEVELS[band].name, cityName, story: STORY, day })
+  });
+  return cards.map(card => ({ ...card, key: storyKey(card.lines) }));
 }
 
 function makeStory(lines, key) {
-  if (storyFile.key === key) return Promise.resolve(storyFile.file);
-  if (storyJob.key === key) return storyJob.promise;
+  if (storyFiles.has(key)) return Promise.resolve(storyFiles.get(key));
+  if (storyJobs.has(key)) return storyJobs.get(key);
   const promise = import('./story.js')
     .then(({ renderStory }) => renderStory(lines))
     .then(blob => {
       const file = new File([blob], 'apa-kabar-udara.png', { type: 'image/png' });
-      storyFile = { key, file };
+      storyFiles.set(key, file);
       return file;
     })
-    .finally(() => {
-      if (storyJob.promise === promise) storyJob = { key: null, promise: null };
-    });
-  storyJob = { key, promise };
+    .finally(() => storyJobs.delete(key));
+  storyJobs.set(key, promise);
   return promise;
 }
 
 function prepareStory() {
   const loc = selected();
   if (!loc || preview) return;
-  const lines = storyInput(loc);
-  const key = storyKey(lines);
-  if (storyFile.key === key || storyJob.key === key) return;
-  const run = () => { makeStory(lines, key).catch(() => {}); }; // a failed warm-up is retried by the tap
+  const run = () => { for (const { lines, key } of storyCards(loc)) makeStory(lines, key).catch(() => {}); }; // a failed warm-up is retried by the tap
   if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 3000 });
   else setTimeout(run, 300);
 }
 
-/** The Story card as a PNG: shared as a file where the browser can (phones offer Instagram Story), otherwise downloaded. */
-async function shareStory() {
+let storySheet = null; // one action sheet, re-presented with the buttons of the city on screen
+
+/** The "Story" tap opens a small action sheet; each choice shares its own, already drawn card inside that choice's tap. */
+function chooseStory() {
   const loc = selected();
   if (!report || !loc || preview) return;
-  const lines = storyInput(loc);
-  const key = storyKey(lines);
+  $('shareNote').textContent = '';
+  if (!storySheet) {
+    storySheet = el('ion-action-sheet');
+    document.querySelector('ion-app').append(storySheet);
+  }
+  const sheet = storySheet;
+  sheet.buttons = [
+    ...storyCards(loc).map(card => ({ text: card.label, handler: () => { shareStory(loc, card); } })),
+    { text: UI.cancel, role: 'cancel' }
+  ];
+  sheet.present();
+}
+
+/** A card as a PNG: shared as a file where the browser can (phones offer Instagram Story), otherwise downloaded. */
+async function shareStory(loc, { lines, key }) {
   $('shareNote').textContent = '';
   // Instagram Stories take no web link from the web: copy it for the Link sticker. Not awaited, and before share, which consumes the tap.
   let linkCopied = false;
   navigator.clipboard?.writeText(cityLink(`${location.origin}${location.pathname}`, loc.id)).then(() => { linkCopied = true; }, () => {});
   // Ready file: share is the first await, so the tap's activation is still live.
-  const ready = storyFile.key === key ? storyFile.file : null;
+  const ready = storyFiles.get(key) ?? null;
   let file = ready;
   try {
     if (ready && navigator.canShare?.({ files: [ready] })) {
@@ -442,7 +468,7 @@ async function shareStory() {
     }
     file = ready ?? (await makeStory(lines, key));
   } catch (error) {
-    shareFailed(error);
+    shareFailed(error, key);
     return;
   }
   try {
@@ -458,13 +484,13 @@ async function shareStory() {
     setTimeout(() => URL.revokeObjectURL(link.href), 10000);
     $('shareNote').textContent = linkCopied ? `${UI.storySaved} ${UI.storyLinkCopied}` : UI.storySaved;
   } catch (error) {
-    shareFailed(error);
+    shareFailed(error, key);
   }
 }
 
-function shareFailed(error) {
+function shareFailed(error, key) {
   if (error?.name === 'AbortError') return; // share sheet dismissed
-  $('shareNote').textContent = error?.name === 'NotAllowedError' && storyFile.file ? UI.storyTapAgain : UI.storyFailed;
+  $('shareNote').textContent = error?.name === 'NotAllowedError' && storyFiles.has(key) ? UI.storyTapAgain : UI.storyFailed;
 }
 
 // Pantau kota lain: up to 3 pinned cities as chips; the one on screen is left out of the row.
@@ -612,7 +638,7 @@ $('methodFeedbackBtn').href = FEEDBACK_URL;
 $('methodFeedbackBtn').hidden = !FEEDBACK_URL;
 $('iosClose').addEventListener('click', () => $('iosSheet').dismiss());
 $('watchClose').addEventListener('click', () => $('watchSheet').dismiss());
-$('story').addEventListener('click', shareStory);
+$('story').addEventListener('click', chooseStory);
 for (const box of document.querySelectorAll('[data-install]')) {
   box.querySelector('.install-go').addEventListener('click', install);
   box.querySelector('.install-x').addEventListener('click', () => {
