@@ -190,9 +190,12 @@ addEventListener('error', e => {
       </div>
 
       <footer class="footer">
-        <p data-copy="footerDisclaimer"></p>
-        <p><span data-copy="creditsIntro"></span> <a href="https://open-meteo.com/" target="_blank" rel="noopener" data-copy="creditOpenMeteo"></a> <span data-copy="creditOpenMeteoLicence"></span> · <span id="camsCredit"></span> · <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener" data-copy="creditFirms"></a> · <a href="https://worldview.earthdata.nasa.gov/" target="_blank" rel="noopener" data-copy="creditGibs"></a> · <span data-copy="creditIspu"></span></p>
-        <div class="fine-row">
+        <p id="disclaimer" class="disclaimer" data-copy="footerDisclaimer"></p>
+        <div class="fine-list">
+          <details class="fine">
+            <summary data-copy="creditsTitle"></summary>
+            <p><a href="https://open-meteo.com/" target="_blank" rel="noopener" data-copy="creditOpenMeteo"></a> <span data-copy="creditOpenMeteoLicence"></span> · <span id="camsCredit"></span> · <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener" data-copy="creditFirms"></a> · <a href="https://worldview.earthdata.nasa.gov/" target="_blank" rel="noopener" data-copy="creditGibs"></a> · <span data-copy="creditIspu"></span></p>
+          </details>
           <details class="fine">
             <summary data-copy="privacyTitle"></summary>
             <p data-copy="privacy"></p>

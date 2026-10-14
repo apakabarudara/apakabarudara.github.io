@@ -631,6 +631,12 @@ for (const node of document.querySelectorAll('[data-copy]')) node.textContent = 
 for (const node of document.querySelectorAll('[data-method]')) node.textContent = UI[node.dataset.method][Number(node.dataset.i)];
 for (const node of document.querySelectorAll('[data-copy-credit]')) node.textContent = UI.creditLine[Number(node.dataset.copyCredit)];
 for (const node of document.querySelectorAll('[data-copy-label]')) node.setAttribute('aria-label', UI[node.dataset.copyLabel]);
+{ // the emergency number in the disclaimer becomes a tel: link
+  const [before, after] = UI.footerDisclaimer.split(EMERGENCY_NUMBER);
+  const call = el('a', '', EMERGENCY_NUMBER);
+  call.href = `tel:${EMERGENCY_NUMBER}`;
+  $('disclaimer').replaceChildren(before, call, after);
+}
 $('iosStep1').textContent = UI.iosSteps[0];
 $('iosStep2').textContent = UI.iosSteps[1];
 $('health').href = mapsSearchUrl(UI.healthQuery);

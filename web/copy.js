@@ -254,7 +254,7 @@ export const UI = {
   feedbackNote: 'Terbuka di Tally. Bisa lapor masalah, kasih saran, atau minta kota baru.',
 
   footerDisclaimer: `Level dan angka di sini perkiraan, bukan hasil alat ukur. Untuk keputusan kesehatan, ikuti panduan resmi. Darurat kesehatan: ${EMERGENCY_NUMBER}.`,
-  creditsIntro: 'Sumber data:',
+  creditsTitle: 'Sumber data',
   creditOpenMeteo: 'Weather data by Open-Meteo.com',
   creditOpenMeteoLicence: '(CC BY 4.0)',
   creditCams: year => `Contains modified Copernicus Atmosphere Monitoring Service information ${year}`,

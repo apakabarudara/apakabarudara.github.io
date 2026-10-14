@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { ACTIVITIES, FACTS, LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
+import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 
 const ISPU_NAMES = ['Baik', 'Sedang', 'Tidak Sehat', 'Sangat Tidak Sehat', 'Berbahaya'];
 const SLANG = /\b(gas|halu|plis|lebay|ngebut|vonis|faskes|mantan|DJ|sinetron)\b/i;
@@ -236,6 +236,12 @@ describe('estimates and suggestions', () => {
 
   it('starts the expired-report share fallback with the estimate prefix', () => {
     assert.equal(UI.shareFallback('Apa Kabar Udara'), 'Apa Kabar Udara (perkiraan, bukan angka resmi)\nApa Kabar Udara');
+  });
+
+  it('keeps the emergency number in the disclaimer and labels the source fold', () => {
+    assert.ok(UI.footerDisclaimer.includes(EMERGENCY_NUMBER));
+    assert.equal(UI.footerDisclaimer.split(EMERGENCY_NUMBER).length, 2);
+    for (const line of [UI.creditsTitle, UI.footerDisclaimer]) assert.doesNotMatch(line, /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i, line);
   });
 
   it('never uses "boleh", "parah", "pasti", "akurat" or "aman" in user-facing copy', () => {
