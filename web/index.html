@@ -108,20 +108,16 @@ addEventListener('error', e => {
           <span class="mascot" aria-hidden="true"><svg class="mascot-art" viewBox="0 0 72 64"><use class="body" href="#blob"/><ellipse class="shine" cx="31" cy="21" rx="6" ry="3.2" transform="rotate(-18 31 21)"/><path class="brow" d="M24 35l6-2.5M48 35l-6-2.5"/><ellipse class="eye" cx="29" cy="40" rx="3" ry="3.6"/><ellipse class="eye" cx="43" cy="40" rx="3" ry="3.6"/><ellipse class="cheek" cx="22" cy="46" rx="4" ry="2.4"/><ellipse class="cheek" cx="50" cy="46" rx="4" ry="2.4"/><path class="mouth happy" d="M31 46q5 5 10 0"/><path class="mouth flat" d="M32 47.5h8"/><path class="mouth sad" d="M31 49q5-5 10 0"/><g class="mask"><path class="strap" d="M25 46l-11-4M47 46l11-4"/><rect x="25" y="43" width="22" height="12" rx="5"/><path class="pleat" d="M29 47.5h14M29 51h14"/></g></svg></span>
           <p class="lvl"><span class="eyebrow" data-copy="eyebrow"></span><span id="scale" class="scale" role="img"><i></i><i></i><i></i><i></i><i></i></span></p>
           <h2 id="headline" class="headline"><span id="levelName"></span> <span id="levelOf" class="of"></span></h2>
-          <p id="desc" class="desc"></p>
           <p id="quip" class="quip"></p>
           <p id="better" class="improve" hidden></p>
           <div id="guide" class="guide">
             <h3 data-copy="guideTitle"></h3>
             <p id="guideSensitive"><b data-copy="guideSensitive"></b> <span></span></p>
             <p id="guideEveryone"><b data-copy="guideEveryone"></b> <span></span></p>
-            <a id="guideSource" class="guide-src" target="_blank" rel="noopener" data-copy="guideSource"></a>
-            <a class="guide-src" href="https://peraturan.bpk.go.id/Details/163466/p" target="_blank" rel="noopener" data-copy="guideRegulation"></a>
-            <a class="guide-src" href="https://www.who.int/europe/news-room/questions-and-answers/item/public-health-advice-during-the-wildfires--how-to-protect-your-health-and-keep-safe" target="_blank" rel="noopener" data-copy="guideWho"></a>
+            <button id="guideMore" class="guide-src" type="button" data-copy="guideMore"></button>
           </div>
-          <p class="guide-note" data-copy="guideCaution"></p>
           <p id="improve" class="improve" hidden></p>
-          <div id="symptoms" class="symptoms"><p data-copy="symptomsMild"></p><p data-copy="symptomsEmergency"></p></div>
+          <div id="symptoms" class="symptoms"><p data-copy="symptoms"></p></div>
           <div class="btns">
             <ion-button id="health" class="lv-btn" target="_blank" rel="noopener"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-plus"/></svg><span data-copy="healthButton"></span></ion-button>
             <ion-button id="call" class="lv-ghost" fill="outline" href="tel:119"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-phone"/></svg>119</ion-button>
@@ -221,7 +217,15 @@ addEventListener('error', e => {
         <h2 id="aboutTitle" data-copy="explainTitle"></h2>
         <ion-button id="aboutClose" fill="clear"><span data-copy="close"></span></ion-button>
       </div>
+      <p id="aboutDesc" class="small"></p>
       <div id="explain" class="explain"></div>
+      <p class="small" data-copy="guideCaution"></p>
+      <div class="sources">
+        <p class="small"><b data-copy="sourcesTitle"></b></p>
+        <a id="guideSource" class="guide-src" target="_blank" rel="noopener" data-copy="guideSource"></a>
+        <a class="guide-src" href="https://peraturan.bpk.go.id/Details/163466/p" target="_blank" rel="noopener" data-copy="guideRegulation"></a>
+        <a class="guide-src" href="https://www.who.int/europe/news-room/questions-and-answers/item/public-health-advice-during-the-wildfires--how-to-protect-your-health-and-keep-safe" target="_blank" rel="noopener" data-copy="guideWho"></a>
+      </div>
       <p class="small" data-copy="medicalNote"></p>
       <button id="methodFromAbout" class="sheet-link" type="button" data-copy="explainMethod"></button>
       <ion-button id="official" class="wide" expand="block" fill="outline" target="_blank" rel="noopener"><span data-copy="official"></span><svg class="ic" slot="end" aria-hidden="true"><use href="#i-arrow"/></svg></ion-button>

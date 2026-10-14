@@ -152,7 +152,7 @@ function renderAnswer(loc, level) {
   $('improve').textContent = better ?? '';
   $('improve').hidden = !better;
   const official = OFFICIAL_ISPU[level];
-  $('desc').textContent = official.description;
+  $('aboutDesc').textContent = official.description;
   const quip = quipFor(level);
   $('quip').textContent = quip ?? '';
   $('quip').hidden = !quip;
@@ -601,6 +601,7 @@ for (const id of ['about', 'method', 'iosSheet', 'watchSheet']) {
 $('watchSoloBtn').addEventListener('click', openWatchSheet);
 const sheet = $('about');
 $('aboutBtn').addEventListener('click', () => sheet.present());
+$('guideMore').addEventListener('click', () => sheet.present());
 $('aboutClose').addEventListener('click', () => sheet.dismiss());
 $('methodClose').addEventListener('click', () => $('method').dismiss());
 $('methodLink').addEventListener('click', () => $('method').present());

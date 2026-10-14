@@ -131,9 +131,8 @@ describe('household tiles', () => {
 
 describe('health lines', () => {
   it('suggests, by urgency: a mild line and a severe line, with 119 only in the severe one', () => {
-    assert.equal(UI.symptomsMild, 'Batuk terus atau mata perih? Ada baiknya periksa ke fasilitas kesehatan.');
-    assert.equal(UI.symptomsEmergency, 'Sesak napas atau nyeri dada? Sebaiknya segera cari pertolongan medis, atau hubungi 119.');
-    assert.doesNotMatch(UI.symptomsMild, /119/);
+    assert.equal(UI.symptoms, 'Batuk terus atau sesak? Periksa ke fasilitas kesehatan. Sesak berat atau nyeri dada: hubungi 119.');
+    assert.ok(UI.symptoms.indexOf('fasilitas kesehatan') < UI.symptoms.indexOf('119'));
   });
 
   it('shows both lines from level 3 and the 119 button from level 4; none before', () => {
@@ -289,7 +288,7 @@ describe('UI', () => {
   });
 
   it('words the batch 3 P1 lines as agreed', () => {
-    assert.equal(UI.stamp('11.00 WIB'), 'Diperbarui 11.00 WIB ·');
+    assert.equal(UI.stamp('11.00 WIB'), 'Diperbarui 11.00 WIB · bisa meleset ·');
     assert.equal(UI.moreTitle, 'Cek napas & fakta asap');
     assert.equal(UI.moreTitleNoFacts, 'Cek napas hari ini');
     assert.ok(FACTS.includes('El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.'));
