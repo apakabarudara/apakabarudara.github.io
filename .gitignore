@@ -3,3 +3,4 @@ dist/
 .superpowers/
 .env
 data/*.tmp
+web/public/sat/

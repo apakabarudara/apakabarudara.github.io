@@ -300,6 +300,15 @@ describe('UI', () => {
     assert.ok(LEVELS[1].quips.includes('Awan putih, langit biru.'));
   });
 
+  it('words the satellite photo lines humbly', () => {
+    assert.equal(UI.satCaption('14 Oktober 2026'), 'Foto satelit NASA, 14 Oktober 2026. Titik merah: titik panas. Kalau berawan, asap bisa tertutup awan.');
+    assert.equal(UI.satNote, 'Foto diambil saat satelit lewat, bukan saat ini.');
+    assert.equal(UI.satAlt('Palangkaraya'), 'Foto satelit NASA untuk Palangkaraya');
+    assert.equal(UI.creditGibs, 'NASA GIBS / Worldview (VIIRS)');
+    assert.ok(UI.methodSources.some(l => /^Foto satelit: .*NASA GIBS/.test(l)));
+    for (const line of [UI.satCaption('x'), UI.satNote, UI.satAlt('x'), UI.satTitle]) assert.doesNotMatch(line, /aman|akurat|pasti/i);
+  });
+
   it('credits the data sources', () => {
     assert.equal(UI.creditOpenMeteo, 'Weather data by Open-Meteo.com');
     assert.match(UI.creditCams(2026), /Copernicus Atmosphere Monitoring Service information 2026/);

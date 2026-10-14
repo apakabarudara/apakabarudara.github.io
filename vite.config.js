@@ -9,10 +9,12 @@ const SW_TEMPLATE = fileURLToPath(new URL('./web/sw.js', import.meta.url));
 
 // web/public files are copied after the bundle is generated, so the precache list has to name the app's own ones itself.
 // robots.txt is for crawlers and og-image.png for link previews; the page needs neither offline.
+// sat/ holds the hourly satellite photos: generated at build time, changing every run, so never cached with the shell.
 const NOT_PRECACHED = new Set(['robots.txt', 'og-image.png']);
+const NOT_PRECACHED_DIRS = new Set(['sat']);
 function publicFiles(dir = PUBLIC_DIR, prefix = '') {
   return readdirSync(dir, { withFileTypes: true }).flatMap(entry =>
-    entry.isDirectory() ? publicFiles(`${dir}${entry.name}/`, `${prefix}${entry.name}/`) : NOT_PRECACHED.has(entry.name) ? [] : [`${prefix}${entry.name}`]);
+    entry.isDirectory() ? (NOT_PRECACHED_DIRS.has(entry.name) ? [] : publicFiles(`${dir}${entry.name}/`, `${prefix}${entry.name}/`)) : NOT_PRECACHED.has(entry.name) ? [] : [`${prefix}${entry.name}`]);
 }
 
 /**

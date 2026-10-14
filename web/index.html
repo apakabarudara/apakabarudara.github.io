@@ -173,6 +173,11 @@ addEventListener('error', e => {
           <ion-accordion value="more">
             <ion-item slot="header" lines="none"><ion-label><h2 id="moreTitle"></h2></ion-label></ion-item>
             <div slot="content" class="fold-body more-body">
+              <figure id="satBlock" class="sat" hidden>
+                <h3 data-copy="satTitle"></h3>
+                <img id="satImg" width="480" height="480" loading="lazy" alt="">
+                <figcaption><p id="satCaption"></p><p class="note" data-copy="satNote"></p></figcaption>
+              </figure>
               <div id="factsBlock">
                 <div class="facts-head"><h3 data-copy="factsTitle"></h3><ion-button id="factsNext" fill="clear" class="small-btn"><span data-copy="factsNext"></span></ion-button></div>
                 <p id="fact"></p>
@@ -196,7 +201,7 @@ addEventListener('error', e => {
 
       <footer class="footer">
         <p data-copy="footerDisclaimer"></p>
-        <p><span data-copy="creditsIntro"></span> <a href="https://open-meteo.com/" target="_blank" rel="noopener" data-copy="creditOpenMeteo"></a> <span data-copy="creditOpenMeteoLicence"></span> · <span id="camsCredit"></span> · <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener" data-copy="creditFirms"></a> · <span data-copy="creditIspu"></span></p>
+        <p><span data-copy="creditsIntro"></span> <a href="https://open-meteo.com/" target="_blank" rel="noopener" data-copy="creditOpenMeteo"></a> <span data-copy="creditOpenMeteoLicence"></span> · <span id="camsCredit"></span> · <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener" data-copy="creditFirms"></a> · <a href="https://worldview.earthdata.nasa.gov/" target="_blank" rel="noopener" data-copy="creditGibs"></a> · <span data-copy="creditIspu"></span></p>
         <div class="fine-row">
           <details class="fine">
             <summary data-copy="privacyTitle"></summary>

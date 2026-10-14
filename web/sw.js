@@ -85,6 +85,8 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  // Satellite photos change every hour and are meaningless without their date: always the network, never a cached copy.
+  if (url.pathname.includes('/sat/')) return;
   if (url.href === DATA_URL) {
     event.respondWith(networkFirst(request, event));
     return;

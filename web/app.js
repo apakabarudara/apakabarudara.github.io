@@ -90,6 +90,7 @@ function show(view) {
   else $('city').after($('shareBlock'));
   $('shareBlock').hidden = view === 'message' || (view === 'city' && Boolean(preview));
   if (view !== 'city') {
+    $('satBlock').hidden = true;
     $('watchSolo').hidden = true;
     $('factsBlock').hidden = false;
     $('moreTitle').textContent = UI.moreTitle;
@@ -179,7 +180,38 @@ function renderAnswer(loc, level) {
   $('official').href = loc.ispu?.source_url ?? ISPU_URL;
   $('factsBlock').hidden = level >= 4; // no jokes or trivia at levels 4–5
   $('moreTitle').textContent = level >= 4 ? UI.moreTitleNoFacts : UI.moreTitle;
+  renderSat(loc);
 }
+
+// Satellite photo: sat/index.json is fetched only once the fold has been opened. Missing index, entry or file hides the block.
+const satDay = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+let satIndex = null; // Promise of the entries, or null before the fold was first opened
+let foldOpen = false;
+
+async function renderSat(loc) {
+  const block = $('satBlock');
+  if (!foldOpen) return;
+  satIndex ??= fetch('./sat/index.json', { cache: 'no-cache' }).then(res => (res.ok ? res.json() : [])).catch(() => []);
+  const entry = (await satIndex).find?.(e => e.id === loc.id);
+  if (selected()?.id !== loc.id || $('city').hidden) return;
+  if (!entry) {
+    block.hidden = true;
+    return;
+  }
+  const img = $('satImg');
+  const src = `./sat/${loc.id}.jpg?d=${entry.date}`;
+  img.onerror = () => { block.hidden = true; };
+  img.alt = UI.satAlt(cityName(loc));
+  $('satCaption').textContent = UI.satCaption(satDay.format(new Date(`${entry.date}T00:00:00Z`)));
+  if (img.getAttribute('src') !== src) img.src = src;
+  block.hidden = false;
+}
+
+document.querySelector('#more ion-accordion-group').addEventListener('ionChange', e => {
+  foldOpen = e.detail.value === 'more';
+  const loc = selected();
+  if (foldOpen && loc && !$('city').hidden) renderSat(loc);
+});
 
 function renderToday(loc, level) {
   $('todayTitle').textContent = UI.todayTitle;

@@ -8,6 +8,7 @@
   },
   "scripts": {
     "ingest": "node ingest/main.ts",
+    "satellite": "node ingest/satellite.ts",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",

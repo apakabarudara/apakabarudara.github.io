@@ -153,8 +153,8 @@ export const UI = {
   methodSources: [
     'Asap (PM2.5) per jam: model CAMS global dari Copernicus, lewat Open-Meteo. Kotak petanya sekitar 45 km.',
     'Titik panas: satelit NASA FIRMS (VIIRS, NOAA-20) dalam 100 km, 24 jam terakhir. Hanya yang tingkat yakinnya sedang atau tinggi.',
-    'Angin dan hujan: prakiraan cuaca Open-Meteo.',
-    'Datanya diperbarui setiap jam.'
+    'Foto satelit: citra warna asli NASA GIBS / Worldview (VIIRS NOAA-20), diambil saat satelit lewat.',
+    'Angin dan hujan: prakiraan cuaca Open-Meteo. Datanya diperbarui setiap jam.'
   ],
   methodLevelTitle: 'Cara menghitung level',
   methodLevel: [
@@ -234,6 +234,10 @@ export const UI = {
 
   moreTitle: 'Cek napas & fakta asap',
   moreTitleNoFacts: 'Cek napas hari ini',
+  satTitle: 'Foto satelit',
+  satAlt: kota => `Foto satelit NASA untuk ${kota}`,
+  satCaption: tanggal => `Foto satelit NASA, ${tanggal}. Titik merah: titik panas. Kalau berawan, asap bisa tertutup awan.`,
+  satNote: 'Foto diambil saat satelit lewat, bukan saat ini.',
   factsTitle: 'Fakta singkat',
   factsNext: 'Fakta lain',
   pollTitle: 'Langit di tempatmu gimana?',
@@ -246,6 +250,7 @@ export const UI = {
   creditOpenMeteoLicence: '(CC BY 4.0)',
   creditCams: year => `Contains modified Copernicus Atmosphere Monitoring Service information ${year}`,
   creditFirms: 'NASA FIRMS',
+  creditGibs: 'NASA GIBS / Worldview (VIIRS)',
   creditIspu: 'batas level: ISPU (Permen LHK P.14/2020).',
   privacyTitle: 'Privasi',
   privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban "Langit di tempatmu gimana?" tidak dikirim ke mana pun. Masukan lewat Tally tersimpan di Tally.',
