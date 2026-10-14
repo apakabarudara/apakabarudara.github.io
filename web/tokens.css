@@ -2,24 +2,24 @@
    components reach them through the --lv-* roles that [data-level] sets. tests/tokens.test.ts checks contrast. */
 :root {
   color-scheme: light;
-  --bg: #F7F4F0;
+  --bg: #F6F1EA;
   --surface: #FFFFFF;
-  --ink: #241F33;
-  --ink-2: #5B5568;
-  --line: #E9E4DD;
-  --brand: #4B3FB5;
+  --ink: #261F27;
+  --ink-2: #5F5662;
+  --line: #E8DFD4;
+  --brand: #6B4E71;
   --on-brand: #FFFFFF;
-  --brand-soft: #EDEAFF;
-  --brand-soft-ink: #3B2FA0;
-  --notice: #241F33;
+  --brand-soft: #EEE4EF;
+  --brand-soft-ink: #5A3F60;
+  --notice: #261F27;
   --notice-ink: #FFFFFF;
-  --focus: #4B3FB5;
+  --focus: #6B4E71;
   --cheek: #FF8FA3;
-  --mascot-neutral: #AFA9EC;
+  --mascot-neutral: #B9A9BD;
   --mascot-eye: #FFFFFF;
   --mask: #FFFFFF;
-  --mask-line: #241F33;
-  --shadow-sm: 0 1px 3px rgba(36, 31, 51, .08), 0 1px 2px rgba(36, 31, 51, .04);
+  --mask-line: #261F27;
+  --shadow-sm: 0 1px 3px rgba(38, 31, 39, .08), 0 1px 2px rgba(38, 31, 39, .04);
 
   --hairline: transparent;
 
@@ -51,18 +51,19 @@
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --bg: #15121A;
-    --surface: #1E1A24;
-    --ink: #F4EFF7;
-    --ink-2: #B3ACBF;
-    --line: #2E2936;
-    --brand: #B3A9FF;
-    --on-brand: #15121A;
-    --brand-soft: #2A2550;
-    --brand-soft-ink: #CFC8FF;
-    --notice: #F4EFF7;
-    --notice-ink: #15121A;
-    --focus: #B3A9FF;
+    --bg: #171218;
+    --surface: #211A23;
+    --ink: #F5EEF4;
+    --ink-2: #BDB2C2;
+    --line: #33283A;
+    --brand: #D2B4D8;
+    --on-brand: #171218;
+    --brand-soft: #35283A;
+    --brand-soft-ink: #E6D0EA;
+    --notice: #F5EEF4;
+    --notice-ink: #171218;
+    --focus: #D2B4D8;
+    --mascot-neutral: #8F7C95;
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, .4);
     --hairline: rgba(255, 255, 255, .07);
 
@@ -83,7 +84,7 @@
 [data-level] {
   --lv-surface: var(--surface); --lv-ink: var(--ink); --lv-label: var(--brand); --lv-soft: var(--brand-soft); --lv-soft-ink: var(--brand-soft-ink);
   --lv-btn: var(--ink); --lv-btn-ink: var(--surface); --lv-dot: var(--brand); --lv-mascot: var(--mascot-neutral); --lv-eye: var(--mascot-eye);
-  --lv-shadow: rgba(36, 31, 51, .14); --lv-border: var(--line);
+  --lv-shadow: rgba(38, 31, 39, .14); --lv-border: var(--line);
 }
 [data-level="1"] { --lv-surface: var(--l1-surface); --lv-ink: var(--l1-ink); --lv-label: var(--l1-label); --lv-soft: var(--l1-soft); --lv-soft-ink: var(--l1-soft-ink); --lv-btn: var(--l1-btn); --lv-btn-ink: var(--l1-btn-ink); --lv-dot: var(--l1-solid); --lv-mascot: var(--l1-mascot); --lv-eye: var(--l1-eye); --lv-shadow: var(--l1-shadow); --lv-border: var(--l1-border); }
 [data-level="2"] { --lv-surface: var(--l2-surface); --lv-ink: var(--l2-ink); --lv-label: var(--l2-label); --lv-soft: var(--l2-soft); --lv-soft-ink: var(--l2-soft-ink); --lv-btn: var(--l2-btn); --lv-btn-ink: var(--l2-btn-ink); --lv-dot: var(--l2-solid); --lv-mascot: var(--l2-mascot); --lv-eye: var(--l2-eye); --lv-shadow: var(--l2-shadow); --lv-border: var(--l2-border); }

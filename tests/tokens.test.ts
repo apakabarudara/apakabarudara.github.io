@@ -20,7 +20,7 @@ const contrast = (a: string, b: string): number => {
 
 const PAIRS: [string, string][] = [
   ['ink', 'bg'], ['ink', 'surface'], ['ink-2', 'bg'], ['ink-2', 'surface'], ['brand', 'bg'], ['brand', 'surface'],
-  ['on-brand', 'brand'], ['brand-soft-ink', 'brand-soft'], ['notice-ink', 'notice'], ['surface', 'ink'],
+  ['on-brand', 'brand'], ['brand-soft-ink', 'brand-soft'], ['brand', 'brand-soft'], ['ink', 'brand-soft'], ['notice-ink', 'notice'], ['surface', 'ink'],
   ...[1, 2, 3, 4, 5].flatMap((n): [string, string][] => [
     [`l${n}-ink`, `l${n}-surface`], [`l${n}-label`, `l${n}-surface`], [`l${n}-soft-ink`, `l${n}-soft`], [`l${n}-btn-ink`, `l${n}-btn`]
   ])
@@ -37,4 +37,29 @@ describe('tokens.css contrast', () => {
       });
     }
   }
+});
+
+describe('Senja brand', () => {
+  const light = parse(css.match(/:root\s*\{([^}]*)\}/)![1]);
+  const dark = parse(css.match(/prefers-color-scheme: dark\)\s*\{\s*:root\s*\{([^}]*)\}/)![1]);
+
+  it('uses the approved light values', () => {
+    assert.deepEqual(
+      ['brand', 'bg', 'brand-soft', 'brand-soft-ink', 'mascot-neutral', 'on-brand'].map(k => light[k]),
+      ['#6B4E71', '#F6F1EA', '#EEE4EF', '#5A3F60', '#B9A9BD', '#FFFFFF']
+    );
+  });
+
+  it('uses the approved dark values', () => {
+    assert.deepEqual(
+      ['brand', 'on-brand', 'bg', 'brand-soft', 'brand-soft-ink', 'mascot-neutral'].map(k => dark[k]),
+      ['#D2B4D8', '#171218', '#171218', '#35283A', '#E6D0EA', '#8F7C95']
+    );
+  });
+
+  it('keeps the old indigo out of the web files', () => {
+    for (const file of ['tokens.css', 'app.css', 'index.html']) {
+      assert.doesNotMatch(readFileSync(new URL(`../web/${file}`, import.meta.url), 'utf8'), /4B3FB5|B3A9FF|EDEAFF|AFA9EC|75, 63, 181/i, file);
+    }
+  });
 });
