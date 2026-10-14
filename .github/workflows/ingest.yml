@@ -4,9 +4,14 @@ on:
   schedule:
     - cron: '17 * * * *'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore: ['data/**', 'README.md']
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: ingest
@@ -22,7 +27,8 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: npm test
-      # Exits non-zero without touching data/latest.json when any source fails or validation rejects the report.
+      # Exits non-zero without touching data/latest.json when any source fails or validation rejects the report,
+      # so nothing below runs and the site keeps serving the last good deployment.
       - run: npm run ingest
         env:
           FIRMS_MAP_KEY: ${{ secrets.FIRMS_MAP_KEY }}
@@ -32,3 +38,17 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/latest.json
           git diff --cached --quiet || { git commit -m "data: refresh latest.json" && git push; }
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: ingest
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

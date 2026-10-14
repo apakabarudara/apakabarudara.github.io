@@ -6,7 +6,7 @@ Status: Phase 2 done. The ingest job writes real data and `web/index.html` reads
 
 ## How it works
 
-An hourly GitHub Actions job fetches three sources, builds one report, validates it, and commits `data/latest.json`. The page only reads that file. If any source fails or validation rejects the report, the job exits non-zero and the last good file stays.
+An hourly GitHub Actions job fetches three sources, builds one report, validates it, commits `data/latest.json`, and deploys `dist/` to GitHub Pages. The page only reads that file. If any source fails or validation rejects the report, the job stops before committing or deploying, so the site keeps the last good data and its staleness banner takes over.
 
 ```
 npm test                              # unit tests, fixtures only
@@ -50,3 +50,6 @@ Not used:
 
 1. Get a free MAP_KEY at https://firms.modaps.eosdis.nasa.gov/api/map_key/.
 2. Add it as the repository secret `FIRMS_MAP_KEY`. Until it is set, every scheduled run fails.
+3. Settings → Pages → Source: GitHub Actions. On the free plan Pages needs a public repository.
+
+A failed run emails the repo owner, which is the only alert so far.
