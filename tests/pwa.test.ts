@@ -13,12 +13,12 @@ describe('web app manifest', () => {
   const manifest = JSON.parse(read('public/manifest.webmanifest'));
 
   it('names the app and starts it standalone in Senja colours', () => {
-    assert.equal(manifest.name, 'Bisa napas gak?');
-    assert.equal(manifest.short_name, 'Bisa Napas');
+    assert.equal(manifest.name, 'Apa Kabar Udara');
+    assert.equal(manifest.short_name, 'Kabar Udara');
     assert.equal(manifest.start_url, './');
     assert.equal(manifest.display, 'standalone');
     assert.equal(manifest.lang, 'id');
-    assert.equal(manifest.description, 'Cek asap dan kualitas udara hari ini');
+    assert.equal(manifest.description, 'Perkiraan asap & kualitas udara hari ini');
     assert.equal(manifest.background_color, '#F6F1EA');
   });
 
@@ -31,7 +31,7 @@ describe('web app manifest', () => {
 describe('page head', () => {
   const html = read('index.html');
   it('carries the tagline in the title and Open Graph tags with a 1200×630 image', () => {
-    assert.match(html, /<title>Bisa napas gak\? · Cek asap dan kualitas udara hari ini<\/title>/);
+    assert.match(html, /<title>Apa Kabar Udara · Perkiraan asap & kualitas udara hari ini<\/title>/);
     for (const tag of ['og:title', 'og:description', 'og:type" content="website', 'og:url" content="https://bisanapasgak.github.io/', 'og:locale" content="id_ID', 'og:image" content="https://bisanapasgak.github.io/og-image.png']) {
       assert.ok(html.includes(`property="${tag}"`), tag);
     }

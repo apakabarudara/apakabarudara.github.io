@@ -189,8 +189,8 @@ describe('estimates and suggestions', () => {
     assert.equal(UI.overviewSub(12), '12 kota di Sumatera dan Kalimantan, diurutkan dari perkiraan asap paling tebal. Pilih kota.');
   });
 
-  it('starts the expired-report share fallback with "Perkiraan Bisa napas gak?"', () => {
-    assert.equal(UI.shareFallback('Bisa napas gak?'), 'Perkiraan Bisa napas gak?\nBisa napas gak?');
+  it('starts the expired-report share fallback with the estimate prefix', () => {
+    assert.equal(UI.shareFallback('Apa Kabar Udara'), 'Apa Kabar Udara (perkiraan, bukan angka resmi)\nApa Kabar Udara');
   });
 
   it('never uses "boleh", "parah", "pasti", "akurat" or "aman" in user-facing copy', () => {
@@ -216,18 +216,19 @@ describe('UI', () => {
     assert.equal(UI.levelLabel('Tidak Sehat', 3), 'Tidak Sehat · level 3 dari 5');
   });
 
-  it('starts every shared text with "Perkiraan"', () => {
-    assert.match(UI.shareText('Palembang', 'Rabu 10.00', 3, LEVELS[3].headline), /^Perkiraan/);
-    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), /^Perkiraan/);
-    assert.match(UI.shareOverview, /^Perkiraan/);
+  it('starts every shared text with the brand and "perkiraan, bukan angka resmi"', () => {
+    const prefix = /^Apa Kabar Udara \(perkiraan, bukan angka resmi\)\n/;
+    assert.match(UI.shareText('Palembang', 'Rabu 10.00', 3, LEVELS[3].headline), prefix);
+    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), prefix);
+    assert.match(UI.shareOverview, prefix);
   });
 
   it('dates shared messages with city, weekday, time, level name and "level X dari 5"', () => {
     assert.equal(
       UI.shareText('Palembang', 'Rabu 10.00', 3, LEVELS[3].headline),
-      'Perkiraan Bisa napas gak?\nPalembang, Rabu 10.00: Tidak Sehat (level 3 dari 5). Kurangi aktivitas di luar.'
+      'Apa Kabar Udara (perkiraan, bukan angka resmi)\nPalembang, Rabu 10.00: Tidak Sehat (level 3 dari 5). Kurangi aktivitas di luar.'
     );
-    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), /^Perkiraan Bisa napas gak\?\nPalembang, Rabu 10\.00: Baik \(level 1 dari 5\)\./);
+    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), /^Apa Kabar Udara \(perkiraan, bukan angka resmi\)\nPalembang, Rabu 10\.00: Baik \(level 1 dari 5\)\./);
   });
 
   it('words the new lines as agreed', () => {
@@ -236,7 +237,7 @@ describe('UI', () => {
     assert.equal(UI.installButton, 'Pasang di layar utama');
     assert.equal(UI.storySaved, 'Gambar diunduh. Unggah ke Story dari galeri. Kalau tidak muncul, buka halaman ini di Safari atau Chrome.');
     assert.equal(UI.storyTapAgain, 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.');
-    assert.equal(UI.tagline, 'Cek asap dan kualitas udara hari ini');
+    assert.equal(UI.tagline, 'Perkiraan asap & kualitas udara hari ini');
   });
 
   it('words the batch 3 P0 lines as agreed', () => {

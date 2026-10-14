@@ -397,7 +397,7 @@ function makeStory(lines, key) {
   const promise = import('./story.js')
     .then(({ renderStory }) => renderStory(lines))
     .then(blob => {
-      const file = new File([blob], 'bisa-napas-gak.png', { type: 'image/png' });
+      const file = new File([blob], 'apa-kabar-udara.png', { type: 'image/png' });
       storyFile = { key, file };
       return file;
     })

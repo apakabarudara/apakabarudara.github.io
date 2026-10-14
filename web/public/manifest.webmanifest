@@ -1,7 +1,7 @@
 {
-  "name": "Bisa napas gak?",
-  "short_name": "Bisa Napas",
-  "description": "Cek asap dan kualitas udara hari ini",
+  "name": "Apa Kabar Udara",
+  "short_name": "Kabar Udara",
+  "description": "Perkiraan asap & kualitas udara hari ini",
   "lang": "id",
   "start_url": "./",
   "scope": "./",

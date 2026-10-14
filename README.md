@@ -1,4 +1,4 @@
-# Bisa napas gak?
+# Apa Kabar Udara
 
 A playful, mobile-first page that tells people in Indonesia whether the air is safe to go out in during the karhutla (forest and land fire) season.
 
@@ -41,7 +41,7 @@ HTML 4.3 KB, CSS 9.3 KB, JS 127.9 KB, font 27.4 KB, data 3.3 KB: about 172 KB in
 - **Alive at levels 1–2**: the mascot floats and blinks in CSS (blink only at level 3, still at 4–5 and on the neutral card; all off under `prefers-reduced-motion`). One light line per day (`LEVELS[1|2].quips`, picked by local date with `dailyQuip()`). "Membaik sejak terakhir kamu cek": the last level seen per city is kept in localStorage (never in preview); a better level 1–2 shows one line and a small hop.
 - **Pantau kota lain**: up to 3 pinned cities (localStorage) as level-coloured chips above the answer card, the city on screen left out of the row. With none pinned there is no chip row; a soft "Pantau kota lain" button sits under the share row instead.
 - **Bagikan ke Story**: `web/story.js` draws a 1080×1920 PNG on a canvas (text from `storyLines()` and `STORY` in copy) inside Instagram's safe zones and shares it as a file, else downloads it. Instagram Stories take no web link from the web, so tapping the button also copies the city link (for the Link sticker); the clipboard write is not awaited, so the share still runs inside the tap. Loaded on first tap, no extra chunk.
-- Tagline "Cek asap dan kualitas udara hari ini" in the title, the header (overview only),  manifest and Open Graph tags; `web/public/og-image.png` is 1200×630.
+- Tagline "Perkiraan asap & kualitas udara hari ini" in the title, the header (overview only),  manifest and Open Graph tags; `web/public/og-image.png` is 1200×630.
 
 ### Copy rules
 

@@ -89,13 +89,16 @@ export const RAIN = { none: 'Tidak hujan', some: 'Ada hujan', heavy: 'Hujan leba
 
 export const EMERGENCY_NUMBER = '119';
 
+/** The public address, written once. The Open Graph tags in index.html and the README repeat it as static text. */
+export const SITE_HOST = 'bisanapasgak.github.io';
+
 /** First line of every shared text: forwarded without context, a claim reads as a hoax unless it says it is an estimate. */
-const SHARE_PREFIX = 'Perkiraan Bisa napas gak?\n';
+const SHARE_PREFIX = 'Apa Kabar Udara (perkiraan, bukan angka resmi)\n';
 
 export const UI = {
   loadingHeadline: 'Mengecek udara…',
-  brand: 'Bisa napas gak?',
-  tagline: 'Cek asap dan kualitas udara hari ini',
+  brand: 'Apa Kabar Udara',
+  tagline: 'Perkiraan asap & kualitas udara hari ini',
   beta: 'BETA',
   welcome: hello => `${hello} Kamu di kota mana?`,
   overviewTitle: 'Perkiraan asap hari ini',
@@ -260,5 +263,5 @@ export const STORY = {
   stamp: day => `Diperbarui ${day}`,
   footer: 'Cek kota sebelum keluar',
   footerLight: 'Cek kotamu sebelum keluar',
-  url: 'bisanapasgak.github.io'
+  url: SITE_HOST
 };
