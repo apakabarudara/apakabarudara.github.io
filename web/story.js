@@ -158,8 +158,9 @@ function drawOutlook(ctx, lines) {
     const rows = wrap(ctx, tile.name, tw - 48);
     rows.forEach((row, r) => ctx.fillText(row, x + tw / 2, 1010 + r * 50));
   });
-  centered(ctx, lines.stamp, 1230, 34, 600, INK_2);
-  centered(ctx, lines.url, 1290, 38, 600, BRAND);
+  centered(ctx, lines.stamp, 1215, 34, 600, INK_2);
+  centered(ctx, lines.salam, 1262, 30, 600, INK_2);
+  centered(ctx, lines.url, 1312, 38, 600, BRAND);
 }
 
 /** The ranking card: all cities in rows of equal height, a ring on the viewer's city. */
@@ -191,7 +192,8 @@ function drawRanking(ctx, lines) {
     ctx.fillText(row.name, W - 112, mid);
     ctx.textBaseline = 'alphabetic';
   });
-  centered(ctx, lines.url, 1335, 38, 600, BRAND);
+  centered(ctx, lines.salam, 1328, 30, 600, INK_2);
+  centered(ctx, lines.url, 1378, 38, 600, BRAND);
 }
 
 /** Waits for the self-hosted font, draws the card and resolves with a PNG blob. */
@@ -248,8 +250,9 @@ function drawCity(ctx, lines) {
   let y = text(lines.guide, at.headline, 56, 800, c.ink, 800, 1.18);
   if (lines.quip) y = text(lines.quip, y + at.quipGap, at.quipSize, 600, c.ink, 800, 1.3);
   if (lines.improve) y = text(lines.improve, y + 76, 40, 700, c.label, 860, 1.3);
-  text(lines.stamp, cardBottom - 56, 34, 600, c.label);
+  text(lines.stamp, cardBottom - 96, 34, 600, c.label);
 
+  text(lines.salam, cardBottom - 52, 28, 600, c.label);
   text(lines.footer, at.footer, 48, 800, BRAND);
   text(lines.url, at.url, 38, 600, INK_2);
 }

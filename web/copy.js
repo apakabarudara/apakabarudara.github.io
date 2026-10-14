@@ -280,6 +280,7 @@ export const STORY = {
   guide: GUIDE_IN_LINK,
   outlookHeading: days => `Perkiraan ${days} hari ke depan`,
   rankTitle: 'Perkiraan asap hari ini',
+  salam: 'Turut prihatin untuk warga yang terdampak asap.',
   footer: 'Cek kota sebelum keluar',
   footerLight: 'Cek kotamu sebelum keluar',
   url: SITE_HOST

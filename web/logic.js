@@ -206,6 +206,7 @@ export function storyLines({ city, level, copy, story, quip, improve, day }) {
     improve,
     stamp: story.stamp(day),
     footer: light ? story.footerLight : story.footer,
+    salam: story.salam,
     url: story.url
   };
 }
@@ -236,6 +237,7 @@ export function outlookLines({ city, level, copy, story, days, weekday, levelNam
     heading: story.outlookHeading(next.length),
     tiles: next.map(d => ({ label: weekday(d.date), level: d.band, name: levelName(d.band) })),
     stamp: story.stamp(day),
+    salam: story.salam,
     url: story.url
   };
 }
@@ -247,6 +249,7 @@ export function rankingLines({ locations, currentId, levelName, cityName, story,
     title: story.rankTitle,
     rows: rankByLevel(locations).map(loc => ({ city: cityName(loc), level: loc.pm25_model.band, name: levelName(loc.pm25_model.band), current: loc.id === currentId })),
     stamp: story.stamp(day),
+    salam: story.salam,
     url: story.url
   };
 }
