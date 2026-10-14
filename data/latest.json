@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T07:45:42.763Z",
+  "generated_at": "2026-10-14T07:46:16.927Z",
   "locations": [
     {
       "id": "pekanbaru",
@@ -22,7 +22,7 @@
         "count": 2,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -171,7 +171,7 @@
         "count": 1,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -320,7 +320,7 @@
         "count": 66,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -469,7 +469,7 @@
         "count": 376,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -618,7 +618,7 @@
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Barat laut",
       "outlook": [
@@ -767,7 +767,7 @@
         "count": 75,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Barat daya",
       "outlook": [
@@ -916,7 +916,7 @@
         "count": 2778,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -1065,7 +1065,7 @@
         "count": 1513,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Selatan",
       "outlook": [
@@ -1214,7 +1214,7 @@
         "count": 1253,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Timur laut",
       "outlook": [
@@ -1363,7 +1363,7 @@
         "count": 449,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -1512,7 +1512,7 @@
         "count": 69,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -1661,7 +1661,7 @@
         "count": 96,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -1810,7 +1810,7 @@
         "count": 3,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T07:45:42.763Z"
+        "updated_at": "2026-10-14T07:46:16.927Z"
       },
       "wind_dir": "Timur",
       "outlook": [
