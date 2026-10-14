@@ -176,6 +176,10 @@ export const UI = {
   methodMaker: 'Proyek kecil yang dibuat sukarela, dengan sepenuh hati. Masih terus belajar.',
   methodFeedback: 'Kalau ada yang menurutmu salah, kabari lewat “Kirim masukan”.',
 
+  remind: 'Ingatkan tiap pagi',
+  remindTitle: 'Cek Apa Kabar Udara',
+  remindBody: url => `Perkiraan asap dan kualitas udara di kotamu hari ini: ${url}`,
+  remindDone: 'Pengingat 07.00 selama 30 hari dibuat. Buka berkasnya untuk menambahkannya ke Kalender.',
   todayTitle: 'Urusan rumah hari ini',
   // From level 3 the window can still be smoky: say its own estimated band so it never reads as a nudge outdoors.
   bestWindow: (level, dayWord, from, to, windowBand) => {
@@ -243,7 +247,6 @@ export const UI = {
   satNote: 'Foto diambil saat satelit lewat, bukan saat ini.',
   factsTitle: 'Fakta singkat',
   factsNext: 'Fakta lain',
-  pollTitle: 'Langit di tempatmu gimana?',
   feedbackButton: 'Kirim masukan',
   feedbackNote: 'Terbuka di Tally. Bisa lapor masalah, kasih saran, atau minta kota baru.',
 
@@ -256,7 +259,7 @@ export const UI = {
   creditGibs: 'NASA GIBS / Worldview (VIIRS)',
   creditIspu: 'batas level: ISPU (Permen LHK P.14/2020).',
   privacyTitle: 'Privasi',
-  privacy: 'Tanpa akun dan tanpa cookie. Kunjungan dan ketukan tombol dihitung secara anonim dan agregat lewat GoatCounter, tanpa profil per orang, dan tidak dihitung kalau browsermu mengaktifkan Do Not Track. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban "Langit di tempatmu gimana?" tidak dikirim ke mana pun. Masukan lewat Tally tersimpan di Tally.',
+  privacy: 'Tanpa akun dan tanpa cookie. Kunjungan dan ketukan tombol dihitung secara anonim dan agregat lewat GoatCounter, tanpa profil per orang, dan tidak dihitung kalau browsermu mengaktifkan Do Not Track. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Masukan lewat Tally tersimpan di Tally.',
   creditLine: ['Proyek sukarela oleh ', 'Khi Hady', ' · kodenya terbuka di ', 'GitHub']
 };
 
@@ -265,13 +268,6 @@ export const FACTS = [
   'Asap tidak mengenal batas negara. Bisa menyeberang sampai Sarawak dan membuat udara di sana ikut tidak sehat.',
   'Lahan gambut bisa terbakar diam-diam di bawah tanah. Api yang kelihatan padam belum tentu benar-benar selesai.',
   'El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.'
-];
-
-export const POLLS = [
-  { label: 'Cerah', reply: 'Makasih! Senang dengarnya.' },
-  { label: 'Agak berasap', reply: 'Makasih! Kalau yang terlihat beda dari perkiraan, ikuti yang terlihat.' },
-  { label: 'Berasap tebal', reply: 'Makasih! Kalau asap di sekitarmu lebih tebal dari perkiraan, ikuti yang terlihat dan cek angka resmi ISPU.' },
-  { label: 'Tidak yakin', reply: 'Makasih! Coba lihat ke luar jendela sebentar.' }
 ];
 
 /** Instagram Story card (1080×1920). Every line on it comes from here. */

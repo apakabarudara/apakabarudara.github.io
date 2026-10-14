@@ -133,7 +133,7 @@ addEventListener('error', e => {
 
         <ion-card id="today" class="panel" aria-labelledby="todayTitle">
           <h2 id="todayTitle"></h2>
-          <ul id="activities" class="activities"></ul>
+          <p id="activities" class="home-line"></p>
           <p id="best" class="best"></p>
           <div id="strip" class="strip" role="img"></div>
           <div id="ticks" class="ticks" aria-hidden="true"></div>
@@ -169,6 +169,7 @@ addEventListener('error', e => {
           <ion-button id="share" class="wide soft" expand="block"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-share"/></svg><span data-copy="share"></span></ion-button>
           <ion-button id="story" class="wide soft" expand="block"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-image"/></svg><span data-copy="storyButton"></span></ion-button>
         </div>
+        <button id="remind" class="text-link" type="button"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg><span data-copy="remind"></span></button>
         <p id="shareNote" class="note" aria-live="polite"></p>
       </div>
       <div id="watchSolo" hidden><button id="watchSoloBtn" class="text-link" type="button"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg><span data-copy="watchAddSolo"></span></button></div>
@@ -186,11 +187,6 @@ addEventListener('error', e => {
               <div id="factsBlock">
                 <div class="facts-head"><h3 data-copy="factsTitle"></h3><ion-button id="factsNext" fill="clear" class="small-btn"><span data-copy="factsNext"></span></ion-button></div>
                 <p id="fact"></p>
-              </div>
-              <div>
-                <h3 data-copy="pollTitle"></h3>
-                <div id="poll" class="choices"></div>
-                <p id="pollNote" class="note" aria-live="polite"></p>
               </div>
             </div>
           </ion-accordion>

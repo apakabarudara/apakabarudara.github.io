@@ -1,7 +1,7 @@
 import './ionic.js';
-import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, OFFICIAL_ISPU, POLLS, RAIN, STORY, UI } from './copy.js';
+import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, OFFICIAL_ISPU, RAIN, STORY, UI } from './copy.js';
 import {
-  activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
+  activityStatuses, ago, bestWindow, cityLink, dailyQuip, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
   nearest, normalizeWatch, previewOverride, rainKind, outlookLines, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom, WET_DAY_MM
 } from './logic.js';
 
@@ -258,9 +258,7 @@ function renderToday(loc, level) {
   $('todayTitle').textContent = UI.todayTitle;
   const rain = loc.outlook.find(d => d.date === localDate(new Date()))?.rain_mm ?? 0;
   const statuses = activityStatuses(LEVELS[level].activities, rain, WET_DAY_MM);
-  $('activities').replaceChildren(...ACTIVITIES.map(a =>
-    el('li', 'activity', icon(a.icon), el('span', 'text', el('span', 'label', a.label), el('strong', 'status', a.notes[statuses[a.id]])))
-  ));
+  $('activities').textContent = ACTIVITIES.map(a => `${a.label}: ${a.notes[statuses[a.id]]}`).join(' · ');
 
   const hours = Array.isArray(loc.next_hours) ? loc.next_hours : [];
   const win = level <= 3 && hours.length > 0 ? bestWindow(hours, BEST) : null;
@@ -656,20 +654,6 @@ function nextFact() {
   $('fact').textContent = FACTS[i];
 }
 
-function renderPoll() {
-  const box = $('poll');
-  box.replaceChildren(...POLLS.map(p => {
-    const choice = el('button', 'choice', p.label);
-    choice.type = 'button';
-    choice.setAttribute('aria-pressed', 'false');
-    choice.addEventListener('click', () => {
-      [...box.children].forEach(c => c.setAttribute('aria-pressed', String(c === choice)));
-      $('pollNote').textContent = p.reply;
-    });
-    return choice;
-  }));
-}
-
 // Static labels come from copy.js so every line lives in one file.
 for (const node of document.querySelectorAll('[data-copy]')) node.textContent = UI[node.dataset.copy];
 for (const node of document.querySelectorAll('[data-method]')) node.textContent = UI[node.dataset.method][Number(node.dataset.i)];
@@ -747,7 +731,6 @@ setInterval(load, REFRESH_MS);
 
 try { sessionStorage.removeItem('bng-reloaded'); } catch { /* storage blocked: the guard in index.html then cannot loop either */ }
 showMessage(UI.loadingHeadline, null, true);
-renderPoll();
 nextFact();
 load();
 
@@ -776,3 +759,18 @@ $('satThumb').addEventListener('click', () => {
   $('satSheet').present();
 });
 $('satClose').addEventListener('click', () => $('satSheet').dismiss());
+
+// A daily calendar reminder at 07:00 for 30 days, made on the device: no account and no server.
+$('remind').addEventListener('click', () => {
+  const loc = selected();
+  const page = `${location.origin}${location.pathname}`;
+  const url = loc ? cityLink(page, loc.id) : page;
+  const blob = new Blob([icsReminder({ title: UI.remindTitle, description: UI.remindBody(url), url, now: new Date() })], { type: 'text/calendar' });
+  const link = el('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'apa-kabar-udara-pengingat.ics';
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 10000);
+  $('shareNote').textContent = UI.remindDone;
+  count('pengingat');
+});

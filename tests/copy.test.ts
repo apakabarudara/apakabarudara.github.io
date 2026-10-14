@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { ACTIVITIES, FACTS, LEVELS, OFFICIAL_ISPU, POLLS, STORY, UI } from '../web/copy.js';
+import { ACTIVITIES, FACTS, LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 
 const ISPU_NAMES = ['Baik', 'Sedang', 'Tidak Sehat', 'Sangat Tidak Sehat', 'Berbahaya'];
 const SLANG = /\b(gas|halu|plis|lebay|ngebut|vonis|faskes|mantan|DJ|sinetron)\b/i;
@@ -20,7 +20,7 @@ function allCopy(): string[] {
     else if (value && typeof value === 'object') Object.values(value).forEach(walk);
   };
   walk(LEVELS); walk(ACTIVITIES); // OFFICIAL_ISPU is a quote and stays exempt
-   walk(UI); walk(FACTS); walk(POLLS); walk(STORY);
+   walk(UI); walk(FACTS); walk(STORY);
   return out;
 }
 
@@ -114,6 +114,13 @@ describe('OFFICIAL_ISPU', () => {
   });
 });
 
+describe('reminder', () => {
+  it('words the link and the confirmation plainly', () => {
+    assert.equal(UI.remind, 'Ingatkan tiap pagi');
+    assert.match(UI.remindDone, /07\.00 selama 30 hari/);
+  });
+});
+
 describe('satellite thumbnail', () => {
   it('labels the thumbnail plainly', () => {
     assert.equal(UI.satThumbLabel, 'Foto satelit NASA');
@@ -155,16 +162,6 @@ describe('health lines', () => {
   it('searches for health facilities without sending a position', () => {
     assert.equal(UI.healthButton, 'Cari fasilitas kesehatan');
     assert.equal(UI.healthQuery, 'fasilitas kesehatan terdekat');
-  });
-
-  it('asks about the sky, with replies that send the reader to what they see and to the official figure', () => {
-    assert.equal(UI.pollTitle, 'Langit di tempatmu gimana?');
-    assert.deepEqual(POLLS, [
-      { label: 'Cerah', reply: 'Makasih! Senang dengarnya.' },
-      { label: 'Agak berasap', reply: 'Makasih! Kalau yang terlihat beda dari perkiraan, ikuti yang terlihat.' },
-      { label: 'Berasap tebal', reply: 'Makasih! Kalau asap di sekitarmu lebih tebal dari perkiraan, ikuti yang terlihat dan cek angka resmi ISPU.' },
-      { label: 'Tidak yakin', reply: 'Makasih! Coba lihat ke luar jendela sebentar.' }
-    ]);
   });
 
   it('has no N95 advice of our own', () => {
@@ -296,7 +293,7 @@ describe('UI', () => {
     assert.equal(UI.stripRange('Sangat Tidak Sehat', 'Berbahaya'), 'dari Sangat Tidak Sehat sampai Berbahaya');
     assert.equal(UI.stripRange('Berbahaya', 'Berbahaya'), 'semuanya Berbahaya');
     assert.match(UI.privacy, /GoatCounter, tanpa profil per orang/);
-    assert.match(UI.privacy, /Jawaban "Langit di tempatmu gimana\?" tidak dikirim ke mana pun\. Masukan lewat Tally tersimpan di Tally\./);
+    assert.match(UI.privacy, /Masukan lewat Tally tersimpan di Tally\./);
     assert.ok(!('feedbackSend' in UI) && !('feedbackThanks' in UI) && !('sensitiveIntro' in UI) && !('sensitivePrefix' in UI) && !('windowsShut' in UI));
   });
 

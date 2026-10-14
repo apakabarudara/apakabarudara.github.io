@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import { LEVELS, STORY } from '../web/copy.js';
 import {
   activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
-  outlookLines, previewOverride, rainKind, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom
+  icsReminder, outlookLines, previewOverride, rainKind, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom
 } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
@@ -388,5 +388,19 @@ describe('Story outlook and ranking cards', () => {
     const text = JSON.stringify([outlook, ranking]);
     assert.doesNotMatch(text, /Panduan|\baman\b|akurat|pasti|gratis|boleh|harus/i);
     assert.doesNotMatch(text, /µg|PM2/);
+  });
+});
+
+describe('icsReminder', () => {
+  const ics = icsReminder({ title: 'Cek, Apa Kabar Udara', description: 'Satu; dua', url: 'https://x.test/#tarakan', now: new Date(2026, 9, 14, 15, 30) });
+  it('starts tomorrow at 07:00 local time and repeats daily for 30 days', () => {
+    assert.match(ics, /DTSTART:20261015T070000\r\n/);
+    assert.match(ics, /RRULE:FREQ=DAILY;COUNT=30\r\n/);
+  });
+  it('escapes commas and semicolons, and has an alarm at the start', () => {
+    assert.ok(ics.includes('SUMMARY:Cek\\, Apa Kabar Udara\r\n'));
+    assert.ok(ics.includes('DESCRIPTION:Satu\\; dua\r\n'));
+    assert.match(ics, /TRIGGER:PT0S/);
+    assert.ok(ics.startsWith('BEGIN:VCALENDAR\r\n') && ics.endsWith('END:VCALENDAR\r\n'));
   });
 });

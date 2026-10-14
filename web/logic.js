@@ -253,3 +253,18 @@ export function rankingLines({ locations, currentId, levelName, cityName, story,
     url: story.url
   };
 }
+
+/** A daily 07:00 reminder for 30 days as an iCalendar file. Floating local time, so it follows the phone's time zone. */
+export function icsReminder({ title, description, url, now }) {
+  const pad = n => String(n).padStart(2, '0');
+  const day = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const local = `${day.getFullYear()}${pad(day.getMonth() + 1)}${pad(day.getDate())}T070000`;
+  const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
+  const esc = s => s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+  return [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Apa Kabar Udara//ID', 'BEGIN:VEVENT',
+    `UID:pengingat-${stamp}@apakabarudara`, `DTSTAMP:${stamp}`, `DTSTART:${local}`, 'DURATION:PT15M', 'RRULE:FREQ=DAILY;COUNT=30',
+    `SUMMARY:${esc(title)}`, `DESCRIPTION:${esc(description)}`, `URL:${url}`,
+    'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${esc(title)}`, 'TRIGGER:PT0S', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'
+  ].join('\r\n') + '\r\n';
+}
