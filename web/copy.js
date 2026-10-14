@@ -18,7 +18,7 @@ export const LEVELS = {
       'Waktu yang enak untuk keluar.',
       'Langit lagi bersih. Cocok buat jalan pagi.',
       'Udaranya lagi bersahabat.',
-      'Jendela boleh dibuka lebar-lebar.',
+      'Cocok buat buka jendela lebar-lebar.',
       'Hari yang pas buat main di luar.',
       'Ajak keluarga jalan sore, yuk.'
     ],
@@ -36,7 +36,7 @@ export const LEVELS = {
     quips: ['Belum sempurna, tapi masih nyaman untuk keluar.', 'Masih enak buat jalan santai.', 'Cukup baik untuk kegiatan biasa.'],
     everyone: [],
     sensitive: ['Kurangi olahraga berat yang lama di luar'],
-    dayLine: 'Masih oke, hindari olahraga yang terlalu berat.',
+    dayLine: 'Masih oke untuk kebanyakan orang.',
     activities: { laundry: 'ok', exercise: 'caution', windows: 'ok', kids: 'ok' },
     goodNews: 'Kabari grup: udara masih oke',
     health: false,
@@ -56,7 +56,7 @@ export const LEVELS = {
   4: {
     name: 'Sangat Tidak Sehat',
     headline: 'Sebisa mungkin di dalam ruangan.',
-    everyone: ['Tutup jendela dan pintu', 'Kalau harus keluar, pakai masker N95'],
+    everyone: ['Tutup jendela dan pintu', 'Kalau harus keluar, sebaiknya pakai masker N95'],
     sensitive: ['Tetap di dalam ruangan'],
     dayLine: 'Rencanakan kegiatan di dalam ruangan.',
     activities: { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' },
@@ -66,8 +66,8 @@ export const LEVELS = {
   },
   5: {
     name: 'Berbahaya',
-    headline: 'Tetap di dalam ruangan.',
-    everyone: ['Tutup jendela dan pintu', 'Keluar hanya kalau terpaksa, dan pakai masker N95'],
+    headline: 'Sebaiknya tetap di dalam ruangan.',
+    everyone: ['Tutup jendela dan pintu', 'Kalau terpaksa keluar, sebaiknya pakai masker N95'],
     sensitive: ['Tetap di dalam ruangan sepanjang hari'],
     dayLine: 'Tetap di dalam ruangan sepanjang hari.',
     activities: { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' },
@@ -99,7 +99,7 @@ export const UI = {
   beta: 'BETA',
   welcome: hello => `${hello} Kamu di kota mana?`,
   overviewTitle: 'Asap hari ini',
-  overviewSub: count => `${count} kota di Sumatera dan Kalimantan, mulai dari yang paling parah. Pilih kota.`,
+  overviewSub: count => `${count} kota di Sumatera dan Kalimantan, diurutkan dari perkiraan asap paling tebal. Pilih kota.`,
   pickCity: 'Pilih kota',
   cancel: 'Batal',
   close: 'Tutup',
@@ -113,13 +113,13 @@ export const UI = {
 
   levelLabel: (name, level) => `${name} · level ${level} dari 5`,
   scaleLabel: level => `level ${level} dari 5`,
-  betterSince: previous => `Membaik sejak terakhir kamu cek (sebelumnya ${previous}).`,
+  betterSince: previous => `Perkiraannya membaik sejak terakhir kamu cek (sebelumnya ${previous}).`,
   improveOn: weekday => `Diperkirakan mulai membaik ${weekday}.`,
-  improveNone: days => `Belum ada tanda membaik dalam ${days} hari ke depan.`,
+  improveNone: days => `Perkiraan ${days} hari ke depan belum menunjukkan perbaikan.`,
   sensitivePrefix: `${SENSITIVE}:`,
   symptomsMild: 'Batuk terus atau mata perih? Ada baiknya periksa ke fasilitas kesehatan.',
   symptomsEmergency: `Sesak napas atau nyeri dada? Sebaiknya segera cari pertolongan medis, atau hubungi ${EMERGENCY_NUMBER}.`,
-  medicalNote: 'Saran kesehatan di sini mengikuti panduan Kemenkes, bukan pengganti pemeriksaan dokter.',
+  medicalNote: 'Saran kesehatan di sini disusun dari panduan Kemenkes, bukan pengganti pemeriksaan dokter.',
   healthButton: 'Cari fasilitas kesehatan',
   healthQuery: 'fasilitas kesehatan terdekat',
   call: number => `Telepon ${number}`,
@@ -163,7 +163,12 @@ export const UI = {
 
   todayTitle: 'Hari ini cocok untuk…',
   todayTitleNeutral: 'Kegiatan hari ini',
-  bestWindow: (level, dayWord, from, to) => `${level === 1 ? 'Udara paling segar' : 'Asap paling tipis'} di siang hari: ${dayWord}, ${from}–${to}`,
+  // From level 3 the window can still be smoky: say its own estimated band so it never reads as a nudge outdoors.
+  bestWindow: (level, dayWord, from, to, windowBand) => {
+    const line = `${level === 1 ? 'Udara paling segar' : 'Asap paling tipis'} di siang hari: ${dayWord}, ${from}–${to}`;
+    return level >= 3 && windowBand >= 3 ? `${line} (perkiraan: masih ${LEVELS[windowBand].name})` : line;
+  },
+  shareFallback: title => `${SHARE_PREFIX}${title}`,
   dayWord: { today: 'hari ini', tomorrow: 'besok' },
   windowsShut: 'Sebaiknya jendela ditutup hari ini.',
   stripLabel: (range, window) => `Asap per jam, 24 jam ke depan, ${range}.${window}`,
@@ -236,14 +241,14 @@ export const UI = {
 export const FACTS = [
   'Asap tidak mengenal batas negara. Bisa menyeberang sampai Sarawak dan membuat udara di sana ikut tidak sehat.',
   'Lahan gambut bisa terbakar diam-diam di bawah tanah. Api yang kelihatan padam belum tentu benar-benar selesai.',
-  'El Niño membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.',
-  'Masker kain hampir tidak menyaring partikel asap. Untuk asap, yang dianjurkan masker N95.'
+  'El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.',
+  'Masker kain kurang efektif menyaring partikel asap yang sangat halus. Untuk asap, masker N95 lebih baik, asal pas di wajah.'
 ];
 
 export const POLLS = [
   { label: 'Lega', reply: 'Syukurlah. Tetap minum air putih, ya.' },
-  { label: 'Agak sesak', reply: 'Kurangi aktivitas di luar hari ini.' },
-  { label: 'Sesak sekali', reply: `Tetap di dalam dan tutup jendela. Kalau sesak berat atau nyeri dada, sebaiknya segera cari pertolongan medis, atau hubungi ${EMERGENCY_NUMBER}.` },
+  { label: 'Agak sesak', reply: 'Kurangi aktivitas di luar hari ini. Kalau tidak membaik, ada baiknya periksa ke fasilitas kesehatan.' },
+  { label: 'Sesak sekali', reply: `Kalau sesaknya berat atau disertai nyeri dada, sebaiknya segera cari pertolongan medis atau hubungi ${EMERGENCY_NUMBER}. Sementara itu, tetap di dalam dan tutup jendela.` },
   { label: 'Tidak yakin', reply: 'Cek level kota di atas dan ikuti sarannya.' }
 ];
 

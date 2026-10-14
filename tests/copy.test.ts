@@ -107,11 +107,26 @@ describe('health lines', () => {
 
   it('answers "Sesak sekali" with the same suggestion', () => {
     const reply = POLLS.find(p => p.label === 'Sesak sekali')?.reply ?? '';
-    assert.match(reply, /Kalau sesak berat atau nyeri dada, sebaiknya segera cari pertolongan medis, atau hubungi 119\./);
+    assert.match(reply, /Kalau sesaknya berat atau disertai nyeri dada, sebaiknya segera cari pertolongan medis atau hubungi 119\./);
+  });
+
+  it('puts medical help before "tetap di dalam" in the "Sesak sekali" reply', () => {
+    const reply = POLLS.find(p => p.label === 'Sesak sekali')?.reply ?? '';
+    assert.ok(reply.includes('pertolongan medis') && reply.indexOf('pertolongan medis') < reply.indexOf('tetap di dalam'));
+  });
+
+  it('points "Agak sesak" to a health facility if it does not improve', () => {
+    assert.equal(POLLS.find(p => p.label === 'Agak sesak')?.reply, 'Kurangi aktivitas di luar hari ini. Kalau tidak membaik, ada baiknya periksa ke fasilitas kesehatan.');
+  });
+
+  it('suggests every N95 line with "sebaiknya"', () => {
+    const lines = Object.values(LEVELS).flatMap(l => l.everyone).filter(line => /N95/.test(line));
+    assert.equal(lines.length, 2);
+    for (const line of lines) assert.match(line, /sebaiknya/, line);
   });
 
   it('says whose guidance this follows', () => {
-    assert.equal(UI.medicalNote, 'Saran kesehatan di sini mengikuti panduan Kemenkes, bukan pengganti pemeriksaan dokter.');
+    assert.equal(UI.medicalNote, 'Saran kesehatan di sini disusun dari panduan Kemenkes, bukan pengganti pemeriksaan dokter.');
   });
 });
 
@@ -164,6 +179,25 @@ describe('all copy', () => {
   });
 });
 
+describe('estimates and suggestions', () => {
+  it('words the level 4–5 and overview lines as agreed', () => {
+    assert.equal(LEVELS[5].headline, 'Sebaiknya tetap di dalam ruangan.');
+    assert.equal(LEVELS[5].everyone[1], 'Kalau terpaksa keluar, sebaiknya pakai masker N95');
+    assert.equal(LEVELS[4].everyone[1], 'Kalau harus keluar, sebaiknya pakai masker N95');
+    assert.equal(LEVELS[2].dayLine, 'Masih oke untuk kebanyakan orang.');
+    assert.ok(LEVELS[1].quips.includes('Cocok buat buka jendela lebar-lebar.'));
+    assert.equal(UI.overviewSub(12), '12 kota di Sumatera dan Kalimantan, diurutkan dari perkiraan asap paling tebal. Pilih kota.');
+  });
+
+  it('starts the expired-report share fallback with "Perkiraan Bisa napas gak?"', () => {
+    assert.equal(UI.shareFallback('Bisa napas gak?'), 'Perkiraan Bisa napas gak?\nBisa napas gak?');
+  });
+
+  it('never uses "boleh", "parah", "pasti", "akurat" or "aman" in user-facing copy', () => {
+    for (const line of allCopy()) assert.doesNotMatch(line, /\b(boleh|parah|pasti|akurat|aman)\b/i, line);
+  });
+});
+
 describe('UI', () => {
   it('shows the level against its scale', () => {
     assert.equal(UI.levelLabel('Tidak Sehat', 3), 'Tidak Sehat · level 3 dari 5');
@@ -185,7 +219,7 @@ describe('UI', () => {
 
   it('words the new lines as agreed', () => {
     assert.equal(UI.improveOn('Jumat'), 'Diperkirakan mulai membaik Jumat.');
-    assert.equal(UI.improveNone(4), 'Belum ada tanda membaik dalam 4 hari ke depan.');
+    assert.equal(UI.improveNone(4), 'Perkiraan 4 hari ke depan belum menunjukkan perbaikan.');
     assert.equal(UI.installButton, 'Pasang di layar utama');
     assert.equal(UI.storySaved, 'Gambar diunduh. Unggah ke Story dari galeri. Kalau tidak muncul, buka halaman ini di Safari atau Chrome.');
     assert.equal(UI.storyTapAgain, 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.');
@@ -195,7 +229,9 @@ describe('UI', () => {
   it('words the batch 3 P0 lines as agreed', () => {
     assert.equal(LEVELS[1].goodNews, 'Kabari grup: udara lagi bagus');
     assert.equal(LEVELS[2].goodNews, 'Kabari grup: udara masih oke');
-    assert.equal(UI.bestWindow(3, 'besok', '09.00', '11.00'), 'Asap paling tipis di siang hari: besok, 09.00–11.00');
+    assert.equal(UI.bestWindow(3, 'besok', '09.00', '11.00', 3), 'Asap paling tipis di siang hari: besok, 09.00–11.00 (perkiraan: masih Tidak Sehat)');
+    assert.equal(UI.bestWindow(3, 'besok', '09.00', '11.00', 2), 'Asap paling tipis di siang hari: besok, 09.00–11.00');
+    assert.equal(UI.bestWindow(2, 'besok', '09.00', '11.00', 3), 'Asap paling tipis di siang hari: besok, 09.00–11.00');
     assert.equal(UI.bestWindow(1, 'hari ini', '13.00', '15.00'), 'Udara paling segar di siang hari: hari ini, 13.00–15.00');
     assert.equal(UI.sensitivePrefix, 'Anak, lansia, ibu hamil, sakit paru/jantung:');
     assert.equal(ACTIVITIES.find(a => a.id === 'exercise')?.notes.caution, 'Ringan saja');
@@ -213,13 +249,14 @@ describe('UI', () => {
     assert.equal(UI.todayTitleNeutral, 'Kegiatan hari ini');
     assert.equal(UI.moreTitle, 'Cek napas & fakta asap');
     assert.equal(UI.moreTitleNoFacts, 'Cek napas hari ini');
-    assert.ok(FACTS.includes('Masker kain hampir tidak menyaring partikel asap. Untuk asap, yang dianjurkan masker N95.'));
+    assert.ok(FACTS.includes('Masker kain kurang efektif menyaring partikel asap yang sangat halus. Untuk asap, masker N95 lebih baik, asal pas di wajah.'));
+    assert.ok(FACTS.includes('El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.'));
     assert.ok(!FACTS.some(f => /berhari-hari di bawah permukaan/.test(f)));
     assert.equal(UI.storyLinkCopied, 'Link kota ini sudah disalin. Di Instagram, tambahkan stiker Link lalu tempel.');
   });
 
   it('words the batch 3 Fun lines as agreed', () => {
-    assert.equal(UI.betterSince('Sedang'), 'Membaik sejak terakhir kamu cek (sebelumnya Sedang).');
+    assert.equal(UI.betterSince('Sedang'), 'Perkiraannya membaik sejak terakhir kamu cek (sebelumnya Sedang).');
     assert.ok(LEVELS[1].quips.includes('Ajak keluarga jalan sore, yuk.') && LEVELS[2].quips.includes('Masih enak buat jalan santai.'));
   });
 

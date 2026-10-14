@@ -189,7 +189,7 @@ function renderToday(loc, level) {
   const from = win ? hm.format(new Date(win.start)) : '';
   const to = win ? hm.format(new Date(win.end)) : '';
   const dayWord = win ? UI.dayWord[relativeDay(win.start, new Date())] : '';
-  $('best').textContent = level >= 4 ? UI.windowsShut : win ? UI.bestWindow(level, dayWord, from, to) : '';
+  $('best').textContent = level >= 4 ? UI.windowsShut : win ? UI.bestWindow(level, dayWord, from, to, win.band) : '';
   $('best').hidden = !$('best').textContent;
 
   const peak = Math.max(...hours.map(h => h.pm25), 1);
@@ -362,7 +362,7 @@ async function share(goodNews) {
   const target = loc && live && !preview ? loc : null;
   const page = `${location.origin}${location.pathname}`;
   const url = target ? cityLink(page, target.id) : page;
-  let text = live ? UI.shareOverview : document.title;
+  let text = live ? UI.shareOverview : UI.shareFallback(document.title);
   if (target) {
     const level = target.pm25_model.band;
     const day = dayTime.format(new Date(target.pm25_model.updated_at));

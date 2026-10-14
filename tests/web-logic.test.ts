@@ -74,7 +74,12 @@ describe('bestWindow', () => {
   const opts = { span: 2, fromHour: 6, toHour: 21, localHour: wib };
 
   it('finds the cleanest two daytime hours', () => {
-    assert.deepEqual(bestWindow(hours, opts), { start: '2026-10-14T07:00:00.000Z', end: '2026-10-14T09:00:00.000Z', indexes: [7, 8] });
+    assert.deepEqual(bestWindow(hours, opts), { start: '2026-10-14T07:00:00.000Z', end: '2026-10-14T09:00:00.000Z', indexes: [7, 8], band: 2 }); // mean 41 µg/m³
+  });
+
+  it('bands the window by its mean PM2.5, not by its cleanest hour', () => {
+    const smoky = hours.map(h => ({ ...h, pm25: 200 }));
+    assert.equal(bestWindow(smoky, opts)?.band, 4); // 200 µg/m³: Sangat Tidak Sehat
   });
 
   it('keeps the window inside 06:00–21:00 and prefers the earliest tie', () => {

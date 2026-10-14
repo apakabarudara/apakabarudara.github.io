@@ -49,7 +49,7 @@ export function nearest(locations, lat, lon) {
 
 /**
  * The `span`-hour stretch with the lowest mean PM2.5 that starts at or after `fromHour` and ends by `toHour`
- * (viewer's local hours, from `localHour(iso)`). Ties go to the earliest. Null when no stretch fits.
+ * (viewer's local hours, from `localHour(iso)`), with the ISPU band of its mean PM2.5. Ties go to the earliest. Null when no stretch fits.
  */
 export function bestWindow(hours, { span, fromHour, toHour, localHour }) {
   let best = null;
@@ -62,7 +62,7 @@ export function bestWindow(hours, { span, fromHour, toHour, localHour }) {
   }
   if (!best) return null;
   const end = new Date(Date.parse(hours[best.start + span - 1].time) + 3600e3).toISOString();
-  return { start: hours[best.start].time, end, indexes: Array.from({ length: span }, (_, k) => best.start + k) };
+  return { start: hours[best.start].time, end, indexes: Array.from({ length: span }, (_, k) => best.start + k), band: bandForPm25(best.mean) };
 }
 
 /** Today's activity statuses: the level's own, except that forecast rain makes "ok" laundry a "caution". */
