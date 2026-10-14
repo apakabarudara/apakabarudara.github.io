@@ -112,6 +112,14 @@ describe('OFFICIAL_ISPU', () => {
   });
 });
 
+describe('disclaimer banner', () => {
+  it('words the notice and the close label as agreed', () => {
+    assert.equal(UI.disclaimer, 'Hai! Isinya perkiraan dari data satelit dan cuaca, jadi bisa meleset. Bukan angka resmi, bukan saran medis.');
+    assert.equal(UI.disclaimerClose, 'Tutup pemberitahuan');
+    assert.equal(UI.methodLink, 'Metode & sumber');
+  });
+});
+
 describe('household tiles', () => {
   it('keeps only "Jemur baju" and "Jendela", under "Urusan rumah hari ini"', () => {
     assert.deepEqual(ACTIVITIES.map(a => a.label), ['Jemur baju', 'Jendela']);

@@ -14,6 +14,7 @@ const WATCH_KEY = 'bisanapasgak.watch';
 const INSTALL_KEY = 'bisanapasgak.installHidden';
 const VISITS_KEY = 'bisanapasgak.visits';
 const SEEN_KEY = 'bisanapasgak.seen';
+const DISCLAIMER_KEY = 'akud-disclaimer-v1'; // bump the version to show the notice again
 const ALL = '__all';
 const REFRESH_MS = 15 * 60e3;
 const BEST = { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() };
@@ -66,6 +67,7 @@ const readSeen = () => { try { return JSON.parse(store.read(SEEN_KEY) ?? '{}') ?
 const readWatch = () => { try { return JSON.parse(store.read(WATCH_KEY) ?? '[]'); } catch { return []; } };
 
 let report = null;
+let disclaimerDismissed = store.read(DISCLAIMER_KEY) === '1';
 let watch = readWatch();
 let installEvent = null; // Chromium's beforeinstallprompt, kept until the button is used
 let current = null; // chosen city id; null shows the overview
@@ -94,6 +96,8 @@ function show(view) {
     $('moreTitle').textContent = UI.moreTitle;
   }
 }
+
+const renderDisclaimer = () => { $('disclaimer').hidden = disclaimerDismissed || Boolean(preview); };
 
 /** Neutral card for loading and problems: no verdict, only the official link. */
 function showMessage(headline, text, busy) {
@@ -247,6 +251,7 @@ function render() {
   const state = freshness(report.generated_at, new Date());
   $('camsCredit').textContent = UI.creditCams(report.generated_at.slice(0, 4));
   $('previewBanner').hidden = !preview;
+  renderDisclaimer();
   $('previewBanner').textContent = UI.preview;
   if (state === 'expired') {
     showMessage(UI.expiredHeadline, UI.expiredText, false);
@@ -601,6 +606,12 @@ $('aboutBtn').addEventListener('click', () => sheet.present());
 $('aboutClose').addEventListener('click', () => sheet.dismiss());
 $('methodClose').addEventListener('click', () => $('method').dismiss());
 $('methodLink').addEventListener('click', () => $('method').present());
+$('disclaimerMethod').addEventListener('click', () => $('method').present());
+$('disclaimerClose').addEventListener('click', () => {
+  disclaimerDismissed = true;
+  store.write(DISCLAIMER_KEY, '1');
+  renderDisclaimer();
+});
 $('methodFromAbout').addEventListener('click', async () => {
   await sheet.dismiss();
   $('method').present();
@@ -637,6 +648,7 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 setInterval(load, REFRESH_MS);
 
 try { sessionStorage.removeItem('bng-reloaded'); } catch { /* storage blocked: the guard in index.html then cannot loop either */ }
+renderDisclaimer();
 showMessage(UI.loadingHeadline, null, true);
 renderPoll();
 nextFact();

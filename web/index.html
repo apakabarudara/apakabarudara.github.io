@@ -64,6 +64,10 @@ addEventListener('error', e => {
   <ion-content id="content">
     <ion-refresher slot="fixed" id="refresher"><ion-refresher-content></ion-refresher-content></ion-refresher>
     <main class="wrap">
+      <div id="disclaimer" class="disclaimer" role="note" hidden>
+        <p><span data-copy="disclaimer"></span> <button id="disclaimerMethod" class="disclaimer-link" type="button" data-copy="methodLink"></button></p>
+        <button id="disclaimerClose" class="disclaimer-x" type="button" data-copy-label="disclaimerClose"><span aria-hidden="true">×</span></button>
+      </div>
       <div id="previewBanner" class="banner" role="status" hidden></div>
       <div id="banner" class="banner" role="status" hidden></div>
 

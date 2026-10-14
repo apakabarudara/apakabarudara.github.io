@@ -28,6 +28,17 @@ describe('web app manifest', () => {
   });
 });
 
+describe('disclaimer banner', () => {
+  const html = read('index.html');
+  it('sits first inside main.wrap as a note with a close button', () => {
+    assert.match(html, /<main class="wrap">\s*<div id="disclaimer" class="disclaimer" role="note" hidden>/);
+    assert.match(html, /id="disclaimerClose"[^>]*data-copy-label="disclaimerClose"/);
+  });
+  it('remembers the dismissal under a versioned key', () => {
+    assert.match(read('app.js'), /DISCLAIMER_KEY = 'akud-disclaimer-v1'/);
+  });
+});
+
 describe('page head', () => {
   const html = read('index.html');
   it('carries the tagline in the title and Open Graph tags with a 1200×630 image', () => {
