@@ -165,14 +165,12 @@ function renderAnswer(loc, level) {
     $('answer').classList.add('hop');
   }
   // Official ISPU guidance, quoted as is. Level 1 has no separate sensitive-group line.
-  $('guide').open = level >= 3; // quiet on good days, open when the guidance matters
+  $('guide').hidden = level < 3; // the guidance only earns its space from level 3
   $('guideSensitive').hidden = !official.sensitive;
   $('guideSensitive').lastElementChild.textContent = official.sensitive ?? '';
   $('guideEveryone').lastElementChild.textContent = official.everyone;
   $('guideSource').href = loc.ispu?.source_url ?? ISPU_URL;
   $('symptoms').hidden = !copy.health;
-  $('shareGood').hidden = !copy.goodNews;
-  $('goodNewsLabel').textContent = copy.goodNews ?? '';
   $('health').hidden = !copy.health;
   $('call').hidden = !copy.emergency;
   $('stamp').textContent = UI.stamp(clock.format(new Date(loc.pm25_model.updated_at)));
@@ -363,7 +361,7 @@ function useLocation() {
   );
 }
 
-async function share(goodNews) {
+async function share() {
   if (!report) return;
   const loc = selected();
   const live = freshness(report.generated_at, new Date()) !== 'expired';
@@ -374,7 +372,7 @@ async function share(goodNews) {
   if (target) {
     const level = target.pm25_model.band;
     const day = dayTime.format(new Date(target.pm25_model.updated_at));
-    text = (goodNews ? UI.shareGood : UI.shareText)(cityName(target), day, level, quipFor(level));
+    text = UI.shareText(cityName(target), day, level, quipFor(level));
   }
   try {
     if (navigator.share) {
@@ -593,7 +591,6 @@ for (const id of ['locate', 'locateOverview']) {
   else $(id).hidden = true;
 }
 $('share').addEventListener('click', () => share(false));
-$('shareGood').addEventListener('click', () => share(true));
 $('factsNext').addEventListener('click', nextFact);
 
 // Bottom sheets that fit their content: "Apa ini?", the iOS install steps, "Pantau kota lain".

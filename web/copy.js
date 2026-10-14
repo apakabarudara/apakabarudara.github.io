@@ -45,7 +45,6 @@ export const LEVELS = {
     name: 'Baik',
     quips: ['Langit lagi bersih-bersihnya.', 'Jemuran lagi senang hari ini.', 'Si Kapas lagi senyum lebar.', 'Awan putih, langit biru.'],
     activities: { laundry: 'ok', windows: 'ok' },
-    goodNews: 'Kabari grup: udara lagi bagus',
     health: false,
     emergency: false
   },
@@ -53,28 +52,24 @@ export const LEVELS = {
     name: 'Sedang',
     quips: ['Langit agak berkabut tipis.', 'Si Kapas masih senyum.', 'Langit belum sebersih kemarin, tapi masih cerah.'],
     activities: { laundry: 'ok', windows: 'ok' },
-    goodNews: 'Kabari grup: udara masih oke',
     health: false,
     emergency: false
   },
   3: {
     name: 'Tidak Sehat',
     activities: { laundry: 'no', windows: 'caution' },
-    goodNews: null,
     health: true,
     emergency: false
   },
   4: {
     name: 'Sangat Tidak Sehat',
     activities: { laundry: 'no', windows: 'no' },
-    goodNews: null,
     health: true,
     emergency: true
   },
   5: {
     name: 'Berbahaya',
     activities: { laundry: 'no', windows: 'no' },
-    goodNews: null,
     health: true,
     emergency: true
   }
@@ -223,7 +218,6 @@ export const UI = {
   storyFailed: 'Gambar belum bisa dibuat. Coba lagi.',
   shared: 'Link disalin. Tinggal tempel di grup.',
   shareText: (city, day, level, quip) => `${SHARE_PREFIX}${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5).${quip ? ` ${quip}` : ''} ${GUIDE_IN_LINK}`,
-  shareGood: (city, day, level, quip) => `${SHARE_PREFIX}${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5).${quip ? ` ${quip}` : ''} ${GUIDE_IN_LINK} Cek kotamu juga.`,
   shareOverview: `${SHARE_PREFIX}Kondisi asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.`,
 
   preview: 'Pratinjau: level contoh untuk melihat tampilan, bukan data nyata.',

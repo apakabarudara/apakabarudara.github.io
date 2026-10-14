@@ -41,7 +41,6 @@ describe('LEVELS', () => {
     it(`level ${level} offers health access from level 3, 119 from level 4, good news up to level 2`, () => {
       assert.equal(copy.health, level >= 3);
       assert.equal(copy.emergency, level >= 4);
-      assert.equal(typeof copy.goodNews === 'string', level <= 2);
     });
 
     it(`level ${level} has a status for every household tile, and smoke closes the windows from level 4`, () => {
@@ -251,7 +250,6 @@ describe('UI', () => {
   it('starts every shared text with the brand and "perkiraan, bukan angka resmi"', () => {
     const prefix = /^Apa Kabar Udara \(perkiraan, bukan angka resmi\)\n/;
     assert.match(UI.shareText('Palembang', 'Rabu 10.00', 3, null), prefix);
-    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), prefix);
     assert.match(UI.shareOverview, prefix);
   });
 
@@ -264,7 +262,6 @@ describe('UI', () => {
       UI.shareText('Palembang', 'Rabu 10.00', 1, 'Awan putih, langit biru.'),
       'Apa Kabar Udara (perkiraan, bukan angka resmi)\nPalembang, Rabu 10.00: Baik (level 1 dari 5). Awan putih, langit biru. Panduan resmi ISPU ada di link.'
     );
-    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1, null), /^Apa Kabar Udara \(perkiraan, bukan angka resmi\)\nPalembang, Rabu 10\.00: Baik \(level 1 dari 5\)\./);
   });
 
   it('words the new lines as agreed', () => {
@@ -277,8 +274,6 @@ describe('UI', () => {
   });
 
   it('words the batch 3 P0 lines as agreed', () => {
-    assert.equal(LEVELS[1].goodNews, 'Kabari grup: udara lagi bagus');
-    assert.equal(LEVELS[2].goodNews, 'Kabari grup: udara masih oke');
     assert.equal(UI.bestWindow(3, 'besok', '09.00', '11.00', 3), 'Asap paling tipis di siang hari: besok, 09.00–11.00 (perkiraan: masih Tidak Sehat)');
     assert.equal(UI.bestWindow(3, 'besok', '09.00', '11.00', 2), 'Asap paling tipis di siang hari: besok, 09.00–11.00');
     assert.equal(UI.bestWindow(2, 'besok', '09.00', '11.00', 3), 'Asap paling tipis di siang hari: besok, 09.00–11.00');

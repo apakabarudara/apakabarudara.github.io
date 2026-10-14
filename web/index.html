@@ -36,7 +36,6 @@ addEventListener('error', e => {
   <symbol id="blob" viewBox="0 0 72 64"><ellipse cx="36" cy="42" rx="26" ry="17"/><circle cx="24" cy="31" r="12"/><circle cx="38" cy="24" r="14"/><circle cx="52" cy="31" r="11"/></symbol>
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></symbol>
   <symbol id="i-share" viewBox="0 0 24 24"><path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M8.7 10.7l6.6 -3.4"/><path d="M8.7 13.3l6.6 3.4"/></symbol>
-  <symbol id="i-sun" viewBox="0 0 24 24"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/></symbol>
   <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M8.5 4l-5 2.8 1.9 3.6 2.1-1V20h9V9.4l2.1 1 1.9-3.6-5-2.8c-.6 1.3-2 2.2-3.5 2.2s-2.9-.9-3.5-2.2z"/></symbol>
   <symbol id="i-window" viewBox="0 0 24 24"><rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M12 3.5v17M4.5 12h15"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
@@ -112,19 +111,18 @@ addEventListener('error', e => {
           <p id="desc" class="desc"></p>
           <p id="quip" class="quip"></p>
           <p id="better" class="improve" hidden></p>
-          <details id="guide" class="guide">
-            <summary data-copy="guideTitle"></summary>
+          <div id="guide" class="guide">
+            <h3 data-copy="guideTitle"></h3>
             <p id="guideSensitive"><b data-copy="guideSensitive"></b> <span></span></p>
             <p id="guideEveryone"><b data-copy="guideEveryone"></b> <span></span></p>
             <a id="guideSource" class="guide-src" target="_blank" rel="noopener" data-copy="guideSource"></a>
             <a class="guide-src" href="https://peraturan.bpk.go.id/Details/163466/p" target="_blank" rel="noopener" data-copy="guideRegulation"></a>
             <a class="guide-src" href="https://www.who.int/europe/news-room/questions-and-answers/item/public-health-advice-during-the-wildfires--how-to-protect-your-health-and-keep-safe" target="_blank" rel="noopener" data-copy="guideWho"></a>
-          </details>
+          </div>
           <p class="guide-note" data-copy="guideCaution"></p>
           <p id="improve" class="improve" hidden></p>
           <div id="symptoms" class="symptoms"><p data-copy="symptomsMild"></p><p data-copy="symptomsEmergency"></p></div>
           <div class="btns">
-            <ion-button id="shareGood" class="lv-btn"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-sun"/></svg><span id="goodNewsLabel"></span></ion-button>
             <ion-button id="health" class="lv-btn" target="_blank" rel="noopener"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-plus"/></svg><span data-copy="healthButton"></span></ion-button>
             <ion-button id="call" class="lv-ghost" fill="outline" href="tel:119"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-phone"/></svg>119</ion-button>
           </div>
