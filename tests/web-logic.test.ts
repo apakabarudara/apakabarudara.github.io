@@ -227,9 +227,9 @@ describe('storyLines', () => {
 
   it('carries city, level, headline and the time, and no numbers from the data', () => {
     const lines = make(3);
-    assert.equal(lines.levelName, 'Tidak Sehat');
+    assert.equal(lines.levelName, 'Perkiraan: Tidak Sehat');
     assert.equal(lines.headline, 'Kurangi aktivitas di luar.');
-    assert.equal(lines.stamp, 'Perkiraan · Rabu 10.00');
+    assert.equal(lines.stamp, 'Diperbarui Rabu 10.00');
     assert.equal(lines.url, 'bisanapasgak.github.io');
     assert.doesNotMatch(JSON.stringify(lines), /µg|PM2/);
   });

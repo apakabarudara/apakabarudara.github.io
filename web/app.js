@@ -141,7 +141,7 @@ const quipFor = level => dailyQuip(LEVELS[level].quips, localDate(new Date()));
 function renderAnswer(loc, level) {
   const copy = LEVELS[level];
   $('answer').dataset.level = String(level);
-  $('levelName').textContent = copy.name;
+  $('levelName').textContent = UI.levelHeading(copy.name);
   $('scale').setAttribute('aria-label', UI.scaleLabel(level));
   [...$('scale').children].forEach((seg, i) => seg.classList.toggle('on', i + 1 === level));
   const better = improveText(loc, level);
@@ -204,6 +204,7 @@ function renderToday(loc, level) {
   const range = hours.length ? levelRange(bands) : null;
   $('strip').setAttribute('aria-label', range ? UI.stripLabel(UI.stripRange(LEVELS[range.min].name, LEVELS[range.max].name), win ? UI.stripBest(from, to) : '') : '');
   $('ticks').replaceChildren(...hours.filter((_, i) => i % TICK_EVERY === 0).map((h, i) => el('span', null, i === 0 ? UI.stripNow : hm.format(new Date(h.time)))));
+  $('stripLegend').textContent = range ? UI.stripLegend(LEVELS[range.min].name, LEVELS[range.max].name) : '';
   for (const id of ['strip', 'ticks', 'stripLegend']) $(id).hidden = hours.length === 0;
 }
 

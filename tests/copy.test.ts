@@ -198,6 +198,19 @@ describe('estimates and suggestions', () => {
   });
 });
 
+describe('hedge first', () => {
+  it('starts the answer-card level text, the story level line and the section titles with "Perkiraan"', () => {
+    for (const level of [1, 2, 3, 4, 5]) {
+      assert.equal(UI.levelHeading(LEVELS[level].name), `Perkiraan: ${LEVELS[level].name}`);
+      assert.match(STORY.levelName(LEVELS[level].name), /^Perkiraan: /);
+    }
+    assert.equal(UI.overviewTitle, 'Perkiraan asap hari ini');
+    assert.match(UI.outlookSub, /^Perkiraan beberapa hari ke depan\./);
+    assert.equal(UI.reasonsTitle, 'Yang mungkin berpengaruh');
+    assert.equal(STORY.stamp('Rabu 10.00'), 'Diperbarui Rabu 10.00');
+  });
+});
+
 describe('UI', () => {
   it('shows the level against its scale', () => {
     assert.equal(UI.levelLabel('Tidak Sehat', 3), 'Tidak Sehat · level 3 dari 5');
@@ -237,7 +250,8 @@ describe('UI', () => {
     assert.equal(ACTIVITIES.find(a => a.id === 'exercise')?.notes.caution, 'Ringan saja');
     assert.match(UI.explain(10)[0], /^Level ini perkiraan komputer dari data satelit dan cuaca/);
     assert.match(UI.footerDisclaimer, /^Level dan angka di sini perkiraan, bukan hasil alat ukur\./);
-    assert.equal(UI.stripLegend, 'Warna batang = level per jam. Makin tinggi, makin tebal asap.');
+    assert.equal(UI.stripLegend('Sedang', 'Sedang'), 'Semua jam diperkirakan Sedang. Makin tinggi batang, makin tebal asap.');
+    assert.equal(UI.stripLegend('Sedang', 'Tidak Sehat'), 'Warna = level per jam, dari Sedang sampai Tidak Sehat. Makin tinggi batang, makin tebal asap.');
     assert.equal(UI.stripRange('Sangat Tidak Sehat', 'Berbahaya'), 'dari Sangat Tidak Sehat sampai Berbahaya');
     assert.equal(UI.stripRange('Berbahaya', 'Berbahaya'), 'semuanya Berbahaya');
     assert.match(UI.privacy, /tidak dikirim ke mana pun\. Masukan lewat Tally tersimpan di Tally\./);
@@ -245,7 +259,7 @@ describe('UI', () => {
   });
 
   it('words the batch 3 P1 lines as agreed', () => {
-    assert.equal(UI.stamp('11.00 WIB'), 'Perkiraan, diperbarui 11.00 WIB ·');
+    assert.equal(UI.stamp('11.00 WIB'), 'Diperbarui 11.00 WIB ·');
     assert.equal(UI.todayTitleNeutral, 'Kegiatan hari ini');
     assert.equal(UI.moreTitle, 'Cek napas & fakta asap');
     assert.equal(UI.moreTitleNoFacts, 'Cek napas hari ini');

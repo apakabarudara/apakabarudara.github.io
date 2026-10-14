@@ -98,7 +98,7 @@ export const UI = {
   tagline: 'Cek asap dan kualitas udara hari ini',
   beta: 'BETA',
   welcome: hello => `${hello} Kamu di kota mana?`,
-  overviewTitle: 'Asap hari ini',
+  overviewTitle: 'Perkiraan asap hari ini',
   overviewSub: count => `${count} kota di Sumatera dan Kalimantan, diurutkan dari perkiraan asap paling tebal. Pilih kota.`,
   pickCity: 'Pilih kota',
   cancel: 'Batal',
@@ -111,6 +111,7 @@ export const UI = {
   locateFailed: 'Lokasi tidak terbaca. Pilih kota dari daftar.',
   nearest: (city, km) => `Kota terdekat: ${city}, sekitar ${km} km. Lokasi tidak disimpan atau dikirim.`,
 
+  levelHeading: name => `Perkiraan: ${name}`,
   levelLabel: (name, level) => `${name} · level ${level} dari 5`,
   scaleLabel: level => `level ${level} dari 5`,
   betterSince: previous => `Perkiraannya membaik sejak terakhir kamu cek (sebelumnya ${previous}).`,
@@ -123,7 +124,7 @@ export const UI = {
   healthButton: 'Cari fasilitas kesehatan',
   healthQuery: 'fasilitas kesehatan terdekat',
   call: number => `Telepon ${number}`,
-  stamp: time => `Perkiraan, diperbarui ${time} ·`,
+  stamp: time => `Diperbarui ${time} ·`,
   explainTitle: 'Apa ini?',
   explain: pm => [
     'Level ini perkiraan komputer dari data satelit dan cuaca, bukan hasil alat ukur di kota ini.',
@@ -174,12 +175,13 @@ export const UI = {
   stripLabel: (range, window) => `Asap per jam, 24 jam ke depan, ${range}.${window}`,
   stripRange: (low, high) => (low === high ? `semuanya ${low}` : `dari ${low} sampai ${high}`),
   stripBest: (from, to) => ` Paling tipis ${from}–${to}.`,
-  stripLegend: 'Warna batang = level per jam. Makin tinggi, makin tebal asap.',
+  stripLegend: (low, high) =>
+    low === high ? `Semua jam diperkirakan ${low}. Makin tinggi batang, makin tebal asap.` : `Warna = level per jam, dari ${low} sampai ${high}. Makin tinggi batang, makin tebal asap.`,
   stripNow: 'Sekarang',
 
   outlookTitle: 'Besok gimana?',
-  outlookSub: 'Pilih hari untuk lihat detail.',
-  reasonsTitle: 'Kenapa begini?',
+  outlookSub: 'Perkiraan beberapa hari ke depan. Pilih hari untuk lihat detail.',
+  reasonsTitle: 'Yang mungkin berpengaruh',
   hotspots: km => `Titik panas dalam ${km} km (24 jam terakhir)`,
   wind: 'Angin datang dari',
   rainDays: days => `Hari hujan, ${days} hari ke depan`,
@@ -254,7 +256,8 @@ export const POLLS = [
 
 /** Instagram Story card (1080×1920). Every line on it comes from here. */
 export const STORY = {
-  stamp: day => `Perkiraan · ${day}`,
+  levelName: name => `Perkiraan: ${name}`,
+  stamp: day => `Diperbarui ${day}`,
   footer: 'Cek kota sebelum keluar',
   footerLight: 'Cek kotamu sebelum keluar',
   url: 'bisanapasgak.github.io'

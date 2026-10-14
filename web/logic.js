@@ -193,7 +193,7 @@ export function storyLines({ city, level, copy, story, quip, improve, day }) {
   return {
     city,
     level,
-    levelName: copy.name,
+    levelName: story.levelName(copy.name),
     headline: copy.headline,
     quip: light ? quip : null,
     improve,
