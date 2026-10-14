@@ -307,9 +307,11 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 
 /* Share row */
 .share-row { display: flex; gap: var(--sp-2); }
+#watchSolo { display: flex; justify-content: center; }
+.text-link { display: inline-flex; align-items: center; gap: var(--sp-1); min-height: 44px; padding: 0 var(--sp-2); border: 0; background: none; color: var(--brand); font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-strong); cursor: pointer; }
+.text-link .ic { width: 16px; height: 16px; }
 .share-row ion-button.wide { flex: 1 1 0; min-width: 0; margin-top: 0; }
 /* Two buttons side by side only fit on one line without their icons on phones. */
-@media (max-width: 420px) { .share-row .ic { display: none; } }
 @media (max-width: 359px) { .share-row { flex-direction: column; } }
 #watchSolo ion-button.wide { margin-top: 0; }
 

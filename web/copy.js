@@ -204,14 +204,15 @@ export const UI = {
   iosSteps: ['Ketuk tombol Bagikan di bilah Safari.', 'Pilih “Tambah ke Layar Utama”, lalu ketuk Tambah.'],
 
   watchAdd: 'Pantau kota lain',
+  watchAddSolo: 'Pantau kota keluarga',
   watchRowLabel: 'Kota pantauan',
   watchSub: 'Pilih sampai 3 kota, misalnya tempat keluarga tinggal. Tersimpan di HP ini saja.',
   watchCount: n => `${n} dari 3 kota dipantau`,
   watchFull: 'Sudah 3 kota. Lepas satu dulu untuk menambah.',
   watchChip: (city, level, name) => `${city}, ${name}, level ${level} dari 5`,
 
-  share: 'Bagikan ke grup',
-  storyButton: 'Bagikan ke Story',
+  share: 'Bagikan',
+  storyButton: 'Story',
   storySaved: 'Gambar diunduh. Unggah ke Story dari galeri. Kalau tidak muncul, buka halaman ini di Safari atau Chrome.',
   storyLinkCopied: 'Link kota ini sudah disalin. Di Instagram, tambahkan stiker Link lalu tempel.',
   storyTapAgain: 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.',
