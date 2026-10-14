@@ -1,0 +1,92 @@
+/* Design tokens. Components read only these. Level colours (--l1..--l5) mean air quality and nothing else;
+   components reach them through the --lv-* roles that [data-level] sets. tests/tokens.test.ts checks contrast. */
+:root {
+  color-scheme: light;
+  --bg: #F7F4F0;
+  --surface: #FFFFFF;
+  --ink: #241F33;
+  --ink-2: #5B5568;
+  --line: #E9E4DD;
+  --brand: #4B3FB5;
+  --on-brand: #FFFFFF;
+  --brand-soft: #EDEAFF;
+  --brand-soft-ink: #3B2FA0;
+  --notice: #241F33;
+  --notice-ink: #FFFFFF;
+  --focus: #4B3FB5;
+  --cheek: #FF8FA3;
+  --mascot-neutral: #AFA9EC;
+  --mascot-eye: #FFFFFF;
+  --mask: #FFFFFF;
+  --mask-line: #241F33;
+  --shadow-sm: 0 1px 3px rgba(36, 31, 51, .08), 0 1px 2px rgba(36, 31, 51, .04);
+
+  --hairline: transparent;
+
+  --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* 13px floor for older readers; body 17px. */
+  --fs-xs: 13px; --fs-sm: 15px; --fs-md: 17px; --fs-lg: 20px; --fs-xl: 24px; --fs-2xl: 30px;
+  --fw-body: 500; --fw-label: 600; --fw-strong: 700; --fw-display: 800;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-panel: 20px; --sp-5: 24px; --sp-6: 32px;
+  --r-sm: 8px; --r-btn: 14px; --r-card: 24px; --r-pill: 999px;
+
+  /* 1 Baik */
+  --l1-solid: #22A06B; --l1-surface: #EFFAF4; --l1-ink: #0B3D2A; --l1-label: #13744B; --l1-soft: #D3F1E1; --l1-soft-ink: #0F5C3B;
+  --l1-btn: #0B3D2A; --l1-btn-ink: #FFFFFF; --l1-mascot: #22A06B; --l1-eye: #FFFFFF; --l1-shadow: rgba(34, 160, 107, .18); --l1-border: transparent;
+  /* 2 Sedang */
+  --l2-solid: #3D7BF2; --l2-surface: #F1F6FF; --l2-ink: #12306B; --l2-label: #2154BD; --l2-soft: #DCE8FE; --l2-soft-ink: #1D4AA8;
+  --l2-btn: #12306B; --l2-btn-ink: #FFFFFF; --l2-mascot: #3D7BF2; --l2-eye: #FFFFFF; --l2-shadow: rgba(61, 123, 242, .18); --l2-border: transparent;
+  /* 3 Tidak Sehat */
+  --l3-solid: #F5B301; --l3-surface: #FFFBEC; --l3-ink: #3A2A00; --l3-label: #7A5600; --l3-soft: #FFE9A8; --l3-soft-ink: #5C4100;
+  --l3-btn: #5C4100; --l3-btn-ink: #FFFFFF; --l3-mascot: #F5B301; --l3-eye: #3A2A00; --l3-shadow: rgba(160, 110, 0, .18); --l3-border: transparent;
+  /* 4 Sangat Tidak Sehat */
+  --l4-solid: #E5484D; --l4-surface: #FFF1F0; --l4-ink: #5A1416; --l4-label: #B0262B; --l4-soft: #FFD9D7; --l4-soft-ink: #8E1A1E;
+  --l4-btn: #5A1416; --l4-btn-ink: #FFFFFF; --l4-mascot: #E5484D; --l4-eye: #FFFFFF; --l4-shadow: rgba(229, 72, 77, .18); --l4-border: transparent;
+  /* 5 Berbahaya */
+  --l5-solid: #2A2230; --l5-surface: #221C28; --l5-ink: #FFF3EC; --l5-label: #FFB4A2; --l5-soft: #3A3044; --l5-soft-ink: #FFD9CF;
+  --l5-btn: #FFFFFF; --l5-btn-ink: #221C28; --l5-mascot: #4A3F55; --l5-eye: #FFFFFF; --l5-shadow: rgba(20, 12, 28, .3); --l5-border: transparent;
+  --l5-dot: #FFB4A2;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #15121A;
+    --surface: #1E1A24;
+    --ink: #F4EFF7;
+    --ink-2: #B3ACBF;
+    --line: #2E2936;
+    --brand: #B3A9FF;
+    --on-brand: #15121A;
+    --brand-soft: #2A2550;
+    --brand-soft-ink: #CFC8FF;
+    --notice: #F4EFF7;
+    --notice-ink: #15121A;
+    --focus: #B3A9FF;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, .4);
+    --hairline: rgba(255, 255, 255, .07);
+
+    --l1-surface: #12291F; --l1-ink: #D6F5E5; --l1-label: #5FD39A; --l1-soft: #1C3D2E; --l1-soft-ink: #9BE3C0;
+    --l1-btn: #5FD39A; --l1-btn-ink: #0B241A; --l1-shadow: rgba(0, 0, 0, .5); --l1-border: #1F4535;
+    --l2-surface: #142039; --l2-ink: #DCE8FE; --l2-label: #8DB4FF; --l2-soft: #1E3157; --l2-soft-ink: #B5CEFF;
+    --l2-btn: #8DB4FF; --l2-btn-ink: #0E1B33; --l2-shadow: rgba(0, 0, 0, .5); --l2-border: #253A63;
+    --l3-surface: #2A2110; --l3-ink: #FFF1C2; --l3-label: #F5C542; --l3-soft: #4A3A12; --l3-soft-ink: #FFDE7A;
+    --l3-btn: #F5C542; --l3-btn-ink: #2A2110; --l3-shadow: rgba(0, 0, 0, .5); --l3-border: #4A3A18;
+    --l4-surface: #2E1416; --l4-ink: #FFE1E0; --l4-label: #FF8A8E; --l4-soft: #47201F; --l4-soft-ink: #FFB3B5;
+    --l4-btn: #FF8A8E; --l4-btn-ink: #2E1416; --l4-shadow: rgba(0, 0, 0, .5); --l4-border: #552426;
+    --l5-surface: #0B080E; --l5-ink: #FFF3EC; --l5-label: #FFB4A2; --l5-soft: #2A2230; --l5-soft-ink: #FFD9CF;
+    --l5-btn: #FFF3EC; --l5-btn-ink: #0B080E; --l5-shadow: rgba(0, 0, 0, .6); --l5-border: #3A3044;
+  }
+}
+
+/* Level roles. data-level="0" is the neutral card for loading, errors and stale data. */
+[data-level] {
+  --lv-surface: var(--surface); --lv-ink: var(--ink); --lv-label: var(--brand); --lv-soft: var(--brand-soft); --lv-soft-ink: var(--brand-soft-ink);
+  --lv-btn: var(--ink); --lv-btn-ink: var(--surface); --lv-dot: var(--brand); --lv-mascot: var(--mascot-neutral); --lv-eye: var(--mascot-eye);
+  --lv-shadow: rgba(36, 31, 51, .14); --lv-border: var(--line);
+}
+[data-level="1"] { --lv-surface: var(--l1-surface); --lv-ink: var(--l1-ink); --lv-label: var(--l1-label); --lv-soft: var(--l1-soft); --lv-soft-ink: var(--l1-soft-ink); --lv-btn: var(--l1-btn); --lv-btn-ink: var(--l1-btn-ink); --lv-dot: var(--l1-solid); --lv-mascot: var(--l1-mascot); --lv-eye: var(--l1-eye); --lv-shadow: var(--l1-shadow); --lv-border: var(--l1-border); }
+[data-level="2"] { --lv-surface: var(--l2-surface); --lv-ink: var(--l2-ink); --lv-label: var(--l2-label); --lv-soft: var(--l2-soft); --lv-soft-ink: var(--l2-soft-ink); --lv-btn: var(--l2-btn); --lv-btn-ink: var(--l2-btn-ink); --lv-dot: var(--l2-solid); --lv-mascot: var(--l2-mascot); --lv-eye: var(--l2-eye); --lv-shadow: var(--l2-shadow); --lv-border: var(--l2-border); }
+[data-level="3"] { --lv-surface: var(--l3-surface); --lv-ink: var(--l3-ink); --lv-label: var(--l3-label); --lv-soft: var(--l3-soft); --lv-soft-ink: var(--l3-soft-ink); --lv-btn: var(--l3-btn); --lv-btn-ink: var(--l3-btn-ink); --lv-dot: var(--l3-solid); --lv-mascot: var(--l3-mascot); --lv-eye: var(--l3-eye); --lv-shadow: var(--l3-shadow); --lv-border: var(--l3-border); }
+[data-level="4"] { --lv-surface: var(--l4-surface); --lv-ink: var(--l4-ink); --lv-label: var(--l4-label); --lv-soft: var(--l4-soft); --lv-soft-ink: var(--l4-soft-ink); --lv-btn: var(--l4-btn); --lv-btn-ink: var(--l4-btn-ink); --lv-dot: var(--l4-solid); --lv-mascot: var(--l4-mascot); --lv-eye: var(--l4-eye); --lv-shadow: var(--l4-shadow); --lv-border: var(--l4-border); }
+[data-level="5"] { --lv-surface: var(--l5-surface); --lv-ink: var(--l5-ink); --lv-label: var(--l5-label); --lv-soft: var(--l5-soft); --lv-soft-ink: var(--l5-soft-ink); --lv-btn: var(--l5-btn); --lv-btn-ink: var(--l5-btn-ink); --lv-dot: var(--l5-dot); --lv-mascot: var(--l5-mascot); --lv-eye: var(--l5-eye); --lv-shadow: var(--l5-shadow); --lv-border: var(--l5-border); }

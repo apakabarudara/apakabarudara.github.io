@@ -8,7 +8,7 @@
   },
   "scripts": {
     "ingest": "node ingest/main.ts",
-    "build": "rm -rf dist && mkdir -p dist/data && cp web/* dist/ && cp data/latest.json dist/data/",
+    "build": "rm -rf dist && mkdir -p dist/data dist/coba && cp web/* dist/ && cp data/latest.json dist/data/ && cp -r spike/native spike/ionic dist/coba/",
     "test": "node --test \"tests/*.test.ts\""
   }
 }
