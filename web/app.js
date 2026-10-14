@@ -1,13 +1,15 @@
 import './ionic.js';
-import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, POLLS, RAIN, UI } from './copy.js';
+import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, POLLS, RAIN, STORY, UI } from './copy.js';
 import {
-  activityStatuses, ago, bestWindow, freshness, greeting, localDate, mapsSearchUrl, nearest, previewOverride, rainKind, rankByLevel, resolveCity,
-  upcomingDays, WET_DAY_MM
+  activityStatuses, ago, bestWindow, freshness, greeting, improvement, installMode, isIosSafari, localDate, mapsSearchUrl, nearest, normalizeWatch,
+  previewOverride, rainKind, rankByLevel, resolveCity, storyLines, toggleWatch, upcomingDays, watchRow, WET_DAY_MM
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
 const ISPU_URL = 'https://ispu.kemenlh.go.id/app/#/';
 const CITY_KEY = 'bisanapasgak.city';
+const WATCH_KEY = 'bisanapasgak.watch';
+const INSTALL_KEY = 'bisanapasgak.installHidden';
 const ALL = '__all';
 const REFRESH_MS = 15 * 60e3;
 const BEST = { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() };
@@ -18,6 +20,7 @@ const clock = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-dig
 const hm = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit' });
 const dayTime = new Intl.DateTimeFormat('id-ID', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
 const weekdayShort = new Intl.DateTimeFormat('id-ID', { weekday: 'short', timeZone: 'UTC' });
+const weekdayLong = new Intl.DateTimeFormat('id-ID', { weekday: 'long', timeZone: 'UTC' });
 const dayLong = new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'short', timeZone: 'UTC' });
 
 const $ = id => document.getElementById(id);
@@ -48,7 +51,16 @@ const savedCity = {
   set(id) { try { localStorage.setItem(CITY_KEY, id); } catch { /* nothing to remember in private mode */ } }
 };
 
+// Pinned family cities and the "install" dismissal: also device-only, also optional.
+const store = {
+  read(key) { try { return localStorage.getItem(key); } catch { return null; } },
+  write(key, value) { try { localStorage.setItem(key, value); } catch { /* nothing to remember in private mode */ } }
+};
+const readWatch = () => { try { return JSON.parse(store.read(WATCH_KEY) ?? '[]'); } catch { return []; } };
+
 let report = null;
+let watch = readWatch();
+let installEvent = null; // Chromium's beforeinstallprompt, kept until the button is used
 let current = null; // chosen city id; null shows the overview
 let preview = null; // { city, level } from ?city=&level=&preview=1, otherwise null
 let dayIndex = 0;
@@ -62,6 +74,8 @@ function show(view) {
   $('message').hidden = view !== 'message';
   $('overview').hidden = view !== 'overview';
   $('city').hidden = view !== 'city';
+  renderInstall();
+  $('story').hidden = view !== 'city';
   $('shareBlock').hidden = view === 'message' || (view === 'city' && Boolean(preview));
   if (view !== 'city') $('factsBlock').hidden = false;
 }
@@ -99,11 +113,22 @@ function renderOverview() {
   }));
 }
 
+/** "Kapan membaik?" as one line, or null at levels 1–2 and when the forecast has no later day. */
+function improveText(loc, level) {
+  const found = improvement(loc.outlook, localDate(new Date()), level);
+  if (!found) return null;
+  return 'date' in found ? UI.improveOn(weekdayLong.format(dateOf(found.date))) : UI.improveNone(found.days);
+}
+
 function renderAnswer(loc, level) {
   const copy = LEVELS[level];
   $('answer').dataset.level = String(level);
-  // Wrap only after the dot, so a narrow card shows "Sangat Tidak Sehat ·" / "level 4 dari 5".
-  $('levelLabel').textContent = levelText(level).replace(/ · (.+)$/, (_, rest) => ` · ${rest.replaceAll(' ', ' ')}`);
+  $('levelName').textContent = copy.name;
+  $('scale').setAttribute('aria-label', UI.scaleLabel(level));
+  [...$('scale').children].forEach((seg, i) => seg.classList.toggle('on', i + 1 === level));
+  const better = improveText(loc, level);
+  $('improve').textContent = better ?? '';
+  $('improve').hidden = !better;
   $('headline').textContent = copy.headline;
   $('quip').textContent = copy.quip ?? '';
   $('quip').hidden = !copy.quip;
@@ -202,6 +227,7 @@ function render() {
   renderAnswer(loc, level);
   renderToday(loc, level);
   renderReasons(loc, renderOutlook(loc));
+  renderWatch();
 }
 
 function fillPicker() {
@@ -311,6 +337,104 @@ async function share(goodNews) {
   }
 }
 
+/** The Story card as a PNG: shared as a file where the browser can (phones offer Instagram Story), otherwise downloaded. */
+async function shareStory() {
+  const loc = selected();
+  if (!report || !loc || preview) return;
+  const level = loc.pm25_model.band;
+  const day = dayTime.format(new Date(loc.pm25_model.updated_at));
+  $('shareNote').textContent = '';
+  try {
+    const { renderStory } = await import('./story.js');
+    const blob = await renderStory(storyLines({ city: cityName(loc), level, copy: LEVELS[level], story: STORY, improve: improveText(loc, level), day }));
+    const file = new File([blob], 'bisa-napas-gak.png', { type: 'image/png' });
+    if (navigator.canShare?.({ files: [file] })) {
+      await navigator.share({ files: [file] });
+      return;
+    }
+    const link = el('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = file.name;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 10000);
+    $('shareNote').textContent = UI.storySaved;
+  } catch (error) {
+    if (error?.name !== 'AbortError') $('shareNote').textContent = UI.storyFailed; // AbortError: share sheet dismissed
+  }
+}
+
+// Pantau kota lain: up to 3 pinned cities as chips; the one on screen is left out of the row.
+function saveWatch() {
+  store.write(WATCH_KEY, JSON.stringify(watch));
+}
+
+function renderWatch() {
+  const ids = report.locations.map(l => l.id);
+  watch = normalizeWatch(watch, ids, current);
+  const chips = watchRow(watch, current).map(id => {
+    const loc = report.locations.find(l => l.id === id);
+    const level = bandOf(loc);
+    const chip = el('button', 'chip', el('span', 'c', cityName(loc)), el('span', 'n', LEVELS[level].name));
+    chip.type = 'button';
+    chip.dataset.level = String(level);
+    chip.setAttribute('aria-label', UI.watchChip(cityName(loc), level, LEVELS[level].name));
+    chip.addEventListener('click', () => choose(id));
+    return chip;
+  });
+  const add = el('button', 'chip add', el('span', null, `+ ${UI.watchAdd}`));
+  add.type = 'button';
+  add.addEventListener('click', openWatchSheet);
+  $('watch').replaceChildren(...chips, add);
+}
+
+function openWatchSheet() {
+  const ids = report.locations.map(l => l.id);
+  const note = $('watchNote');
+  const count = () => { note.textContent = UI.watchCount(watchRow(watch, current).length); };
+  $('watchList').replaceChildren(...rankByLevel(report.locations).filter(l => l.id !== current).map(loc => {
+    const box = el('input');
+    box.type = 'checkbox';
+    box.checked = watch.includes(loc.id);
+    box.addEventListener('change', () => {
+      const next = toggleWatch(watch, loc.id, ids, current);
+      if (next.refused) {
+        box.checked = false;
+        note.textContent = UI.watchFull;
+        return;
+      }
+      watch = next.list;
+      saveWatch();
+      count();
+      renderWatch();
+    });
+    return el('label', 'pick', box, el('span', 'c', cityName(loc)), el('span', 'n', LEVELS[bandOf(loc)].name));
+  }));
+  count();
+  $('watchSheet').present();
+}
+
+// Pasang di layar utama: Chromium gives an event to call; iOS Safari only has the Share menu, so a sheet shows the steps.
+const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const ios = isIosSafari(navigator.userAgent, navigator.platform, navigator.maxTouchPoints);
+
+function renderInstall() {
+  const mode = installMode({ standalone: standalone(), hasPrompt: Boolean(installEvent), ios, dismissed: store.read(INSTALL_KEY) === '1' });
+  for (const box of document.querySelectorAll('[data-install]')) box.hidden = !mode;
+}
+
+async function install() {
+  if (installEvent) {
+    const prompt = installEvent;
+    installEvent = null;
+    renderInstall();
+    try {
+      await prompt.prompt();
+    } catch { /* prompt already used or refused */ }
+  } else if (ios) {
+    $('iosSheet').present();
+  }
+}
+
 function nextFact() {
   let i;
   do i = Math.floor(Math.random() * FACTS.length); while (i === lastFact && FACTS.length > 1);
@@ -335,6 +459,9 @@ function renderPoll() {
 // Static labels come from copy.js so every line lives in one file.
 for (const node of document.querySelectorAll('[data-copy]')) node.textContent = UI[node.dataset.copy];
 for (const node of document.querySelectorAll('[data-copy-credit]')) node.textContent = UI.creditLine[Number(node.dataset.copyCredit)];
+for (const node of document.querySelectorAll('[data-copy-label]')) node.setAttribute('aria-label', UI[node.dataset.copyLabel]);
+$('iosStep1').textContent = UI.iosSteps[0];
+$('iosStep2').textContent = UI.iosSteps[1];
 $('sensitive').textContent = UI.sensitive;
 $('health').href = mapsSearchUrl(UI.healthQuery);
 $('call').setAttribute('aria-label', UI.call(EMERGENCY_NUMBER));
@@ -363,12 +490,34 @@ $('sendFb').addEventListener('click', () => {
   if (!empty) $('feedback').value = '';
 });
 
-// "Apa ini?": a bottom sheet that fits its content.
+// Bottom sheets that fit their content: "Apa ini?", the iOS install steps, "Pantau kota lain".
+for (const id of ['about', 'iosSheet', 'watchSheet']) {
+  $(id).breakpoints = [0, 1];
+  $(id).initialBreakpoint = 1;
+}
 const sheet = $('about');
-sheet.breakpoints = [0, 1];
-sheet.initialBreakpoint = 1;
 $('aboutBtn').addEventListener('click', () => sheet.present());
 $('aboutClose').addEventListener('click', () => sheet.dismiss());
+$('iosClose').addEventListener('click', () => $('iosSheet').dismiss());
+$('watchClose').addEventListener('click', () => $('watchSheet').dismiss());
+$('story').addEventListener('click', shareStory);
+for (const box of document.querySelectorAll('[data-install]')) {
+  box.querySelector('.install-go').addEventListener('click', install);
+  box.querySelector('.install-x').addEventListener('click', () => {
+    store.write(INSTALL_KEY, '1');
+    renderInstall();
+  });
+}
+addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  installEvent = event;
+  renderInstall();
+});
+addEventListener('appinstalled', () => {
+  installEvent = null;
+  store.write(INSTALL_KEY, '1');
+  renderInstall();
+});
 
 $('refresher').addEventListener('ionRefresh', async e => {
   await load();

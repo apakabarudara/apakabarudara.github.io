@@ -255,3 +255,50 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .footer a { color: var(--ink); padding: 14px 2px; margin: -14px -2px; } /* inline links: a 44px tap area without moving the text */
 .fine summary { cursor: pointer; display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; font-weight: var(--fw-label); color: var(--ink); }
 .fine p { margin-top: 0; }
+
+/* Header tagline */
+.brand-wrap { display: flex; flex-direction: column; min-width: 0; padding-block: var(--sp-1); }
+.tagline { margin: 0; padding-left: 4px; font-size: var(--fs-xs); font-weight: var(--fw-label); line-height: 1.25; color: var(--ink-2); text-wrap: balance; }
+
+/* Level scale: five segments in their level colours, the current one solid and taller (shape, not only colour). */
+:root { --seg5: var(--l5-solid); }
+@media (prefers-color-scheme: dark) { :root { --seg5: var(--l5-dot); } }
+.lvl { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.scale { display: flex; align-items: flex-end; gap: 4px; height: 14px; }
+.scale i { width: 26px; height: 8px; border-radius: 4px; background: var(--c); opacity: .3; }
+.scale i:nth-child(1) { --c: var(--l1-solid); }
+.scale i:nth-child(2) { --c: var(--l2-solid); }
+.scale i:nth-child(3) { --c: var(--l3-solid); }
+.scale i:nth-child(4) { --c: var(--l4-solid); }
+.scale i:nth-child(5) { --c: var(--seg5); }
+.scale i.on { height: 14px; border-radius: 7px; opacity: 1; }
+[data-level="5"] .scale i.on { --c: var(--l5-dot); } /* level 5's solid colour would vanish on its dark card */
+.improve { margin: var(--sp-3) 0 0; font-size: var(--fs-sm); font-weight: var(--fw-strong); color: var(--lv-label); }
+
+/* Install control: quiet, dismissible */
+.install { display: flex; align-items: center; justify-content: center; gap: var(--sp-1); }
+#overview .install { margin-top: var(--sp-2); justify-content: flex-start; }
+.install-go, .install-x { min-height: 44px; border: 0; background: transparent; color: var(--brand); font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-strong); cursor: pointer; border-radius: var(--r-btn); }
+.install-go { display: inline-flex; align-items: center; gap: 6px; padding: 0 var(--sp-3); background: var(--brand-soft); color: var(--brand-soft-ink); }
+.install-x { min-width: 44px; font-size: var(--fs-xl); line-height: 1; color: var(--ink-2); }
+
+/* Share row */
+.share-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.share-row ion-button.wide { flex: 1 1 200px; margin-top: 0; }
+
+/* Pinned cities: chips in level colours, then "Pantau kota lain" */
+.watch { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.chip { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-height: 48px; min-width: 0; padding: 6px var(--sp-3); border: 0; border-radius: var(--r-btn); font: inherit; line-height: 1.2; cursor: pointer; background: var(--lv-soft); color: var(--lv-soft-ink); text-align: left; }
+.chip .c { font-size: var(--fs-sm); font-weight: var(--fw-display); }
+.chip .n { font-size: var(--fs-xs); font-weight: var(--fw-label); }
+.chip.add { flex-direction: row; align-items: center; background: transparent; color: var(--brand); border: 1.5px dashed currentColor; font-size: var(--fs-sm); font-weight: var(--fw-strong); }
+.picks { display: flex; flex-direction: column; margin-top: var(--sp-2); }
+.pick { display: flex; align-items: center; gap: var(--sp-3); min-height: 48px; border-top: 1px solid var(--line); font-size: var(--fs-md); font-weight: var(--fw-strong); cursor: pointer; }
+.pick:first-child { border-top: 0; }
+.pick input { flex: none; width: 24px; height: 24px; accent-color: var(--brand); }
+.pick .c { flex: 1; }
+.pick .n { font-size: var(--fs-xs); font-weight: var(--fw-label); color: var(--ink-2); }
+.sheet-intro { margin: var(--sp-2) 0 0; }
+.steps { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-3); }
+.steps li { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); border-radius: var(--r-btn); background: var(--bg); font-weight: var(--fw-label); }
+.steps .ic { width: 28px; height: 28px; color: var(--brand); }
