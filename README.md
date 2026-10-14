@@ -4,31 +4,54 @@ A playful, mobile-first page that tells people in Indonesia whether the air is s
 
 Live: https://bisanapasgak.github.io/
 
-Status: Phase 2 done. The ingest job writes real data and `web/index.html` reads it. Hosting, the health review of the band copy and the beta are still to come.
+Status: the Ionic version is the main site (chosen by the owner after a live A/B). Hosting, the health review of the level 3–5 copy and the beta are still to come.
 
 ## How it works
 
-An hourly GitHub Actions job fetches three sources, builds one report, validates it, commits `data/latest.json`, and deploys `dist/` to GitHub Pages. The page only reads that file. If any source fails or validation rejects the report, the job stops before committing or deploying, so the site keeps the last good data and its staleness banner takes over.
+An hourly GitHub Actions job installs dependencies (`npm ci`), runs the tests, fetches three sources, builds one report, validates it, commits `data/latest.json`, builds the site with Vite and deploys `dist/` to GitHub Pages. The page only reads that file. If any step fails (tests, a source, validation, the build), the job stops before deploying, so the site keeps the last good deployment and the page's own staleness banner takes over.
 
 ```
+npm ci                                # two devDependencies only: @ionic/core 9.0.5 and vite 8.3.1, pinned exactly
 npm test                              # unit tests, fixtures only
 FIRMS_MAP_KEY=<key> npm run ingest    # writes data/latest.json
-npm run build                         # dist/ = the page + data/latest.json, ready for any static host
-python3 -m http.server -d dist        # preview at http://localhost:8000
+npm run build                         # dist/ = hashed bundle + data/latest.json + robots.txt + sw.js
+npm run preview                       # serves dist/ at http://127.0.0.1:4173
+npm run dev                           # Vite dev server (serves data/latest.json, no service worker)
 ```
 
-Node 22.18 or newer runs the TypeScript directly (type stripping). There are no dependencies.
+Node 22.18 or newer runs the ingest TypeScript directly (type stripping); Vite is only needed for the page.
 
-The page follows a small design system, described in `docs/superpowers/specs/2026-10-14-design-system-design.md`:
-- `web/tokens.css` holds every colour, size and radius. Level colours mean air quality only, and `tests/tokens.test.ts` fails the build if any text/background pair drops below WCAG AA.
-- `web/copy.js` holds every line of copy per level. Level 3–5 safety copy is a draft until the health reviewer signs off.
-- `web/logic.js` holds the pure rules (freshness, city choice, outlook from tomorrow); `web/app.js` renders.
+### Architecture
 
-The answer card's tone follows the level: jokes at 1–2, plain at 3 with a small quip, calm and direct at 4–5. From level 3 it offers "Cari faskes terdekat" (a Google Maps search; the page sends no position), and from level 4 "Telepon 119" ([Kemenkes](https://kemkes.go.id/id/terjadi-darurat-kesehatan-saat-mudik-hubungi-119)). Below the answer card, "Hari ini cocok untuk…" turns the level into four everyday calls (laundry, outdoor exercise, opening windows, kids playing outside), names the freshest two hours from `next_hours`, and draws those 24 hourly values as a neutral strip (hourly values are never banded). Levels 1–2 offer "Kabari grup" to share good air.
+- `web/` is the Vite root. `web/app.js` is the entry; `web/ionic.js` imports the Ionic CSS and defines only the custom elements the page uses (`@ionic/core/components`), so the output is one JS file, one CSS file and one font file, with no lazy chunks. Everything is self-hosted: no CDN and no Google Fonts request at runtime.
+- Plus Jakarta Sans is self-hosted: one variable woff2 (weights 500–800, latin subset) in `web/fonts/` with its OFL licence, `font-display: swap`.
+- `vite.config.js` also emits `data/latest.json` (from `data/`) and `sw.js` (from `web/sw.js`) into `dist/`. `web/public/robots.txt` is copied as is.
+- Service worker (`web/sw.js`, no library): precaches the built shell, cache-first for static files, network-first for `data/latest.json` (4 s wait, then the cached copy), so the page opens offline with the last data and the usual "Data lama" / expired logic decides what to show. The cache name carries a hash of the built file list, so it only changes when the code does, not on the hourly data refresh; old caches are deleted on activate. It is registered only in production builds.
+- Design system: `docs/superpowers/specs/2026-10-14-design-system-design.md`. `web/tokens.css` holds every colour, size and radius (level colours mean air quality only; `tests/tokens.test.ts` fails the build if a text/background pair drops below WCAG AA). `web/app.css` themes Ionic to the tokens. `web/copy.js` holds every line of copy. `web/logic.js` holds the pure rules (freshness, city choice, outlook from tomorrow, preview rule). `web/app.js` renders.
 
-A first visit opens a welcome card ("Pagi! Kamu di kota mana?") with "Pakai lokasiku", then every city as a compact chip ranked worst first, so nobody sees a verdict for a city they did not pick. The chosen city is remembered on the device and opens directly next time; a `#city` link wins over it, and "Lihat semua kota" returns to the overview.
+### Size (first visit, gzip, as GitHub Pages serves it)
 
-The page refetches `data/latest.json` every 15 minutes and whenever it comes back into view. When data is over 3 hours old it shows a "Data lama" banner. Over 12 hours, or when the fetch fails, it hides the verdict and points to the official ISPU. "Kota terdekat" picks the nearest city in the browser; the position is never stored or sent. `#<city id>` in the URL selects a city, which is what "Lempar ke grup" shares.
+HTML 3.6 KB, CSS 8.4 KB, JS 121.6 KB, font 27.4 KB, data 3.2 KB: about 164 KB in total (raw 13.7 + 36.9 + 538 + 27.3 + 44.3 KB). Later visits and offline reloads come from the service worker cache.
+
+### Copy rules
+
+- The app suggests, official sources prescribe, the user decides. Suggest ("sebaiknya", "ada baiknya"); never order. No "Segera ke…", "wajib" or "harus segera".
+- All user-facing text lives in `web/copy.js`. "kamu" only in light parts (welcome, levels 1–2); levels 3–5, safety lines and errors use plain imperatives and "tidak". No slang older readers do not know.
+- No jokes about the reader's body or breathing; no jokes at levels 4–5, "Lainnya" facts included.
+- Numbers are estimates: say so once, in the label ("Perkiraan") or headline, not in every line. Never claim "aman".
+- Health access by urgency, never "puskesmas", "RS", "IGD" or "faskes": mild, lasting symptoms suggest a "fasilitas kesehatan"; severe symptoms suggest medical help or 119. The button reads "Cari fasilitas kesehatan" (a Google Maps search; the page sends no position).
+- Level 3–5 safety copy, activity statuses and symptom lines are drafts awaiting a health reviewer (comment at the top of `copy.js`).
+- `tests/copy.test.ts` checks these rules.
+
+### Behaviour
+
+A first visit opens a welcome card ("Pagi! Kamu di kota mana?") with "Pakai lokasiku", then every city worst first, so nobody sees a verdict for a city they did not pick. The chosen city is remembered on the device (localStorage, in try/catch). Precedence: `#city` in the URL, then the saved city, then the overview; "Lihat semua kota" returns to the overview. "Terdekat" picks the nearest city in the browser; the position is never stored or sent.
+
+The city view: answer card (headline, actions, symptom lines from level 3, "Cari fasilitas kesehatan" from level 3, 119 from level 4, "Kabari grup" at levels 1–2, "Apa ini?" as a bottom sheet), "Hari ini cocok untuk…" (activities, freshest two hours, labelled 24-hour strip), "Besok gimana?" from tomorrow with day detail, "Kenapa begini?" and "Lainnya" folded (accordions), "Bagikan ke grup", and a footer with the data credits (Open-Meteo CC BY 4.0, Copernicus CAMS with the year, NASA FIRMS, ISPU).
+
+The page refetches `data/latest.json` every 15 minutes, when it returns to the tab and on pull-to-refresh. Over 3 hours old it shows "Data lama". Over 12 hours, or on a failed first load, it hides the verdict and points to the official ISPU. A failed refresh keeps the last data.
+
+`?city=<id>&level=<1-5>&preview=1` shows a level for design review with a visible "Pratinjau" banner. Without `preview=1` the `level` parameter is ignored, so a shared link can never show a made-up level (`previewOverride` in `web/logic.js`).
 
 ## data/latest.json
 
