@@ -1,0 +1,545 @@
+{
+  "generated_at": "2026-10-14T00:35:59.674Z",
+  "locations": [
+    {
+      "id": "pekanbaru",
+      "name": "Pekanbaru, Riau",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 59.9,
+        "unit": "ug/m3",
+        "band": 3,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 2,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Barat daya",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 58.7,
+          "band": 3
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 58.6,
+          "band": 3
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 46,
+          "band": 2
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 39.5,
+          "band": 2
+        }
+      ]
+    },
+    {
+      "id": "dumai",
+      "name": "Dumai, Riau",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 63.1,
+        "unit": "ug/m3",
+        "band": 3,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 1,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Tenggara",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 61.7,
+          "band": 3
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 35.2,
+          "band": 2
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 31.8,
+          "band": 2
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 24.9,
+          "band": 2
+        }
+      ]
+    },
+    {
+      "id": "jambi",
+      "name": "Jambi, Jambi",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 117.5,
+        "unit": "ug/m3",
+        "band": 3,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 248,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Tenggara",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 100.5,
+          "band": 3
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 98.6,
+          "band": 3
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 104.3,
+          "band": 3
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 79.6,
+          "band": 3
+        }
+      ]
+    },
+    {
+      "id": "palembang",
+      "name": "Palembang, Sumatera Selatan",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 96.9,
+        "unit": "ug/m3",
+        "band": 3,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 914,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Tenggara",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 94.9,
+          "band": 3
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 124.1,
+          "band": 3
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 114.3,
+          "band": 3
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 95.4,
+          "band": 3
+        }
+      ]
+    },
+    {
+      "id": "pontianak",
+      "name": "Pontianak, Kalimantan Barat",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 88.1,
+        "unit": "ug/m3",
+        "band": 3,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 6,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Utara",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 98.4,
+          "band": 3
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 99.5,
+          "band": 3
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 23.5,
+          "band": 2
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 51.7,
+          "band": 2
+        }
+      ]
+    },
+    {
+      "id": "ketapang",
+      "name": "Ketapang, Kalimantan Barat",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 120.2,
+        "unit": "ug/m3",
+        "band": 3,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 145,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Timur",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 95.6,
+          "band": 3
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 159.3,
+          "band": 4
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 110.7,
+          "band": 3
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 139.2,
+          "band": 3
+        }
+      ]
+    },
+    {
+      "id": "palangkaraya",
+      "name": "Palangkaraya, Kalimantan Tengah",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 1133.1,
+        "unit": "ug/m3",
+        "band": 5,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 3321,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Tenggara",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 1163.8,
+          "band": 5
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 1046.7,
+          "band": 5
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 1099.5,
+          "band": 5
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 1194.7,
+          "band": 5
+        }
+      ]
+    },
+    {
+      "id": "sampit",
+      "name": "Sampit, Kalimantan Tengah",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 393.1,
+        "unit": "ug/m3",
+        "band": 5,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 2447,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Tenggara",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 397.3,
+          "band": 5
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 345,
+          "band": 5
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 462.3,
+          "band": 5
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 511.2,
+          "band": 5
+        }
+      ]
+    },
+    {
+      "id": "banjarmasin",
+      "name": "Banjarmasin, Kalimantan Selatan",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 60.9,
+        "unit": "ug/m3",
+        "band": 3,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 1858,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Tenggara",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 70.2,
+          "band": 3
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 56.3,
+          "band": 3
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 42.4,
+          "band": 2
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 40.5,
+          "band": 2
+        }
+      ]
+    },
+    {
+      "id": "banjarbaru",
+      "name": "Banjarbaru, Kalimantan Selatan",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 69.6,
+        "unit": "ug/m3",
+        "band": 3,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 727,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Tenggara",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 72.4,
+          "band": 3
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 56.4,
+          "band": 3
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 45.3,
+          "band": 2
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 51.8,
+          "band": 2
+        }
+      ]
+    },
+    {
+      "id": "samarinda",
+      "name": "Samarinda, Kalimantan Timur",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 35.7,
+        "unit": "ug/m3",
+        "band": 2,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 89,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Timur",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 35.4,
+          "band": 2
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 35,
+          "band": 2
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 32.2,
+          "band": 2
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 29,
+          "band": 2
+        }
+      ]
+    },
+    {
+      "id": "balikpapan",
+      "name": "Balikpapan, Kalimantan Timur",
+      "ispu": {
+        "value": null,
+        "status": "link_only",
+        "source_url": "https://ispu.kemenlh.go.id/app/#/"
+      },
+      "pm25_model": {
+        "value": 31.4,
+        "unit": "ug/m3",
+        "band": 2,
+        "source": "CAMS global via Open-Meteo",
+        "updated_at": "2026-10-14T00:00:00.000Z"
+      },
+      "hotspots_24h": {
+        "count": 96,
+        "radius_km": 100,
+        "source": "NASA FIRMS VIIRS NOAA-20 NRT",
+        "updated_at": "2026-10-14T00:35:59.674Z"
+      },
+      "wind_dir": "Barat",
+      "outlook": [
+        {
+          "date": "2026-10-14",
+          "pm25_mean": 37.1,
+          "band": 2
+        },
+        {
+          "date": "2026-10-15",
+          "pm25_mean": 45.2,
+          "band": 2
+        },
+        {
+          "date": "2026-10-16",
+          "pm25_mean": 22.4,
+          "band": 2
+        },
+        {
+          "date": "2026-10-17",
+          "pm25_mean": 16.9,
+          "band": 2
+        }
+      ]
+    }
+  ]
+}
