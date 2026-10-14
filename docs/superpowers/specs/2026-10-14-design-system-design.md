@@ -14,7 +14,10 @@ Residents living in the smoke, opening the page in the morning before going out.
 | Tone | Scales with severity. Levels 1–2 joke, level 3 is plain with a small quip, levels 4–5 are calm and direct. |
 | Visual direction | Option C: clean, warm, playful. ISPU hue order (green, blue, yellow, red, dark) tuned on a warm grey ground, soft shadows instead of thick outlines, Plus Jakarta Sans, blob mascot. |
 | City | Remembered on the device (localStorage). Precedence: `#city` in the link, then the saved city, then the overview. GPS position is never stored or sent. |
-| First visit | Overview "Asap hari ini": every city ranked worst first, "Pakai lokasiku" on top, tap a row to open and remember it. Never a verdict for a city nobody picked. "Lihat semua kota" returns to it. Added after a UX review on 2026-10-14. |
+| First visit | Welcome card with the mascot ("Pagi! Kamu di kota mana?") and "Pakai lokasiku", then every city as a compact two-column chip grid ranked worst first. Tapping a chip opens and remembers it. Never a verdict for a city nobody picked. "Lihat semua kota" returns to it. Added after a UX review on 2026-10-14. |
+| Everyday calls | "Hari ini cocok untuk…": laundry, outdoor exercise, opening windows, kids outside, each ✓ / ! / ✕ from the level (rain turns ok laundry into caution). Health-related statuses are drafts for the reviewer. |
+| Freshest hours | The two cleanest consecutive hours between 06:00 and 21:00 in the next 24, from `next_hours`; levels 4–5 say windows stay shut instead. A neutral 24-bar strip shows the hours, best ones in brand colour. |
+| Good news | Levels 1–2 get "Kabari grup: udara lagi bagus", a share of good air. |
 | Health access | "Cari faskes terdekat" from level 3 opens a Google Maps search; the page sends no position. "Telepon 119" from level 4 ([Kemenkes](https://kemkes.go.id/id/terjadi-darurat-kesehatan-saat-mudik-hubungi-119)). |
 | Outlook | Starts tomorrow, because the answer card covers today. |
 

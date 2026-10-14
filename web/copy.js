@@ -11,6 +11,8 @@ export const LEVELS = {
     actions: ['Bebas beraktivitas di luar'],
     bubble: ['Gas keluar!', 'Hirup yang dalem dong~', 'Lagi cakep banget udaranya.'],
     dayLine: 'Napas santai, senyum lebar.',
+    activities: { laundry: 'ok', exercise: 'ok', windows: 'ok', kids: 'ok' },
+    goodNews: true,
     faskes: false,
     emergency: false
   },
@@ -21,6 +23,8 @@ export const LEVELS = {
     actions: ['Aktivitas di luar oke', 'Punya asma atau sakit jantung? Jangan lama-lama olahraga di luar'],
     bubble: ['Hmm, lumayan sih.', 'Jangan sok kuat di lapangan.', 'Santai aja, gak dramatis kok.'],
     dayLine: 'Aman, tapi jangan ngebut di luar.',
+    activities: { laundry: 'ok', exercise: 'caution', windows: 'ok', kids: 'ok' },
+    goodNews: true,
     faskes: false,
     emergency: false
   },
@@ -31,6 +35,8 @@ export const LEVELS = {
     actions: ['Kurangi olahraga dan kerja berat di luar', 'Anak, lansia, dan yang punya asma lebih banyak di dalam'],
     bubble: ['Minum air dulu, plis.', 'Paru-paru minta cuti.'],
     dayLine: 'Kurangi aktivitas berat di luar.',
+    activities: { laundry: 'no', exercise: 'no', windows: 'caution', kids: 'caution' },
+    goodNews: false,
     faskes: true,
     emergency: false
   },
@@ -41,6 +47,8 @@ export const LEVELS = {
     actions: ['Tutup jendela dan pintu', 'Anak dan lansia tetap di dalam', 'Pakai N95 kalau harus keluar'],
     bubble: null,
     dayLine: 'Rencanakan kegiatan di dalam ruangan.',
+    activities: { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' },
+    goodNews: false,
     faskes: true,
     emergency: true
   },
@@ -51,18 +59,40 @@ export const LEVELS = {
     actions: ['Tutup jendela dan pintu', 'Anak dan lansia tetap di dalam', 'Pakai N95 hanya kalau terpaksa keluar'],
     bubble: null,
     dayLine: 'Tetap di dalam ruangan sepanjang hari.',
+    activities: { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' },
+    goodNews: false,
     faskes: true,
     emergency: true
   }
 };
 
+/** "Hari ini cocok untuk…" tiles. Statuses come from LEVELS[n].activities (drafts for the health reviewer, except laundry). */
+export const ACTIVITIES = [
+  { id: 'laundry', label: 'Jemur baju', notes: { ok: 'Aman', caution: 'Bisa hujan', no: 'Bau asap' } },
+  { id: 'exercise', label: 'Olahraga luar', notes: { ok: 'Gas', caution: 'Sensitif: santai', no: 'Tunda dulu' } },
+  { id: 'windows', label: 'Buka jendela', notes: { ok: 'Boleh', caution: 'Di jam segar', no: 'Tutup' } },
+  { id: 'kids', label: 'Anak main luar', notes: { ok: 'Boleh', caution: 'Sebentar aja', no: 'Di dalam aja' } }
+];
+
+export const STATUS_MARK = { ok: '✓', caution: '!', no: '✕' };
+
 export const EMERGENCY_NUMBER = '119';
 
 export const UI = {
   loadingHeadline: 'Lagi ngecek udara…',
+  welcome: hello => `${hello} Kamu di kota mana?`,
+  welcomeSub: 'Pilih sekali, besok langsung muncul.',
   overviewTitle: 'Asap hari ini',
   overviewSub: count => `${count} kota di Sumatra & Kalimantan, dari yang terparah. Tap kotamu.`,
   useLocation: 'Pakai lokasiku',
+  todayTitle: 'Hari ini cocok untuk…',
+  bestWindow: (from, to) => `Jam paling segar: ${from}–${to}`,
+  windowsShut: 'Jendela tetap tutup seharian.',
+  stripLabel: (from, to) => `PM2.5 per jam, 24 jam ke depan. Paling rendah ${from}–${to}.`,
+  stripNow: 'Sekarang',
+  stripEnd: '24 jam ke depan · perkiraan model',
+  goodNews: 'Kabari grup: udara lagi bagus',
+  shareGood: (city, level) => `${city}: Level ${level} · ${LEVELS[level].name}. Udara lagi bagus, cek kotamu juga.`,
   allCities: 'Lihat semua kota',
   shareOverview: 'Asap hari ini di Sumatra & Kalimantan. Cek kotamu sebelum keluar.',
   locating: 'Lagi cari posisimu…',

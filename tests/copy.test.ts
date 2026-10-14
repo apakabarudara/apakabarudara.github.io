@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { LEVELS, UI } from '../web/copy.js';
+import { ACTIVITIES, LEVELS, UI } from '../web/copy.js';
 
 const ISPU_NAMES = ['Baik', 'Sedang', 'Tidak Sehat', 'Sangat Tidak Sehat', 'Berbahaya'];
 
@@ -21,9 +21,16 @@ describe('LEVELS', () => {
       assert.equal(copy.bubble === null, serious);
     });
 
-    it(`level ${level} offers health access from level 3 and 119 from level 4`, () => {
+    it(`level ${level} offers health access from level 3, 119 from level 4, good news up to level 2`, () => {
       assert.equal(copy.faskes, level >= 3);
       assert.equal(copy.emergency, level >= 4);
+      assert.equal(copy.goodNews, level <= 2);
+    });
+
+    it(`level ${level} has a status for every activity, consistent with the safety actions`, () => {
+      for (const activity of ACTIVITIES) assert.ok(['ok', 'caution', 'no'].includes(copy.activities[activity.id]), activity.id);
+      if (level >= 4) assert.deepEqual(copy.activities, { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' });
+      if (level >= 3) assert.equal(copy.activities.exercise, 'no');
     });
   }
 });

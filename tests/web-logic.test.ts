@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { ago, freshness, mapsSearchUrl, nearest, rankByLevel, resolveCity, upcomingDays } from '../web/logic.js';
+import { activityStatuses, ago, bestWindow, freshness, greeting, mapsSearchUrl, nearest, rankByLevel, resolveCity, upcomingDays } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
 const hoursAgo = (h: number): string => new Date(NOW.getTime() - h * 3600e3).toISOString();
@@ -57,6 +57,44 @@ describe('nearest', () => {
     const result = nearest(locations, -2.98, 104.76);
     assert.equal(result.location.id, 'palembang');
     assert.ok(result.km > 6 && result.km < 8);
+  });
+});
+
+describe('bestWindow', () => {
+  // 24 hours from 07:00 WIB; the two cleanest daytime hours are 14:00–16:00 WIB, a cleaner pair at 23:00 is outside the window.
+  const wib = (iso: string): number => (new Date(iso).getUTCHours() + 7) % 24;
+  const values = Array.from({ length: 24 }, (_, i) => 100);
+  values[7] = 40; values[8] = 42; // 14:00, 15:00 WIB
+  values[16] = 10; values[17] = 10; // 23:00, 00:00 WIB
+  const hours = values.map((pm25, i) => ({ time: new Date(Date.parse('2026-10-14T00:00:00Z') + i * 3600e3).toISOString(), pm25 }));
+  const opts = { span: 2, fromHour: 6, toHour: 21, localHour: wib };
+
+  it('finds the cleanest two daytime hours', () => {
+    assert.deepEqual(bestWindow(hours, opts), { start: '2026-10-14T07:00:00.000Z', end: '2026-10-14T09:00:00.000Z', indexes: [7, 8] });
+  });
+
+  it('keeps the window inside 06:00–21:00 and prefers the earliest tie', () => {
+    const flat = hours.map(h => ({ ...h, pm25: 50 }));
+    assert.equal(bestWindow(flat, opts)?.start, '2026-10-14T00:00:00.000Z'); // 07:00 WIB
+    const night = hours.filter(h => wib(h.time) >= 21 || wib(h.time) < 6);
+    assert.equal(bestWindow(night, opts), null);
+  });
+});
+
+describe('activityStatuses', () => {
+  const clear = { laundry: 'ok', exercise: 'ok', windows: 'ok', kids: 'ok' };
+  it('turns ok laundry into caution when rain is forecast', () => {
+    assert.equal(activityStatuses(clear, 0.5, 1).laundry, 'ok');
+    assert.equal(activityStatuses(clear, 1, 1).laundry, 'caution');
+  });
+  it('never relaxes a smoky no', () => {
+    assert.equal(activityStatuses({ ...clear, laundry: 'no' }, 12, 1).laundry, 'no');
+  });
+});
+
+describe('greeting', () => {
+  it('follows the hour of day', () => {
+    assert.deepEqual([6, 12, 16, 20, 2].map(greeting), ['Pagi!', 'Siang!', 'Sore!', 'Malam!', 'Malam!']);
   });
 });
 

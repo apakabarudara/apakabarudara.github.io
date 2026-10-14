@@ -42,16 +42,23 @@
 
   <div id="banner" class="banner" role="status" hidden></div>
 
-  <section id="overview" class="panel overview" aria-labelledby="overviewTitle" hidden>
-    <h1 id="overviewTitle" class="overview-title">Asap hari ini</h1>
-    <p id="overviewSub" class="sub"></p>
-    <button type="button" id="locateOverview" class="btn btn--brand btn--wide">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
-      Pakai lokasiku
-    </button>
-    <p id="overviewHint" class="note" aria-live="polite"></p>
-    <ul id="cityList" class="city-list"></ul>
-  </section>
+  <div id="overview" class="overview" hidden>
+    <section class="answer welcome" data-level="0" aria-labelledby="welcomeTitle">
+      <span class="mascot" aria-hidden="true"><span class="eye l"></span><span class="eye r"></span><span class="cheek l"></span><span class="cheek r"></span><span class="mouth"></span></span>
+      <h1 id="welcomeTitle" class="headline">Kamu di kota mana?</h1>
+      <p id="welcomeSub" class="quip"></p>
+      <button type="button" id="locateOverview" class="btn btn--brand btn--wide">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
+        Pakai lokasiku
+      </button>
+      <p id="overviewHint" class="note" aria-live="polite"></p>
+    </section>
+    <section class="panel" aria-labelledby="overviewTitle">
+      <h2 id="overviewTitle">Asap hari ini</h2>
+      <p id="overviewSub" class="sub"></p>
+      <ul id="cityList" class="city-grid"></ul>
+    </section>
+  </div>
 
   <section id="answer" class="answer" data-level="0" aria-live="polite" aria-busy="true">
     <div id="confetti" class="confetti" aria-hidden="true"></div>
@@ -63,11 +70,23 @@
     <p id="quip" class="quip" hidden></p>
     <ul id="actions" class="actions"><li><span class="skeleton" style="width:85%"></span></li><li><span class="skeleton" style="width:60%"></span></li></ul>
     <div id="buttons" class="btns" hidden>
+      <button type="button" id="shareGood" class="btn btn--level" hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/></svg>
+        <span id="shareGoodLabel">Kabari grup: udara lagi bagus</span>
+      </button>
       <a id="faskes" class="btn btn--level" target="_blank" rel="noopener">Cari faskes terdekat</a>
       <a id="call" class="btn btn--level-ghost" href="tel:119">Telepon 119</a>
     </div>
     <p id="stamp" class="stamp"></p>
     <a id="official" class="official" href="https://ispu.kemenlh.go.id/app/#/" target="_blank" rel="noopener">Cek ISPU resmi KLH ↗</a>
+  </section>
+
+  <section id="today" class="panel" aria-labelledby="todayTitle" hidden>
+    <h2 id="todayTitle">Hari ini cocok untuk…</h2>
+    <ul id="activities" class="activities"></ul>
+    <p id="bestWindow" class="best"></p>
+    <div id="strip" class="strip" role="img"></div>
+    <div id="stripAxis" class="strip-axis"><span id="stripNow">Sekarang</span><span id="stripEnd">24 jam ke depan · perkiraan model</span></div>
   </section>
 
   <section id="outlook" class="panel" aria-labelledby="outlookTitle" hidden>

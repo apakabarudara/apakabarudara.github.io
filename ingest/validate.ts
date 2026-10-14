@@ -1,6 +1,8 @@
+import { NEXT_HOURS } from './build.ts';
 import type { LatestReport } from './types.ts';
 
 const BANDS: ReadonlySet<number> = new Set([1, 2, 3, 4, 5]);
+const HOUR_MS = 3600e3;
 
 const isUtcTimestamp = (value: unknown): boolean => typeof value === 'string' && value.endsWith('Z') && !Number.isNaN(Date.parse(value));
 const isDate = (value: unknown): boolean => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
@@ -41,6 +43,13 @@ export function validateReport(report: LatestReport, expectedIds: readonly strin
       if (!isConcentration(day.pm25_mean)) at(`outlook[${i}].pm25_mean invalid: ${day.pm25_mean}`);
       if (!BANDS.has(day.band)) at(`outlook[${i}].band invalid: ${day.band}`);
       if (!isConcentration(day.rain_mm)) at(`outlook[${i}].rain_mm invalid: ${day.rain_mm}`);
+    });
+
+    if (loc.next_hours.length !== NEXT_HOURS) at(`next_hours has ${loc.next_hours.length} entries, expected ${NEXT_HOURS}`);
+    loc.next_hours.forEach((hour, i) => {
+      if (!isUtcTimestamp(hour.time)) at(`next_hours[${i}].time invalid: ${hour.time}`);
+      if (i > 0 && Date.parse(hour.time) - Date.parse(loc.next_hours[i - 1].time) !== HOUR_MS) at(`next_hours[${i}] is not one hour after the previous`);
+      if (!isConcentration(hour.pm25)) at(`next_hours[${i}].pm25 invalid: ${hour.pm25}`);
     });
   }
   return problems;

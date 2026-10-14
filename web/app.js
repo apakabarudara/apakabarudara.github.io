@@ -1,10 +1,20 @@
-import { EMERGENCY_NUMBER, LEVELS, POLLS, TWISTS, UI } from './copy.js';
-import { ago, freshness, localDate, mapsSearchUrl, nearest, rankByLevel, resolveCity, upcomingDays } from './logic.js';
+import { ACTIVITIES, EMERGENCY_NUMBER, LEVELS, POLLS, STATUS_MARK, TWISTS, UI } from './copy.js';
+import { activityStatuses, ago, bestWindow, freshness, greeting, localDate, mapsSearchUrl, nearest, rankByLevel, resolveCity, upcomingDays } from './logic.js';
 
 const DATA_URL = 'data/latest.json';
 const CITY_KEY = 'bisanapasgak.city';
 const REFRESH_MS = 15 * 60e3;
 const BUBBLE_MS = 3000;
+const WET_DAY_MM = 1; // the usual wet-day threshold
+const BEST_WINDOW = { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() };
+const hourMinute = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+const ACTIVITY_ICONS = {
+  laundry: '<path d="M9 3l-5 3 2 4 2-1v11h8V9l2 1 2-4-5-3a3 3 0 0 1-6 0z"/>',
+  exercise: '<path d="M11 5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M4 17l5 1l.75 -1.5"/><path d="M15 21v-4l-4 -3l1 -6"/><path d="M7 12v-3l5 -1l3 3l3 1"/>',
+  windows: '<path d="M5 3h14v18H5z"/><path d="M12 3v18M5 12h14"/>',
+  kids: '<path d="M9.5 5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"/><path d="M12 8v7M8 11l4-2 4 2M9 21l3-6 3 6"/>'
+};
 
 const num = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 });
 const clock = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
@@ -62,32 +72,63 @@ function showMessage(headline, text) {
   $('banner').hidden = true;
   $('overview').hidden = true;
   $('answer').hidden = false;
-  $('outlook').hidden = true;
-  $('reasons').hidden = true;
+  for (const id of ['today', 'outlook', 'reasons']) $(id).hidden = true;
 }
 
 function renderOverview() {
   $('cityBar').hidden = true;
-  $('answer').hidden = true;
-  $('outlook').hidden = true;
-  $('reasons').hidden = true;
+  for (const id of ['answer', 'today', 'outlook', 'reasons']) $(id).hidden = true;
   $('overview').hidden = false;
+  $('welcomeTitle').textContent = UI.welcome(greeting(new Date().getHours()));
+  $('welcomeSub').textContent = UI.welcomeSub;
   $('overviewSub').textContent = UI.overviewSub(report.locations.length);
   $('cityList').replaceChildren(...rankByLevel(report.locations).map(loc => {
-    const [city, province = ''] = loc.name.split(',').map(s => s.trim());
     const level = loc.pm25_model.band;
-    const name = el('span', null, 'name');
-    name.append(el('b', city), el('small', province));
-    const chip = el('span', `Level ${level} · ${LEVELS[level].name}`, 'chip');
+    const chip = el('button', null, 'city-chip');
+    chip.type = 'button';
     chip.dataset.level = String(level);
-    const row = el('button', null, 'city-row');
-    row.type = 'button';
-    row.append(name, chip);
-    row.addEventListener('click', () => choose(loc.id));
+    chip.setAttribute('aria-label', `${loc.name}, level ${level}, ${LEVELS[level].name}`);
+    chip.append(el('b', cityName(loc)), el('small', LEVELS[level].name));
+    chip.addEventListener('click', () => choose(loc.id));
     const item = el('li');
-    item.append(row);
+    item.append(chip);
     return item;
   }));
+}
+
+function renderToday(loc) {
+  const level = loc.pm25_model.band;
+  const todayRain = loc.outlook.find(d => d.date === localDate(new Date()))?.rain_mm ?? 0;
+  const statuses = activityStatuses(LEVELS[level].activities, todayRain, WET_DAY_MM);
+  $('activities').replaceChildren(...ACTIVITIES.map(activity => {
+    const status = statuses[activity.id];
+    const tile = el('li', null, 'activity');
+    tile.dataset.status = status;
+    tile.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ACTIVITY_ICONS[activity.id]}</svg>`;
+    const text = el('span', null, 'text');
+    text.append(el('span', activity.label, 'label'), el('span', `${STATUS_MARK[status]} ${activity.notes[status]}`, 'status'));
+    tile.append(text);
+    return tile;
+  }));
+
+  const hours = Array.isArray(loc.next_hours) ? loc.next_hours : [];
+  const win = level <= 3 && hours.length > 0 ? bestWindow(hours, BEST_WINDOW) : null;
+  const from = win ? hourMinute.format(new Date(win.start)) : '';
+  const to = win ? hourMinute.format(new Date(win.end)) : '';
+  $('bestWindow').textContent = level >= 4 ? UI.windowsShut : win ? UI.bestWindow(from, to) : '';
+  $('bestWindow').hidden = !$('bestWindow').textContent;
+
+  const peak = Math.max(...hours.map(h => h.pm25), 1);
+  const best = new Set(win?.indexes ?? []);
+  $('strip').replaceChildren(...hours.map((h, i) => {
+    const bar = el('i', null, best.has(i) ? 'best' : '');
+    bar.style.height = `${Math.max(8, (h.pm25 / peak) * 100)}%`;
+    return bar;
+  }));
+  $('strip').setAttribute('aria-label', win ? UI.stripLabel(from, to) : UI.stripEnd);
+  $('strip').hidden = hours.length === 0;
+  $('stripAxis').hidden = hours.length === 0;
+  $('today').hidden = false;
 }
 
 function burst() {
@@ -125,7 +166,9 @@ function renderAnswer(loc) {
     item.append(mark, text);
     return item;
   }));
-  $('buttons').hidden = !copy.faskes;
+  $('buttons').hidden = !copy.faskes && !copy.goodNews;
+  $('shareGood').hidden = !copy.goodNews;
+  $('faskes').hidden = !copy.faskes;
   $('faskes').href = mapsSearchUrl(UI.faskesQuery);
   $('faskes').textContent = copy.emergency ? UI.faskesShort : UI.faskes;
   $('call').hidden = !copy.emergency;
@@ -205,6 +248,7 @@ function render() {
   $('allCities').hidden = false;
   $('answer').hidden = false;
   renderAnswer(loc);
+  renderToday(loc);
   renderReasons(loc, renderOutlook(loc));
 }
 
@@ -294,6 +338,10 @@ $('city').addEventListener('change', e => {
 });
 $('overviewTitle').textContent = UI.overviewTitle;
 $('allCities').textContent = UI.allCities;
+$('todayTitle').textContent = UI.todayTitle;
+$('shareGoodLabel').textContent = UI.goodNews;
+$('stripNow').textContent = UI.stripNow;
+$('stripEnd').textContent = UI.stripEnd;
 
 function useLocation() {
   if (!report) return;
@@ -328,13 +376,15 @@ $('mascot').addEventListener('click', () => {
   bubbleTimer = setTimeout(() => { bubble.hidden = true; }, BUBBLE_MS);
 });
 
-$('share').addEventListener('click', async () => {
+async function share(goodNews) {
   if (!report) return;
   const fresh = freshness(report.generated_at, new Date()) !== 'expired';
   const cityView = view === 'city' && fresh;
   const loc = cityView ? selected() : null;
   const url = `${location.origin}${location.pathname}${loc ? `#${loc.id}` : ''}`;
-  const text = loc ? UI.shareText(cityName(loc), loc.pm25_model.band, LEVELS[loc.pm25_model.band].headline) : fresh ? UI.shareOverview : document.title;
+  const level = loc?.pm25_model.band;
+  const text = !loc ? (fresh ? UI.shareOverview : document.title)
+    : goodNews ? UI.shareGood(cityName(loc), level) : UI.shareText(cityName(loc), level, LEVELS[level].headline);
   try {
     if (navigator.share) {
       await navigator.share({ title: document.title, text, url });
@@ -346,7 +396,9 @@ $('share').addEventListener('click', async () => {
   } catch {
     // Share sheet dismissed or clipboard refused: nothing to undo.
   }
-});
+}
+$('share').addEventListener('click', () => share(false));
+$('shareGood').addEventListener('click', () => share(true));
 
 $('twistBtn').addEventListener('click', pickTwist);
 $('feedback').addEventListener('input', () => { $('fbNote').textContent = ''; });

@@ -42,18 +42,33 @@ a { color: var(--brand); }
 .hint { margin: 0; font-size: var(--fs-sm); color: var(--ink-2); }
 .linkbtn { flex: none; min-height: 44px; margin-left: auto; padding: 0; border: 0; background: none; color: var(--brand); font-size: var(--fs-sm); font-weight: 700; text-decoration: underline; cursor: pointer; }
 
-/* Overview: the first-visit list of every city, worst air first. */
-.overview-title { margin: 0; font-size: var(--fs-xl); font-weight: 800; letter-spacing: -.01em; }
-.overview > .btn { margin-top: var(--sp-3); }
-.city-list { list-style: none; margin: var(--sp-2) 0 0; padding: 0; }
-.city-row {
-  width: 100%; min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
-  padding: var(--sp-2) 0; border: 0; border-top: 1px solid var(--line); background: none; color: var(--ink); text-align: left; cursor: pointer;
+/* Overview (first visit): a welcome card, then every city as a compact chip, worst air first. */
+.overview { display: flex; flex-direction: column; gap: var(--sp-4); }
+.welcome .btn { margin-top: var(--sp-4); }
+.welcome .note:not(:empty) { margin-top: var(--sp-2); }
+.welcome .mascot { cursor: default; animation: bob 2.6s ease-in-out infinite; }
+.welcome .mascot .mouth { width: 18px; height: 9px; border-radius: 0 0 12px 12px; }
+.city-grid { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); }
+.city-chip {
+  width: 100%; min-height: 56px; padding: var(--sp-2) var(--sp-3); border: 0; border-radius: var(--r-btn); cursor: pointer; text-align: left;
+  background: var(--lv-soft); color: var(--lv-soft-ink); display: flex; flex-direction: column; justify-content: center;
 }
-.city-row .name { display: flex; flex-direction: column; min-width: 0; }
-.city-row .name b { font-weight: 800; }
-.city-row .name small { font-size: var(--fs-xs); color: var(--ink-2); }
-.city-row .chip { flex: none; padding: 4px 10px; border-radius: var(--r-pill); background: var(--lv-soft); color: var(--lv-soft-ink); font-size: var(--fs-xs); font-weight: 800; }
+.city-chip b { font-size: var(--fs-sm); font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.city-chip small { font-size: var(--fs-xs); font-weight: 700; line-height: 1.25; }
+
+/* Today panel: activity tiles, the freshest hours, and a neutral 24-hour strip. */
+.activities { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); }
+.activity { min-width: 0; padding: var(--sp-3); border-radius: var(--r-btn); background: var(--bg); display: flex; align-items: center; gap: var(--sp-2); }
+.activity svg { flex: none; color: var(--ink); }
+.activity .text { display: flex; flex-direction: column; min-width: 0; }
+.activity .label { font-size: var(--fs-xs); font-weight: 600; line-height: 1.25; color: var(--ink-2); }
+.activity .status { font-size: var(--fs-sm); font-weight: 800; line-height: 1.25; }
+.activity[data-status="no"] svg { opacity: .55; }
+.best { margin: var(--sp-4) 0 var(--sp-2); font-weight: 800; }
+.strip { display: flex; align-items: flex-end; gap: 2px; height: 44px; }
+.strip i { flex: 1; min-width: 0; border-radius: 3px 3px 1px 1px; background: var(--ink-2); opacity: .3; }
+.strip i.best { background: var(--brand); opacity: 1; }
+.strip-axis { display: flex; justify-content: space-between; gap: var(--sp-2); margin-top: var(--sp-1); font-size: var(--fs-xs); color: var(--ink-2); }
 @media (max-width: 360px) { .icon-btn .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
 
 /* StatusBanner */

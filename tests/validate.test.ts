@@ -16,6 +16,7 @@ const location = (overrides: Partial<LocationReport> = {}): LocationReport => ({
     { date: '2026-10-14', pm25_mean: 98.4, band: 3, rain_mm: 18.5 },
     { date: '2026-10-15', pm25_mean: 99.5, band: 3, rain_mm: 10.1 }
   ],
+  next_hours: Array.from({ length: 24 }, (_, i) => ({ time: new Date(Date.parse('2026-10-14T00:00:00Z') + i * 3600e3).toISOString(), pm25: 80 + i })),
   ...overrides
 });
 const report = (...locations: LocationReport[]): LatestReport => ({ generated_at: '2026-10-14T00:30:00.000Z', locations });
@@ -50,6 +51,13 @@ describe('validateReport', () => {
       'pontianak: wind_dir missing',
       'pontianak: outlook is empty'
     ]);
+  });
+
+  it('rejects hourly values that are short or not one hour apart', () => {
+    const hours = location().next_hours;
+    assert.deepEqual(validateReport(report(location({ next_hours: hours.slice(0, 12) })), ['pontianak']), ['pontianak: next_hours has 12 entries, expected 24']);
+    const gap = [...hours.slice(0, 5), ...hours.slice(6), { time: '2026-10-15T00:00:00.000Z', pm25: 1 }];
+    assert.deepEqual(validateReport(report(location({ next_hours: gap })), ['pontianak']), ['pontianak: next_hours[5] is not one hour after the previous']);
   });
 
   it('rejects outlook days out of order', () => {

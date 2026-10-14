@@ -53,6 +53,13 @@ export interface LocationReport {
   /** Where the wind blows from, as an 8-point Indonesian compass label. */
   wind_dir: string;
   outlook: OutlookDay[];
+  /** Modelled PM2.5 for each of the next 24 hours, from the current hour. Hourly values, so never banded. */
+  next_hours: HourlyPm25[];
+}
+
+export interface HourlyPm25 {
+  time: string;
+  pm25: number;
 }
 
 export interface LatestReport {

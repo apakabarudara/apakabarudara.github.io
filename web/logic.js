@@ -46,6 +46,38 @@ export function nearest(locations, lat, lon) {
     .reduce((best, next) => (next.km < best.km ? next : best));
 }
 
+/**
+ * The `span`-hour stretch with the lowest mean PM2.5 that starts at or after `fromHour` and ends by `toHour`
+ * (viewer's local hours, from `localHour(iso)`). Ties go to the earliest. Null when no stretch fits.
+ */
+export function bestWindow(hours, { span, fromHour, toHour, localHour }) {
+  let best = null;
+  for (let i = 0; i + span <= hours.length; i++) {
+    const startHour = localHour(hours[i].time);
+    const endHour = startHour + span;
+    if (startHour < fromHour || endHour > toHour) continue;
+    const mean = hours.slice(i, i + span).reduce((sum, h) => sum + h.pm25, 0) / span;
+    if (!best || mean < best.mean) best = { start: i, mean };
+  }
+  if (!best) return null;
+  const end = new Date(Date.parse(hours[best.start + span - 1].time) + 3600e3).toISOString();
+  return { start: hours[best.start].time, end, indexes: Array.from({ length: span }, (_, k) => best.start + k) };
+}
+
+/** Today's activity statuses: the level's own, except that forecast rain makes "ok" laundry a "caution". */
+export function activityStatuses(levelActivities, rainMm, wetDayMm) {
+  const laundry = levelActivities.laundry === 'ok' && rainMm >= wetDayMm ? 'caution' : levelActivities.laundry;
+  return { ...levelActivities, laundry };
+}
+
+/** Greeting for the viewer's local hour. */
+export function greeting(hour) {
+  if (hour >= 4 && hour < 11) return 'Pagi!';
+  if (hour >= 11 && hour < 15) return 'Siang!';
+  if (hour >= 15 && hour < 18) return 'Sore!';
+  return 'Malam!';
+}
+
 /** Google Maps search; Maps uses the phone's own location, the page sends none. */
 export function mapsSearchUrl(query) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;

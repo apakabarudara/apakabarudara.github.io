@@ -24,7 +24,9 @@ The page follows a small design system, described in `docs/superpowers/specs/202
 - `web/copy.js` holds every line of copy per level. Level 3–5 safety copy is a draft until the health reviewer signs off.
 - `web/logic.js` holds the pure rules (freshness, city choice, outlook from tomorrow); `web/app.js` renders.
 
-The answer card's tone follows the level: jokes at 1–2, plain at 3 with a small quip, calm and direct at 4–5. From level 3 it offers "Cari faskes terdekat" (a Google Maps search; the page sends no position), and from level 4 "Telepon 119" ([Kemenkes](https://kemkes.go.id/id/terjadi-darurat-kesehatan-saat-mudik-hubungi-119)). A first visit opens "Asap hari ini", every city ranked worst first with a "Pakai lokasiku" button, so nobody sees a verdict for a city they did not pick. The chosen city is remembered on the device and opens directly next time; a `#city` link wins over it, and "Lihat semua kota" returns to the overview.
+The answer card's tone follows the level: jokes at 1–2, plain at 3 with a small quip, calm and direct at 4–5. From level 3 it offers "Cari faskes terdekat" (a Google Maps search; the page sends no position), and from level 4 "Telepon 119" ([Kemenkes](https://kemkes.go.id/id/terjadi-darurat-kesehatan-saat-mudik-hubungi-119)). Below the answer card, "Hari ini cocok untuk…" turns the level into four everyday calls (laundry, outdoor exercise, opening windows, kids playing outside), names the freshest two hours from `next_hours`, and draws those 24 hourly values as a neutral strip (hourly values are never banded). Levels 1–2 offer "Kabari grup" to share good air.
+
+A first visit opens a welcome card ("Pagi! Kamu di kota mana?") with "Pakai lokasiku", then every city as a compact chip ranked worst first, so nobody sees a verdict for a city they did not pick. The chosen city is remembered on the device and opens directly next time; a `#city` link wins over it, and "Lihat semua kota" returns to the overview.
 
 The page refetches `data/latest.json` every 15 minutes and whenever it comes back into view. When data is over 3 hours old it shows a "Data lama" banner. Over 12 hours, or when the fetch fails, it hides the verdict and points to the official ISPU. "Kota terdekat" picks the nearest city in the browser; the position is never stored or sent. `#<city id>` in the URL selects a city, which is what "Lempar ke grup" shares.
 
@@ -40,6 +42,7 @@ The shape lives in `ingest/types.ts`.
 | `hotspots_24h.count` | VIIRS NOAA-20 detections of nominal or high confidence within 100 km, acquired in the last 24 hours. |
 | `wind_dir` | Where the wind blows from, 8-point Indonesian compass. |
 | `outlook` | Mean PM2.5 per complete local day from today, banded like `pm25_model`, plus that day's forecast rain in mm. CAMS global forecasts 5 days, so expect about 4 entries, not 7. |
+| `next_hours` | Modelled PM2.5 for each of the next 24 hours from the current hour, UTC times. Hourly values, so the page never bands them. |
 
 Cities are in `ingest/locations.ts`.
 

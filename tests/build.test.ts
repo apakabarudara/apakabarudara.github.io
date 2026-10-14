@@ -70,6 +70,13 @@ describe('buildReport', () => {
     assert.throws(() => buildReport(LOCATIONS, { ...SOURCES, forecast }, NOW), /no rain forecast for 2026-10-16/);
   });
 
+  it('carries the next 24 hourly values with UTC times', () => {
+    // Fixture hours 2026-10-14T07:00 (737.6) to 2026-10-15T06:00 (414.4) local, UTC+7.
+    assert.equal(palangkaraya.next_hours.length, 24);
+    assert.deepEqual(palangkaraya.next_hours[0], { time: '2026-10-14T00:00:00.000Z', pm25: 737.6 });
+    assert.deepEqual(palangkaraya.next_hours[23], { time: '2026-10-14T23:00:00.000Z', pm25: 414.4 });
+  });
+
   it('throws when the model does not cover now', () => {
     assert.throws(() => buildReport(LOCATIONS, SOURCES, new Date('2026-10-25T00:00:00Z')), /does not cover/);
   });

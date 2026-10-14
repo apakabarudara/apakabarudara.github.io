@@ -62,6 +62,11 @@ export function currentHourIndex(response: AirQualityResponse, now: Date): numbe
   return response.hourly.time.indexOf(localHourKey(now, response.utc_offset_seconds));
 }
 
+/** A local `hourly.time` entry as a UTC timestamp. */
+function hourToUtc(response: AirQualityResponse, index: number): string {
+  return new Date(Date.parse(`${response.hourly.time[index]}:00Z`) - response.utc_offset_seconds * 1000).toISOString();
+}
+
 /** Mean PM2.5 over the 24 hours ending with the current hour, the averaging ISPU uses, and that hour in UTC. */
 export function trailingDayMean(response: AirQualityResponse, now: Date): { value: number; hourUtc: string } {
   const end = currentHourIndex(response, now);
@@ -69,8 +74,21 @@ export function trailingDayMean(response: AirQualityResponse, now: Date): { valu
   const window = response.hourly.pm2_5.slice(end - HOURS_PER_DAY + 1, end + 1);
   if (window.some(v => v === null)) throw new Error(`Open-Meteo PM2.5 has gaps in the 24 hours before ${now.toISOString()}`);
   const value = (window as number[]).reduce((sum, v) => sum + v, 0) / HOURS_PER_DAY;
-  const hourUtc = new Date(Date.parse(`${response.hourly.time[end]}:00Z`) - response.utc_offset_seconds * 1000).toISOString();
-  return { value, hourUtc };
+  return { value, hourUtc: hourToUtc(response, end) };
+}
+
+export interface HourValue {
+  time: string;
+  pm25: number;
+}
+
+/** Hourly PM2.5 from the current hour on, `count` hours, with UTC timestamps. Throws on gaps rather than guessing. */
+export function nextHours(response: AirQualityResponse, now: Date, count: number): HourValue[] {
+  const start = currentHourIndex(response, now);
+  if (start < 0) throw new Error(`Open-Meteo response does not cover ${now.toISOString()}`);
+  const values = response.hourly.pm2_5.slice(start, start + count);
+  if (values.length < count || values.some(v => v === null)) throw new Error(`Open-Meteo PM2.5 has gaps in the ${count} hours after ${now.toISOString()}`);
+  return (values as number[]).map((pm25, i) => ({ time: hourToUtc(response, start + i), pm25 }));
 }
 
 /** Mean PM2.5 per local date, from today on, matching the 24-hour averaging of the current band. Days missing any hour are dropped rather than guessed. */

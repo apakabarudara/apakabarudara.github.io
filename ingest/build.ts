@@ -1,10 +1,11 @@
 import { bandForPm25 } from './bands.ts';
 import { countNearby, SOURCE_LABEL as FIRMS_LABEL, type Hotspot } from './firms.ts';
-import { dailyMeanFrom, trailingDayMean, type AirQualityResponse, type ForecastResponse } from './open-meteo.ts';
+import { dailyMeanFrom, nextHours, trailingDayMean, type AirQualityResponse, type ForecastResponse } from './open-meteo.ts';
 import type { LatestReport, Location } from './types.ts';
 import { compassLabel } from './wind.ts';
 
 export const RADIUS_KM = 100;
+export const NEXT_HOURS = 24;
 const ISPU_URL = 'https://ispu.kemenlh.go.id/app/#/';
 const MODEL_LABEL = 'CAMS global via Open-Meteo';
 
@@ -45,7 +46,8 @@ export function buildReport(locations: readonly Location[], sources: Sources, no
         outlook: dailyMeanFrom(sources.airQuality[i], now).map(day => {
           const mean = round1(day.pm25_mean);
           return { date: day.date, pm25_mean: mean, band: bandForPm25(mean), rain_mm: rainOn(day.date) };
-        })
+        }),
+        next_hours: nextHours(sources.airQuality[i], now, NEXT_HOURS).map(h => ({ time: h.time, pm25: round1(h.pm25) }))
       };
     })
   };
