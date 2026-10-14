@@ -68,3 +68,16 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Looks at the live site after the deploy. A failure emails the repo owner, so stale data or a broken deploy is noticed.
+  smoke:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: sleep 30
+      - run: node scripts/smoke.mjs https://apakabarudara.github.io
