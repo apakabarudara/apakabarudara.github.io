@@ -1,7 +1,7 @@
 import './ionic.js';
 import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, POLLS, RAIN, STORY, UI } from './copy.js';
 import {
-  activityStatuses, ago, bestWindow, feedbackUrl, freshness, greeting, hourBands, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
+  activityStatuses, ago, bestWindow, cityLink, feedbackUrl, freshness, greeting, hourBands, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
   nearest, normalizeWatch, previewOverride, rainKind, rankByLevel, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, WET_DAY_MM
 } from './logic.js';
 
@@ -12,6 +12,7 @@ const FEEDBACK_CITY_ENTRY = ''; // the form's "entry.<id>" for its city question
 const CITY_KEY = 'bisanapasgak.city';
 const WATCH_KEY = 'bisanapasgak.watch';
 const INSTALL_KEY = 'bisanapasgak.installHidden';
+const VISITS_KEY = 'bisanapasgak.visits';
 const ALL = '__all';
 const REFRESH_MS = 15 * 60e3;
 const BEST = { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() };
@@ -58,6 +59,9 @@ const store = {
   read(key) { try { return localStorage.getItem(key); } catch { return null; } },
   write(key, value) { try { localStorage.setItem(key, value); } catch { /* nothing to remember in private mode */ } }
 };
+// Counted once per page load; the install control waits for the second visit.
+const visits = Number(store.read(VISITS_KEY) ?? 0) + 1;
+store.write(VISITS_KEY, String(visits));
 const readWatch = () => { try { return JSON.parse(store.read(WATCH_KEY) ?? '[]'); } catch { return []; } };
 
 let report = null;
@@ -77,9 +81,17 @@ function show(view) {
   $('overview').hidden = view !== 'overview';
   $('city').hidden = view !== 'city';
   renderInstall();
+  $('tagline').hidden = view !== 'overview';
   $('story').hidden = view !== 'city';
+  // City view: the share row sits right under the answer card. Overview: one share button at the bottom.
+  if (view === 'city') $('answer').after($('shareBlock'), $('watchSolo'));
+  else $('city').after($('shareBlock'));
   $('shareBlock').hidden = view === 'message' || (view === 'city' && Boolean(preview));
-  if (view !== 'city') $('factsBlock').hidden = false;
+  if (view !== 'city') {
+    $('watchSolo').hidden = true;
+    $('factsBlock').hidden = false;
+    $('moreTitle').textContent = UI.moreTitle;
+  }
 }
 
 /** Neutral card for loading and problems: no verdict, only the official link. */
@@ -146,9 +158,11 @@ function renderAnswer(loc, level) {
   $('explain').replaceChildren(...UI.explain(num.format(Math.round(loc.pm25_model.value))).map(text => el('p', null, text)));
   $('official').href = loc.ispu?.source_url ?? ISPU_URL;
   $('factsBlock').hidden = level >= 4; // no jokes or trivia at levels 4–5
+  $('moreTitle').textContent = level >= 4 ? UI.moreTitleNoFacts : UI.moreTitle;
 }
 
 function renderToday(loc, level) {
+  $('todayTitle').textContent = level <= 2 ? UI.todayTitle : UI.todayTitleNeutral;
   const rain = loc.outlook.find(d => d.date === localDate(new Date()))?.rain_mm ?? 0;
   const statuses = activityStatuses(LEVELS[level].activities, rain, WET_DAY_MM);
   $('activities').replaceChildren(...ACTIVITIES.map(a =>
@@ -327,7 +341,8 @@ async function share(goodNews) {
   const loc = selected();
   const live = freshness(report.generated_at, new Date()) !== 'expired';
   const target = loc && live && !preview ? loc : null;
-  const url = `${location.origin}${location.pathname}${target ? `#${encodeURIComponent(target.id)}` : ''}`;
+  const page = `${location.origin}${location.pathname}`;
+  const url = target ? cityLink(page, target.id) : page;
   let text = live ? UI.shareOverview : document.title;
   if (target) {
     const level = target.pm25_model.band;
@@ -391,12 +406,16 @@ async function shareStory() {
   const lines = storyInput(loc);
   const key = storyKey(lines);
   $('shareNote').textContent = '';
+  // Instagram Stories take no web link from the web: copy it for the Link sticker. Not awaited, and before share, which consumes the tap.
+  let linkCopied = false;
+  navigator.clipboard?.writeText(cityLink(`${location.origin}${location.pathname}`, loc.id)).then(() => { linkCopied = true; }, () => {});
   // Ready file: share is the first await, so the tap's activation is still live.
   const ready = storyFile.key === key ? storyFile.file : null;
   let file = ready;
   try {
     if (ready && navigator.canShare?.({ files: [ready] })) {
       await navigator.share({ files: [ready] });
+      if (linkCopied) $('shareNote').textContent = UI.storyLinkCopied;
       return;
     }
     file = ready ?? (await makeStory(lines, key));
@@ -407,6 +426,7 @@ async function shareStory() {
   try {
     if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({ files: [file] });
+      if (linkCopied) $('shareNote').textContent = UI.storyLinkCopied;
       return;
     }
     const link = el('a');
@@ -414,7 +434,7 @@ async function shareStory() {
     link.download = file.name;
     link.click();
     setTimeout(() => URL.revokeObjectURL(link.href), 10000);
-    $('shareNote').textContent = UI.storySaved;
+    $('shareNote').textContent = linkCopied ? `${UI.storySaved} ${UI.storyLinkCopied}` : UI.storySaved;
   } catch (error) {
     shareFailed(error);
   }
@@ -447,6 +467,9 @@ function renderWatch() {
   add.type = 'button';
   add.addEventListener('click', openWatchSheet);
   $('watch').replaceChildren(...chips, add);
+  // Nobody pinned yet: no chip row above the answer, one soft button below the share row.
+  $('watch').hidden = chips.length === 0;
+  $('watchSolo').hidden = chips.length > 0;
 }
 
 function openWatchSheet() {
@@ -480,8 +503,8 @@ const standalone = () => matchMedia('(display-mode: standalone)').matches || nav
 const ios = isIosSafari(navigator.userAgent, navigator.platform, navigator.maxTouchPoints);
 
 function renderInstall() {
-  const mode = installMode({ standalone: standalone(), hasPrompt: Boolean(installEvent), ios, dismissed: store.read(INSTALL_KEY) === '1' });
-  for (const box of document.querySelectorAll('[data-install]')) box.hidden = !mode;
+  const mode = installMode({ standalone: standalone(), hasPrompt: Boolean(installEvent), ios, dismissed: store.read(INSTALL_KEY) === '1', visits });
+  for (const box of document.querySelectorAll('[data-install]')) box.hidden = !mode || $('city').hidden; // city page only
 }
 
 async function install() {
@@ -549,6 +572,7 @@ for (const id of ['about', 'iosSheet', 'watchSheet']) {
   $(id).breakpoints = [0, 1];
   $(id).initialBreakpoint = 1;
 }
+$('watchSoloBtn').addEventListener('click', openWatchSheet);
 const sheet = $('about');
 $('aboutBtn').addEventListener('click', () => sheet.present());
 $('aboutClose').addEventListener('click', () => sheet.dismiss());

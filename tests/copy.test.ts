@@ -171,6 +171,16 @@ describe('UI', () => {
     assert.ok(!('feedbackSend' in UI) && !('feedbackThanks' in UI) && !('sensitiveIntro' in UI));
   });
 
+  it('words the batch 3 P1 lines as agreed', () => {
+    assert.equal(UI.stamp('11.00 WIB'), 'Perkiraan, diperbarui 11.00 WIB ·');
+    assert.equal(UI.todayTitleNeutral, 'Kegiatan hari ini');
+    assert.equal(UI.moreTitle, 'Cek napas & fakta asap');
+    assert.equal(UI.moreTitleNoFacts, 'Cek napas hari ini');
+    assert.ok(FACTS.includes('Masker kain hampir tidak menyaring partikel asap. Untuk asap, yang dianjurkan masker N95.'));
+    assert.ok(!FACTS.some(f => /berhari-hari di bawah permukaan/.test(f)));
+    assert.equal(UI.storyLinkCopied, 'Link kota ini sudah disalin. Di Instagram, tambahkan stiker Link lalu tempel.');
+  });
+
   it('credits the data sources', () => {
     assert.equal(UI.creditOpenMeteo, 'Weather data by Open-Meteo.com');
     assert.match(UI.creditCams(2026), /Copernicus Atmosphere Monitoring Service information 2026/);

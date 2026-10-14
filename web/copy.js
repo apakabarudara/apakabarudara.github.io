@@ -115,7 +115,7 @@ export const UI = {
   healthButton: 'Cari fasilitas kesehatan',
   healthQuery: 'fasilitas kesehatan terdekat',
   call: number => `Telepon ${number}`,
-  stamp: time => `Perkiraan · ${time} ·`,
+  stamp: time => `Perkiraan, diperbarui ${time} ·`,
   explainTitle: 'Apa ini?',
   explain: pm => [
     'Level ini perkiraan komputer dari data satelit dan cuaca, bukan hasil alat ukur di kota ini.',
@@ -126,6 +126,7 @@ export const UI = {
   official: 'Cek angka resmi pemerintah (ISPU)',
 
   todayTitle: 'Hari ini cocok untuk…',
+  todayTitleNeutral: 'Kegiatan hari ini',
   bestWindow: (level, dayWord, from, to) => `${level === 1 ? 'Udara paling segar' : 'Asap paling tipis'} di siang hari: ${dayWord}, ${from}–${to}`,
   dayWord: { today: 'hari ini', tomorrow: 'besok' },
   windowsShut: 'Sebaiknya jendela ditutup hari ini.',
@@ -160,6 +161,7 @@ export const UI = {
   share: 'Bagikan ke grup',
   storyButton: 'Bagikan ke Story',
   storySaved: 'Gambar diunduh. Unggah ke Story dari galeri. Kalau tidak muncul, buka halaman ini di Safari atau Chrome.',
+  storyLinkCopied: 'Link kota ini sudah disalin. Di Instagram, tambahkan stiker Link lalu tempel.',
   storyTapAgain: 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.',
   storyFailed: 'Gambar belum bisa dibuat. Coba lagi.',
   shared: 'Link disalin. Tinggal tempel di grup.',
@@ -174,7 +176,8 @@ export const UI = {
   expiredHeadline: 'Datanya sudah terlalu lama.',
   expiredText: 'Data terakhir lebih dari 12 jam lalu, jadi kondisi udara sekarang tidak bisa dinilai. Cek angka resmi pemerintah (ISPU).',
 
-  moreTitle: 'Lainnya',
+  moreTitle: 'Cek napas & fakta asap',
+  moreTitleNoFacts: 'Cek napas hari ini',
   factsTitle: 'Fakta singkat',
   factsNext: 'Fakta lain',
   pollTitle: 'Bagaimana napas hari ini?',
@@ -193,12 +196,12 @@ export const UI = {
   creditLine: ['Proyek sukarela oleh ', 'Khi Hady', ' · kodenya terbuka di ', 'GitHub']
 };
 
-/** "Lainnya" facts. Plain statements; hidden at levels 4–5. */
+/** Facts in the "Cek napas & fakta asap" fold. Plain statements; hidden at levels 4–5. */
 export const FACTS = [
   'Asap tidak mengenal batas negara. Bisa menyeberang sampai Sarawak dan membuat udara di sana ikut tidak sehat.',
   'Lahan gambut bisa terbakar diam-diam di bawah tanah. Api yang kelihatan padam belum tentu benar-benar selesai.',
   'El Niño membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.',
-  'Api di lahan gambut bisa menyala berhari-hari di bawah permukaan.'
+  'Masker kain hampir tidak menyaring partikel asap. Untuk asap, yang dianjurkan masker N95.'
 ];
 
 export const POLLS = [

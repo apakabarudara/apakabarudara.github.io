@@ -37,7 +37,7 @@ Residents living in the smoke, opening the page in the morning before going out.
 
 ## Components
 
-TopBar · CityPicker · AnswerCard (dots, level label, headline, quip, actions, buttons, data stamp, official ISPU link, mascot) · StatusBanner · OutlookStrip with day detail · ReasonList · Ionic accordions ("Kenapa begini?", "Lainnya": facts, poll) · "Apa ini?" bottom-sheet modal · pull-to-refresh · Button · Footer.
+TopBar · CityPicker · AnswerCard (dots, level label, headline, quip, actions, buttons, data stamp, official ISPU link, mascot) · StatusBanner · OutlookStrip with day detail · ReasonList · Ionic accordions ("Kenapa begini?", "Cek napas & fakta asap": facts, poll) · "Apa ini?" bottom-sheet modal · pull-to-refresh · Button · Footer.
 
 ## Copy (`web/copy.js`)
 
@@ -58,12 +58,14 @@ Voice, after a UX-writer review and a plain-language research pass on 2026-10-14
 
 - **Level scale**: level name plus a 5-segment scale in the answer card; the segment of the current level is solid and taller, the others sit at 30% opacity; at level 5 the active segment uses the level-5 accent. The visible "· level X dari 5" is gone; it stays in the aria-label and shared text.
 - **Kapan membaik?**: levels 3–5, first later outlook day with a lower band ("Diperkirakan mulai membaik Jumat.") or "Belum ada tanda membaik dalam n hari ke depan."; nothing at levels 1–2.
-- **PWA install**: manifest plus icons, install control in the welcome card and under the city view, dismissible; iOS Safari gets a two-step sheet.
-- **Pantau kota lain**: up to 3 pinned cities as chips at the top of the city view, picked in a sheet with checkboxes; works offline.
+- **PWA install**: manifest plus icons, install control only at the bottom of the city view and only from the second visit, dismissible; iOS Safari gets a two-step sheet.
+- **Pantau kota lain**: up to 3 pinned cities as chips at the top of the city view (with none pinned, a soft button under the share row instead), picked in a sheet with checkboxes; works offline.
 - **Bagikan ke Story**: canvas card, Web Share with a file, download fallback; text kept between 14% and 80% of the height.
 - **Feedback**: a "Kirim masukan" button above the footer opens an external Google Form in a new tab (`FEEDBACK_URL` and `FEEDBACK_CITY_ENTRY` in `web/app.js`; the row stays hidden while `FEEDBACK_URL` is empty). Nothing is typed into or sent from the page.
 - **Sensitive group**: the answer card names the full list (children, older people, pregnant women, lung or heart disease) instead of "Anak & lansia".
-- **Tagline** in title, header, manifest and Open Graph tags.
+- **Share row**: "Bagikan ke grup" and "Bagikan ke Story" side by side right under the answer card (stacked below 360 px); the overview keeps one button at the bottom. The Story button also copies the city link for Instagram's Link sticker.
+- **Outlook days**: the selected day is filled with its level colour, ringed 2 px in the level label colour and bold; the others are surface with a hairline and a level marker.
+- **Tagline** in title, header (overview only), manifest and Open Graph tags.
 
 ## States
 

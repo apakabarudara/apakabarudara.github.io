@@ -49,7 +49,7 @@
           <svg class="brand-mark" viewBox="0 0 72 64" aria-hidden="true"><use href="#blob"/><ellipse cx="29" cy="40" rx="3.4" ry="4"/><ellipse cx="43" cy="40" rx="3.4" ry="4"/></svg>
           <span data-copy="brand"></span>
         </p>
-        <p class="tagline" data-copy="tagline"></p>
+        <p id="tagline" class="tagline" data-copy="tagline"></p>
       </div>
       <ion-badge slot="end" class="beta" data-copy="beta"></ion-badge>
     </ion-toolbar>
@@ -76,7 +76,6 @@
           <h2 id="welcomeTitle" class="headline"></h2>
           <ion-button id="locateOverview" class="wide" expand="block"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-pin"/></svg><span data-copy="useLocation"></span></ion-button>
           <p id="overviewHint" class="note" aria-live="polite"></p>
-          <div class="install" data-install hidden><button class="install-go" type="button"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg><span data-copy="installButton"></span></button><button class="install-x" type="button" data-copy-label="installHide"><span aria-hidden="true">×</span></button></div>
         </ion-card>
         <ion-card class="panel" aria-labelledby="overviewTitle">
           <h2 id="overviewTitle" data-copy="overviewTitle"></h2>
@@ -116,7 +115,7 @@
         </ion-card>
 
         <ion-card id="today" class="panel" aria-labelledby="todayTitle">
-          <h2 id="todayTitle" data-copy="todayTitle"></h2>
+          <h2 id="todayTitle"></h2>
           <ul id="activities" class="activities"></ul>
           <p id="best" class="best"></p>
           <div id="strip" class="strip" role="img"></div>
@@ -146,7 +145,6 @@
             </ion-accordion>
           </ion-accordion-group>
         </ion-card>
-        <div class="install" data-install hidden><button class="install-go" type="button"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg><span data-copy="installButton"></span></button><button class="install-x" type="button" data-copy-label="installHide"><span aria-hidden="true">×</span></button></div>
       </div>
 
       <div id="shareBlock" hidden>
@@ -156,11 +154,12 @@
         </div>
         <p id="shareNote" class="note" aria-live="polite"></p>
       </div>
+      <div id="watchSolo" hidden><ion-button id="watchSoloBtn" class="wide soft" expand="block"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-plus"/></svg><span data-copy="watchAdd"></span></ion-button></div>
 
       <ion-card id="more" class="fold">
         <ion-accordion-group>
           <ion-accordion value="more">
-            <ion-item slot="header" lines="none"><ion-label><h2 data-copy="moreTitle"></h2></ion-label></ion-item>
+            <ion-item slot="header" lines="none"><ion-label><h2 id="moreTitle"></h2></ion-label></ion-item>
             <div slot="content" class="fold-body more-body">
               <div id="factsBlock">
                 <div class="facts-head"><h3 data-copy="factsTitle"></h3><ion-button id="factsNext" fill="clear" class="small-btn"><span data-copy="factsNext"></span></ion-button></div>
@@ -175,6 +174,8 @@
           </ion-accordion>
         </ion-accordion-group>
       </ion-card>
+
+      <div class="install" data-install hidden><button class="install-go" type="button"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg><span data-copy="installButton"></span></button><button class="install-x" type="button" data-copy-label="installHide"><span aria-hidden="true">×</span></button></div>
 
       <div id="feedbackRow" class="feedback-row" hidden>
         <ion-button id="feedbackBtn" class="wide soft" expand="block" target="_blank" rel="noopener"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-arrow"/></svg><span data-copy="feedbackButton"></span></ion-button>

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { LEVELS, STORY } from '../web/copy.js';
 import {
-  activityStatuses, ago, bestWindow, feedbackUrl, freshness, greeting, hourBands, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
+  activityStatuses, ago, bestWindow, cityLink, feedbackUrl, freshness, greeting, hourBands, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
   previewOverride, rainKind, rankByLevel, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow
 } from '../web/logic.js';
 
@@ -204,11 +204,16 @@ describe('install control', () => {
   });
 
   it('picks prompt, ios or nothing, and hides when installed or dismissed', () => {
-    assert.equal(installMode({ standalone: false, hasPrompt: true, ios: false, dismissed: false }), 'prompt');
-    assert.equal(installMode({ standalone: false, hasPrompt: false, ios: true, dismissed: false }), 'ios');
-    assert.equal(installMode({ standalone: false, hasPrompt: false, ios: false, dismissed: false }), null);
-    assert.equal(installMode({ standalone: true, hasPrompt: true, ios: true, dismissed: false }), null);
-    assert.equal(installMode({ standalone: false, hasPrompt: true, ios: true, dismissed: true }), null);
+    assert.equal(installMode({ standalone: false, hasPrompt: true, ios: false, dismissed: false, visits: 2 }), 'prompt');
+    assert.equal(installMode({ standalone: false, hasPrompt: false, ios: true, dismissed: false, visits: 2 }), 'ios');
+    assert.equal(installMode({ standalone: false, hasPrompt: false, ios: false, dismissed: false, visits: 2 }), null);
+    assert.equal(installMode({ standalone: true, hasPrompt: true, ios: true, dismissed: false, visits: 2 }), null);
+    assert.equal(installMode({ standalone: false, hasPrompt: true, ios: true, dismissed: true, visits: 2 }), null);
+  });
+
+  it('waits for the second visit', () => {
+    assert.equal(installMode({ standalone: false, hasPrompt: true, ios: true, dismissed: false, visits: 1 }), null);
+    assert.equal(installMode({ standalone: false, hasPrompt: true, ios: true, dismissed: false, visits: 3 }), 'prompt');
   });
 });
 
@@ -274,5 +279,12 @@ describe('feedbackUrl', () => {
   it('returns the base without an entry id or a city', () => {
     assert.equal(feedbackUrl(base, '', 'Jambi'), base);
     assert.equal(feedbackUrl(base, '123', ''), base);
+  });
+});
+
+describe('cityLink', () => {
+  it('is the page address plus the encoded city id', () => {
+    assert.equal(cityLink('https://bisanapasgak.github.io/', 'palangkaraya'), 'https://bisanapasgak.github.io/#palangkaraya');
+    assert.equal(cityLink('http://127.0.0.1:8792/', 'a b'), 'http://127.0.0.1:8792/#a%20b');
   });
 });

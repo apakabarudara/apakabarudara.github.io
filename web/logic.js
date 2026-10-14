@@ -163,12 +163,15 @@ export function isIosSafari(ua, platform, touchPoints) {
   return ios && /Safari\//.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA\//.test(ua);
 }
 
-/** Which install control to show: 'prompt' (Chromium event in hand), 'ios' (steps in a sheet) or null. */
-export function installMode({ standalone, hasPrompt, ios, dismissed }) {
-  if (standalone || dismissed) return null;
+/** Which install control to show: 'prompt' (Chromium event in hand), 'ios' (steps in a sheet) or null. Not before the second visit. */
+export function installMode({ standalone, hasPrompt, ios, dismissed, visits }) {
+  if (standalone || dismissed || visits < 2) return null;
   if (hasPrompt) return 'prompt';
   return ios ? 'ios' : null;
 }
+
+/** The shareable link to a city: the page address plus #<city id>. */
+export const cityLink = (base, id) => `${base}#${encodeURIComponent(id)}`;
 
 /** Cache key for a drawn Story card: everything printed on it. */
 export function storyKey(lines) {

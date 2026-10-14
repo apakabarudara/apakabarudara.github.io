@@ -89,7 +89,7 @@ ion-card {
 .headline { margin: var(--sp-1) 0 0; font-size: clamp(var(--fs-xl), 7.6vw, var(--fs-2xl)); font-weight: var(--fw-display); line-height: 1.12; letter-spacing: -.015em; }
 .quip { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); }
 .actions { list-style: none; margin: var(--sp-4) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
-.actions li { position: relative; padding-left: 20px; font-weight: var(--fw-label); }
+.actions li { position: relative; padding-left: 20px; font-weight: var(--fw-body); }
 .actions li::before { content: ""; position: absolute; left: 2px; top: .55em; width: 9px; height: 9px; border-radius: 50%; background: var(--lv-dot); }
 .actions b { font-weight: var(--fw-display); }
 .symptoms { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); font-weight: var(--fw-label); }
@@ -214,13 +214,14 @@ ion-button.soft { --background: var(--brand-soft); --background-activated: var(-
 /* Outlook */
 .days { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: var(--sp-2); margin-top: var(--sp-3); }
 .day {
-  position: relative; min-width: 0; min-height: 56px; border: 0; border-radius: var(--r-btn); padding: var(--sp-3) var(--sp-2); cursor: pointer; overflow: hidden;
-  font: inherit; background: var(--lv-soft); color: var(--lv-soft-ink); display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center;
+  min-width: 0; min-height: 56px; border: 0; border-radius: var(--r-btn); padding: var(--sp-3) var(--sp-2); cursor: pointer;
+  font: inherit; background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center;
 }
+.day::before { content: ""; width: 8px; height: 8px; margin-bottom: 2px; border-radius: 50%; background: var(--lv-bar); }
 .day .d { font-size: var(--fs-md); font-weight: var(--fw-display); }
 .day .n { font-size: var(--fs-xs); font-weight: var(--fw-label); line-height: 1.25; }
-.day[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--line); }
-.day[aria-pressed="true"]::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: var(--lv-dot); }
+.day[aria-pressed="true"] { background: var(--lv-soft); color: var(--lv-soft-ink); font-weight: var(--fw-display); box-shadow: inset 0 0 0 2px var(--lv-label); }
+.day[aria-pressed="true"] .n { font-weight: var(--fw-display); }
 .day-detail { margin: var(--sp-3) 0 0; font-size: var(--fs-sm); }
 .day-detail strong { display: block; font-weight: var(--fw-strong); }
 .legend { margin: var(--sp-1) 0 0; font-size: var(--fs-xs); color: var(--ink-2); }
@@ -229,7 +230,7 @@ ion-button.soft { --background: var(--brand-soft); --background-activated: var(-
 ion-card.fold { padding: 0; }
 .fold ion-accordion-group, .fold ion-accordion { background: transparent; }
 .fold ion-item[slot="header"] { --background: transparent; --min-height: 60px; --padding-start: var(--sp-panel); --inner-padding-end: var(--sp-panel); --color: var(--ink); }
-.fold h2 { margin: 0; font-size: var(--fs-lg); font-weight: var(--fw-strong); letter-spacing: -.01em; }
+.fold ion-item[slot="header"] ion-label h2 { margin: 0; font-size: var(--fs-lg); font-weight: var(--fw-strong); letter-spacing: -.01em; } /* beats Ionic's ion-label h2 */
 .fold ion-accordion::part(icon) { color: var(--ink-2); }
 .fold-body { padding: 0 var(--sp-panel) var(--sp-panel); }
 .rows { margin: 0; }
@@ -278,14 +279,17 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 
 /* Install control: quiet, dismissible */
 .install { display: flex; align-items: center; justify-content: center; gap: var(--sp-1); }
-#overview .install { margin-top: var(--sp-2); justify-content: flex-start; }
 .install-go, .install-x { min-height: 44px; border: 0; background: transparent; color: var(--brand); font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-strong); cursor: pointer; border-radius: var(--r-btn); }
 .install-go { display: inline-flex; align-items: center; gap: 6px; padding: 0 var(--sp-3); background: var(--brand-soft); color: var(--brand-soft-ink); }
 .install-x { min-width: 44px; font-size: var(--fs-xl); line-height: 1; color: var(--ink-2); }
 
 /* Share row */
-.share-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
-.share-row ion-button.wide { flex: 1 1 200px; margin-top: 0; }
+.share-row { display: flex; gap: var(--sp-2); }
+.share-row ion-button.wide { flex: 1 1 0; min-width: 0; margin-top: 0; }
+/* Two buttons side by side only fit on one line without their icons on phones. */
+@media (max-width: 420px) { .share-row .ic { display: none; } }
+@media (max-width: 359px) { .share-row { flex-direction: column; } }
+#watchSolo ion-button.wide { margin-top: 0; }
 
 /* Pinned cities: chips in level colours, then "Pantau kota lain" */
 .watch { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
