@@ -114,10 +114,9 @@ describe('OFFICIAL_ISPU', () => {
   });
 });
 
-describe('disclaimer banner', () => {
-  it('words the notice and the close label as agreed', () => {
-    assert.equal(UI.disclaimer, 'Hai! Isinya perkiraan dari data satelit dan cuaca, jadi bisa meleset. Bukan angka resmi, bukan saran medis.');
-    assert.equal(UI.disclaimerClose, 'Tutup pemberitahuan');
+describe('head note', () => {
+  it('hedges first in the header and keeps the method link', () => {
+    assert.equal(UI.headNote, 'Perkiraan, bisa meleset ·');
     assert.equal(UI.methodLink, 'Metode & sumber');
   });
 });
