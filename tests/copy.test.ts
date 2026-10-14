@@ -115,9 +115,8 @@ describe('OFFICIAL_ISPU', () => {
 });
 
 describe('satellite map caption', () => {
-  it('does not claim hotspots on the map', () => {
-    assert.doesNotMatch(UI.satMapCaption, /Titik merah/);
-    assert.match(UI.satMapCaption, /hanya terlihat di foto/);
+  it('explains the red hotspot dots the map overlays', () => {
+    assert.match(UI.satMapCaption, /Titik merah: titik panas/);
   });
 });
 

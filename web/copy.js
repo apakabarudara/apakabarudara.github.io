@@ -244,7 +244,7 @@ export const UI = {
   satWind: arah => `Angin dari ${arah}.`,
   satLink: 'Buka di NASA Worldview ↗',
   satExplore: 'Jelajahi peta',
-  satMapCaption: 'Peta satelit NASA. Geser dan perbesar. Titik panas hanya terlihat di foto. Pin: pusat kota.',
+  satMapCaption: 'Peta satelit NASA. Geser dan perbesar. Titik merah: titik panas. Pin: pusat kota.',
   satBack: 'Kembali ke foto',
   satMapLabel: kota => `Peta satelit NASA yang bisa digeser dan diperbesar, berpusat di ${kota}`,
   satMapCredit: 'NASA GIBS / Worldview (VIIRS NOAA-20)',
