@@ -2,7 +2,7 @@ import './ionic.js';
 import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, POLLS, RAIN, STORY, UI } from './copy.js';
 import {
   activityStatuses, ago, bestWindow, freshness, greeting, improvement, installMode, isIosSafari, localDate, mapsSearchUrl, nearest, normalizeWatch,
-  previewOverride, rainKind, rankByLevel, resolveCity, storyLines, toggleWatch, upcomingDays, watchRow, WET_DAY_MM
+  previewOverride, rainKind, rankByLevel, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, WET_DAY_MM
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
@@ -228,6 +228,7 @@ function render() {
   renderToday(loc, level);
   renderReasons(loc, renderOutlook(loc));
   renderWatch();
+  prepareStory();
 }
 
 function fillPicker() {
@@ -337,30 +338,83 @@ async function share(goodNews) {
   }
 }
 
+// The Story card, drawn ahead of the tap: iOS only lets navigator.share run while the tap's user activation is still live.
+let storyJob = { key: null, promise: null };
+let storyFile = { key: null, file: null };
+
+function storyInput(loc) {
+  const level = loc.pm25_model.band;
+  const day = dayTime.format(new Date(loc.pm25_model.updated_at));
+  return storyLines({ city: cityName(loc), level, copy: LEVELS[level], story: STORY, improve: improveText(loc, level), day });
+}
+
+function makeStory(lines, key) {
+  if (storyFile.key === key) return Promise.resolve(storyFile.file);
+  if (storyJob.key === key) return storyJob.promise;
+  const promise = import('./story.js')
+    .then(({ renderStory }) => renderStory(lines))
+    .then(blob => {
+      const file = new File([blob], 'bisa-napas-gak.png', { type: 'image/png' });
+      storyFile = { key, file };
+      return file;
+    })
+    .finally(() => {
+      if (storyJob.promise === promise) storyJob = { key: null, promise: null };
+    });
+  storyJob = { key, promise };
+  return promise;
+}
+
+function prepareStory() {
+  const loc = selected();
+  if (!loc || preview) return;
+  const lines = storyInput(loc);
+  const key = storyKey(lines);
+  if (storyFile.key === key || storyJob.key === key) return;
+  const run = () => { makeStory(lines, key).catch(() => {}); }; // a failed warm-up is retried by the tap
+  if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 3000 });
+  else setTimeout(run, 300);
+}
+
 /** The Story card as a PNG: shared as a file where the browser can (phones offer Instagram Story), otherwise downloaded. */
 async function shareStory() {
   const loc = selected();
   if (!report || !loc || preview) return;
-  const level = loc.pm25_model.band;
-  const day = dayTime.format(new Date(loc.pm25_model.updated_at));
+  const lines = storyInput(loc);
+  const key = storyKey(lines);
   $('shareNote').textContent = '';
+  // Ready file: share is the first await, so the tap's activation is still live.
+  const ready = storyFile.key === key ? storyFile.file : null;
+  let file = ready;
   try {
-    const { renderStory } = await import('./story.js');
-    const blob = await renderStory(storyLines({ city: cityName(loc), level, copy: LEVELS[level], story: STORY, improve: improveText(loc, level), day }));
-    const file = new File([blob], 'bisa-napas-gak.png', { type: 'image/png' });
+    if (ready && navigator.canShare?.({ files: [ready] })) {
+      await navigator.share({ files: [ready] });
+      return;
+    }
+    file = ready ?? (await makeStory(lines, key));
+  } catch (error) {
+    shareFailed(error);
+    return;
+  }
+  try {
     if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({ files: [file] });
       return;
     }
     const link = el('a');
-    link.href = URL.createObjectURL(blob);
+    link.href = URL.createObjectURL(file);
     link.download = file.name;
     link.click();
     setTimeout(() => URL.revokeObjectURL(link.href), 10000);
     $('shareNote').textContent = UI.storySaved;
   } catch (error) {
-    if (error?.name !== 'AbortError') $('shareNote').textContent = UI.storyFailed; // AbortError: share sheet dismissed
+    shareFailed(error);
   }
+}
+
+function shareFailed(error) {
+  if (error?.name === 'AbortError') return; // share sheet dismissed
+  $('shareNote').textContent = error?.name === 'NotAllowedError' && storyFile.file ? UI.storyTapAgain : UI.storyFailed;
 }
 
 // Pantau kota lain: up to 3 pinned cities as chips; the one on screen is left out of the row.

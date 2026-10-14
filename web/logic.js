@@ -169,6 +169,11 @@ export function installMode({ standalone, hasPrompt, ios, dismissed }) {
   return ios ? 'ios' : null;
 }
 
+/** Cache key for a drawn Story card: everything printed on it. */
+export function storyKey(lines) {
+  return JSON.stringify(lines);
+}
+
 /** What the Story card says, in order. Levels 1–2 are light; 3–5 stay plain and calm (no "kamu", no quip). */
 export function storyLines({ city, level, copy, story, improve, day }) {
   const light = level <= 2;

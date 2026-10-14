@@ -159,7 +159,8 @@ export const UI = {
 
   share: 'Bagikan ke grup',
   storyButton: 'Bagikan ke Story',
-  storySaved: 'Gambar tersimpan. Unggah ke Story dari galeri.',
+  storySaved: 'Gambar diunduh. Unggah ke Story dari galeri. Kalau tidak muncul, buka halaman ini di Safari atau Chrome.',
+  storyTapAgain: 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.',
   storyFailed: 'Gambar belum bisa dibuat. Coba lagi.',
   shared: 'Link disalin. Tinggal tempel di grup.',
   shareText: (city, day, level, headline) => `${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${headline}`,

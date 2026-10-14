@@ -150,7 +150,8 @@ describe('UI', () => {
     assert.equal(UI.improveOn('Jumat'), 'Diperkirakan mulai membaik Jumat.');
     assert.equal(UI.improveNone(4), 'Belum ada tanda membaik dalam 4 hari ke depan.');
     assert.equal(UI.installButton, 'Pasang di layar utama');
-    assert.equal(UI.storySaved, 'Gambar tersimpan. Unggah ke Story dari galeri.');
+    assert.equal(UI.storySaved, 'Gambar diunduh. Unggah ke Story dari galeri. Kalau tidak muncul, buka halaman ini di Safari atau Chrome.');
+    assert.equal(UI.storyTapAgain, 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.');
     assert.equal(UI.tagline, 'Cek asap dan kualitas udara hari ini');
   });
 

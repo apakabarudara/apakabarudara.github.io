@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import { LEVELS, STORY } from '../web/copy.js';
 import {
   activityStatuses, ago, bestWindow, freshness, greeting, improvement, installMode, isIosSafari, mapsSearchUrl, nearest, normalizeWatch, previewOverride,
-  rainKind, rankByLevel, resolveCity, storyLines, toggleWatch, upcomingDays, watchRow
+  rainKind, rankByLevel, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow
 } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
@@ -232,5 +232,18 @@ describe('storyLines', () => {
       assert.equal(lines.quip, null);
       assert.doesNotMatch(Object.values(lines).join(' '), /\bkamu|kotamu/i);
     }
+  });
+});
+
+describe('storyKey', () => {
+  const make = (level: number, improve: string | null = null, day = 'Rabu 10.00', city = 'Palembang') =>
+    storyKey(storyLines({ city, level, copy: LEVELS[level], story: STORY, improve, day }));
+
+  it('is stable for the same card and changes with city, level, day or improve line', () => {
+    assert.equal(make(3), make(3));
+    assert.notEqual(make(3), make(4));
+    assert.notEqual(make(3), make(3, null, 'Rabu 11.00'));
+    assert.notEqual(make(3), make(3, 'Besok membaik.'));
+    assert.notEqual(make(3), make(3, null, 'Rabu 10.00', 'Jambi'));
   });
 });
