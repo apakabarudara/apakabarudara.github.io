@@ -13,5 +13,6 @@ export const LOCATIONS: readonly Location[] = [
   { id: 'banjarmasin', name: 'Banjarmasin, Kalimantan Selatan', lat: -3.31987, lon: 114.59075 }, // 1650213
   { id: 'banjarbaru', name: 'Banjarbaru, Kalimantan Selatan', lat: -3.4406, lon: 114.8365 }, // 1650217
   { id: 'samarinda', name: 'Samarinda, Kalimantan Timur', lat: -0.49167, lon: 117.14583 }, // 1629001
-  { id: 'balikpapan', name: 'Balikpapan, Kalimantan Timur', lat: -1.26753, lon: 116.82887 } // 1650527
+  { id: 'balikpapan', name: 'Balikpapan, Kalimantan Timur', lat: -1.26753, lon: 116.82887 }, // 1650527
+  { id: 'tarakan', name: 'Tarakan, Kalimantan Utara', lat: 3.31332, lon: 117.59152 } // 1624725
 ];
