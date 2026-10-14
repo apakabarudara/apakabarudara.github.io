@@ -214,6 +214,10 @@ export const UI = {
 
   share: 'Bagikan',
   storyButton: 'Story',
+  kidsTitle: 'Anak di rumah? Ada kegiatan dari Si Kapas',
+  kidsText: 'Halaman mewarnai, teka-teki, dan tantangan 10 menit. Bisa dicetak.',
+  kidsButton: 'Buka paket kegiatan',
+  kidsFail: 'Paket kegiatan belum bisa dibuka. Coba lagi sebentar lagi.',
   storyChoiceToday: 'Kota ini hari ini',
   storyChoice3d: 'Kota ini 3 hari ke depan',
   storyChoiceRank: 'Peringkat 13 kota',
