@@ -208,6 +208,16 @@ addEventListener('error', e => {
           <div id="days" class="days" role="group" aria-labelledby="outlookTitle"></div>
           <p id="dayDetail" class="day-detail" aria-live="polite"></p>
         </ion-card>
+
+        <section id="kids" class="kids-card" aria-labelledby="kidsCardTitle" hidden>
+          <svg class="kids-mascot" viewBox="0 0 72 64" aria-hidden="true"><use class="body" href="#blob"/><ellipse class="shine" cx="31" cy="21" rx="6" ry="3.2" transform="rotate(-18 31 21)"/><ellipse class="eye" cx="29" cy="40" rx="3" ry="3.6"/><ellipse class="eye" cx="43" cy="40" rx="3" ry="3.6"/><ellipse class="cheek" cx="22" cy="46" rx="4" ry="2.4"/><ellipse class="cheek" cx="50" cy="46" rx="4" ry="2.4"/><path class="smile" d="M31 46q5 5 10 0"/></svg>
+          <div class="kids-text">
+            <h2 id="kidsCardTitle" data-copy="kidsTitle"></h2>
+            <p data-copy="kidsText"></p>
+            <button id="kidsOpen" class="kids-open" type="button" data-copy="kidsButton"></button>
+            <p id="kidsNote" class="note" role="status"></p>
+          </div>
+        </section>
       </div>
 
       <div id="shareBlock" hidden>
@@ -316,6 +326,15 @@ addEventListener('error', e => {
       <p id="reportNotSent" class="small"></p>
     </div>
   </ion-modal>
+  <ion-modal id="kidsSheet" class="sheet" aria-labelledby="kidsSheetTitle">
+    <div class="sheet-body">
+      <div class="sheet-head">
+        <h2 id="kidsSheetTitle"></h2>
+        <ion-button id="kidsClose" fill="clear"><span data-copy="close"></span></ion-button>
+      </div>
+      <div id="kidsBody"></div>
+    </div>
+  </ion-modal>
   <ion-modal id="method" class="sheet" aria-labelledby="methodTitle">
     <div class="sheet-body">
       <div class="sheet-head">
@@ -364,5 +383,6 @@ addEventListener('error', e => {
     </div>
   </ion-modal>
 </ion-app>
+<div id="printArea"></div>
 </body>
 </html>

@@ -198,6 +198,7 @@ function renderAnswer(loc, level) {
   $('official').href = loc.ispu?.source_url ?? ISPU_URL;
   $('factsBlock').hidden = level >= 4; // no jokes or trivia at levels 4–5
   $('more').hidden = level >= 4; // the card only holds the facts
+  $('kids').hidden = level < 3; // the kids pack is for the days school may be closed
   renderSatThumb(loc);
 }
 
@@ -662,7 +663,7 @@ $('share').addEventListener('click', () => share(false));
 $('factsNext').addEventListener('click', nextFact);
 
 // Bottom sheets that fit their content: "Apa ini?", the iOS install steps, "Pantau kota lain".
-for (const id of ['about', 'method', 'iosSheet', 'watchSheet']) {
+for (const id of ['about', 'method', 'iosSheet', 'watchSheet', 'kidsSheet']) {
   $(id).breakpoints = [0, 1];
   $(id).initialBreakpoint = 1;
 }
@@ -683,6 +684,35 @@ $('methodFeedbackBtn').href = FEEDBACK_URL;
 $('methodFeedbackBtn').hidden = !FEEDBACK_URL;
 $('iosClose').addEventListener('click', () => $('iosSheet').dismiss());
 $('watchClose').addEventListener('click', () => $('watchSheet').dismiss());
+
+// "Hari Libur Asap": the pack is its own chunk, fetched and built on first open.
+let kidsReady = false;
+async function openKids() {
+  count('paket-anak-buka');
+  $('kidsNote').textContent = '';
+  try {
+    if (!kidsReady) {
+      const { renderKids } = await import('./kids.js');
+      const kids = renderKids();
+      $('kidsSheetTitle').textContent = kids.title;
+      $('kidsBody').replaceChildren(kids.sheet);
+      $('printArea').replaceChildren(...kids.print);
+      kids.sheet.querySelector('.kids-print').addEventListener('click', printKids);
+      kidsReady = true;
+    }
+    $('kidsSheet').present();
+  } catch {
+    $('kidsNote').textContent = UI.kidsFail;
+  }
+}
+function printKids() {
+  count('paket-anak-cetak');
+  document.body.classList.add('kids-printing'); // app.css prints only #printArea while this is set
+  window.print();
+}
+addEventListener('afterprint', () => document.body.classList.remove('kids-printing'));
+$('kidsOpen').addEventListener('click', openKids);
+$('kidsClose').addEventListener('click', () => $('kidsSheet').dismiss());
 $('story').addEventListener('click', chooseStory);
 for (const box of document.querySelectorAll('[data-install]')) {
   box.querySelector('.install-go').addEventListener('click', install);
