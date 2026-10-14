@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T06:11:52.990Z",
+  "generated_at": "2026-10-14T06:59:41.752Z",
   "locations": [
     {
       "id": "pekanbaru",
@@ -22,7 +22,7 @@
         "count": 2,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -42,13 +42,13 @@
           "date": "2026-10-16",
           "pm25_mean": 46,
           "band": 2,
-          "rain_mm": 1.7
+          "rain_mm": 1.1
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 39.5,
           "band": 2,
-          "rain_mm": 4.5
+          "rain_mm": 5.1
         }
       ],
       "next_hours": [
@@ -171,7 +171,7 @@
         "count": 1,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -179,25 +179,25 @@
           "date": "2026-10-14",
           "pm25_mean": 61.7,
           "band": 3,
-          "rain_mm": 2.2
+          "rain_mm": 3.5
         },
         {
           "date": "2026-10-15",
           "pm25_mean": 35.2,
           "band": 2,
-          "rain_mm": 7.4
+          "rain_mm": 6.4
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 31.8,
           "band": 2,
-          "rain_mm": 5.1
+          "rain_mm": 2.4
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 24.9,
           "band": 2,
-          "rain_mm": 6.5
+          "rain_mm": 9.9
         }
       ],
       "next_hours": [
@@ -317,10 +317,10 @@
         "updated_at": "2026-10-14T06:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 248,
+        "count": 66,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -466,10 +466,10 @@
         "updated_at": "2026-10-14T06:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 914,
+        "count": 376,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -615,10 +615,10 @@
         "updated_at": "2026-10-14T06:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 6,
+        "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
       "wind_dir": "Utara",
       "outlook": [
@@ -764,10 +764,10 @@
         "updated_at": "2026-10-14T06:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 145,
+        "count": 75,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
       "wind_dir": "Barat",
       "outlook": [
@@ -781,13 +781,13 @@
           "date": "2026-10-15",
           "pm25_mean": 159.3,
           "band": 4,
-          "rain_mm": 11.3
+          "rain_mm": 7.6
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 110.7,
           "band": 3,
-          "rain_mm": 7.1
+          "rain_mm": 10.8
         },
         {
           "date": "2026-10-17",
@@ -913,10 +913,10 @@
         "updated_at": "2026-10-14T06:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 3321,
+        "count": 2778,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -930,13 +930,13 @@
           "date": "2026-10-15",
           "pm25_mean": 1046.7,
           "band": 5,
-          "rain_mm": 3.8
+          "rain_mm": 3.5
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 1099.5,
           "band": 5,
-          "rain_mm": 5.5
+          "rain_mm": 5.8
         },
         {
           "date": "2026-10-17",
@@ -1062,10 +1062,10 @@
         "updated_at": "2026-10-14T06:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 2447,
+        "count": 1513,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
       "wind_dir": "Selatan",
       "outlook": [
@@ -1211,12 +1211,12 @@
         "updated_at": "2026-10-14T06:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 1858,
+        "count": 1253,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
-      "wind_dir": "Tenggara",
+      "wind_dir": "Timur",
       "outlook": [
         {
           "date": "2026-10-14",
@@ -1360,12 +1360,12 @@
         "updated_at": "2026-10-14T06:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 727,
+        "count": 449,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
-      "wind_dir": "Tenggara",
+      "wind_dir": "Timur",
       "outlook": [
         {
           "date": "2026-10-14",
@@ -1509,12 +1509,12 @@
         "updated_at": "2026-10-14T06:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 86,
+        "count": 69,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
-      "wind_dir": "Timur laut",
+      "wind_dir": "Timur",
       "outlook": [
         {
           "date": "2026-10-14",
@@ -1538,7 +1538,7 @@
           "date": "2026-10-17",
           "pm25_mean": 29,
           "band": 2,
-          "rain_mm": 4.4
+          "rain_mm": 3.5
         }
       ],
       "next_hours": [
@@ -1661,7 +1661,7 @@
         "count": 96,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -1681,7 +1681,7 @@
           "date": "2026-10-16",
           "pm25_mean": 22.4,
           "band": 2,
-          "rain_mm": 0.4
+          "rain_mm": 0.3
         },
         {
           "date": "2026-10-17",
@@ -1810,7 +1810,7 @@
         "count": 3,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T06:11:52.990Z"
+        "updated_at": "2026-10-14T06:59:41.752Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -1830,13 +1830,13 @@
           "date": "2026-10-16",
           "pm25_mean": 23.9,
           "band": 2,
-          "rain_mm": 3
+          "rain_mm": 1.7
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 9.1,
           "band": 1,
-          "rain_mm": 5.4
+          "rain_mm": 6.7
         }
       ],
       "next_hours": [
