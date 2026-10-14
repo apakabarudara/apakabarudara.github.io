@@ -26,19 +26,21 @@
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 *, *::before, *::after { box-sizing: inherit; }
 [hidden] { display:none !important; }
-body { margin:0; background:var(--surface-0); color:var(--text-primary);
+body { margin:0; background:var(--surface-0); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height:1.5; }
 button, textarea, select { font-family: inherit; }
+button, a, select, [role="button"] { -webkit-tap-highlight-color: transparent; }
 a { color: inherit; }
 .ic { display:inline-block; vertical-align:-0.18em; flex-shrink:0; }
 .wrap { max-width: 640px; margin: 0 auto; padding: 16px 16px 32px; }
 .bn-root { display:flex; flex-direction:column; gap:16px; width:100%; overflow-wrap:anywhere; }
 .bn-card { border:2px solid var(--line); border-radius:22px; position:relative; background:var(--surface-2); }
-.bn-select { flex:1 1 180px; min-width:0; min-height:44px; border:2px solid var(--line); border-radius:999px; padding:8px 14px; font-size:15px; font-weight:600; background:var(--surface-2); color:var(--text-primary); }
+.bn-select { flex:1 1 180px; min-width:0; min-height:44px; border:2px solid var(--line); border-radius:999px; padding:8px 14px; font-size:16px; font-weight:600; background:var(--surface-2); color:var(--text-primary); }
 .bn-btn { border:2px solid var(--line); border-radius:999px; min-height:44px; padding:10px 16px; font-size:14px; font-weight:600; background:var(--surface-2); color:var(--text-primary); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; }
 .bn-btn:active { transform:scale(.98); }
 .bn-tilt-l { transform:rotate(-1.2deg); } .bn-tilt-r { transform:rotate(1.2deg); }
 .bn-grid-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; }
+.bn-grid-stats > :last-child:nth-child(odd) { grid-column: 1 / -1; }
 .bn-hero-row { display:flex; align-items:flex-start; justify-content:center; gap:10px; flex-wrap:wrap; }
 .bn-mascot { cursor:pointer; width:110px; height:110px; flex-shrink:0; }
 .bn-mascot svg { width:100%; height:100%; display:block; }
@@ -46,11 +48,11 @@ a { color: inherit; }
 .bn-banner { width:100%; border:2px solid #26215C; border-radius:14px; padding:8px 12px; font-size:13px; font-weight:600; background:#FAC775; color:#412402; text-align:left; }
 .bn-ispu-link { display:inline-flex; align-items:center; min-height:44px; padding:0 4px; font-size:13px; font-weight:600; text-decoration:underline; }
 .bn-source { font-size:12px; line-height:1.45; opacity:.85; max-width:440px; }
-.bn-days { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; padding:12px 2px 12px; -webkit-overflow-scrolling:touch; }
-.bn-day { flex:0 0 96px; scroll-snap-align:start; border:2px solid var(--line); border-radius:18px; padding:10px 8px; background:var(--surface-2); color:var(--text-primary); cursor:pointer; text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px; position:relative; }
+.bn-days { display:grid; grid-template-columns:repeat(var(--n, 4), minmax(0, 1fr)); gap:8px; padding:16px 0 12px; }
+.bn-day { min-width:0; border:2px solid var(--line); border-radius:18px; padding:18px 2px 10px; background:var(--surface-2); color:var(--text-primary); cursor:pointer; text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px; position:relative; }
 .bn-day[aria-pressed="true"] { transform:translateY(-3px) rotate(-1deg); box-shadow: 0 0 0 2px var(--line); }
-.bn-day-icon { width:46px; height:46px; border-radius:50%; border:2px solid #26215C; display:flex; align-items:center; justify-content:center; }
-.bn-badge { position:absolute; top:-10px; right:-6px; font-size:10px; font-weight:600; padding:3px 8px; border-radius:999px; background:#FAC775; color:#412402; border:2px solid #26215C; transform:rotate(6deg); }
+.bn-day-icon { width:40px; height:40px; border-radius:50%; border:2px solid #26215C; display:flex; align-items:center; justify-content:center; }
+.bn-badge { position:absolute; top:-12px; left:50%; transform:translateX(-50%) rotate(-4deg); white-space:nowrap; font-size:11px; line-height:1.2; font-weight:600; padding:2px 7px; border-radius:999px; background:#FAC775; color:#412402; border:2px solid #26215C; }
 .bn-note { border:2px solid var(--line); border-radius:16px; padding:10px 12px; font-size:14px; line-height:1.5; background:var(--surface-2); color:var(--text-primary); min-height:52px; }
 .bn-tip { display:flex; gap:10px; align-items:flex-start; font-size:14px; background:var(--surface-2); border:2px solid var(--line); border-radius:14px; padding:10px 12px; color:var(--text-primary); }
 .bn-tip-sub { display:block; font-size:12px; color:var(--text-secondary); margin-top:3px; line-height:1.45; font-style:italic; }
@@ -82,7 +84,6 @@ h1, h2 { margin:0; font-weight:600; }
   .bn-bubble { max-width:100%; }
   .bn-btn-row .bn-btn { flex:1 1 100%; }
   .bn-stat-num { font-size:22px !important; }
-  .bn-day { flex-basis:84px; }
 }
 @media (prefers-reduced-motion: reduce) { .bn-pop, .bn-wiggle, .bn-bob, .bn-twist, .bn-note-in { animation:none; } .bn-dot { display:none; } }
 </style>
@@ -133,25 +134,32 @@ h1, h2 { margin:0; font-weight:600; }
           <div style="flex:1; height:14px; border-radius:999px; background:#791F1F; border:2px solid #26215C;"></div>
         </div>
         <div style="position:relative; height:18px;"><div id="marker" style="position:absolute; top:-6px; width:22px; height:22px; margin-left:-11px; border-radius:50%; background:#FFFFFF; border:3px solid #26215C; left:50%; transition:left .7s cubic-bezier(.3,1.4,.5,1);"></div></div>
-        <div style="display:flex; justify-content:space-between; font-size:11px;"><span>Adem</span><span>Kiamat</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:12px;"><span>Adem</span><span>Kiamat</span></div>
       </div>
       <div id="sticker" style="margin-top:12px; width:84px; height:84px; border-radius:50%; border:4px solid #26215C; background:#FFFFFF; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#26215C; transform:rotate(-6deg);">
         <div class="bn-stat-num" style="font-size:24px; font-weight:700; line-height:1;" id="pm25"></div>
-        <div style="font-size:10px; line-height:1.2;">PM2.5<br>µg/m³</div>
+        <div style="font-size:11px; line-height:1.2;">PM2.5<br>µg/m³</div>
       </div>
       <div id="heroSource" class="bn-source" style="margin-top:8px;"></div>
     </div>
     <a id="ispuLink" class="bn-ispu-link" href="https://ispu.kemenlh.go.id/app/#/" target="_blank" rel="noopener">Cek ISPU resmi KLH</a>
   </section>
 
-  <section class="bn-card bn-pop" style="padding:1rem 1.1rem; animation-delay:.12s;">
-    <div style="font-size:15px; font-weight:600; margin-bottom:4px;">Napas kamu hari ini gimana?</div>
-    <div class="sub" style="margin-bottom:10px;">Pilih satu, nggak ada jawaban salah.</div>
-    <div class="bn-poll" id="poll"></div>
-    <div id="pollNote" class="bn-note" style="margin-top:10px; min-height:0; display:none;" aria-live="polite"></div>
-  </section>
-
   <div id="live" style="display:flex; flex-direction:column; gap:inherit;" hidden>
+    <section class="bn-card bn-pop" style="padding:1rem 1.1rem; animation-delay:.12s;">
+      <div style="font-size:16px; font-weight:600;">Ritual hari ini</div>
+      <div class="sub" style="margin:2px 0 10px;">Ikutin kalau mau, atau curhat aja ke paru-paru.</div>
+      <div id="advice" style="display:flex; flex-direction:column; gap:8px;"></div>
+    </section>
+
+    <section class="bn-card bn-pop" style="padding:1rem 1.1rem; animation-delay:.15s;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:4px; flex-wrap:wrap;">
+        <div style="font-size:16px; font-weight:600;" id="outlookTitle">Ramalan</div><div class="muted">Perkiraan model, tap tiap hari</div></div>
+      <div class="sub" style="margin-bottom:6px;">Ramalannya jujur, cuma dikemas agak lebay.</div>
+      <div id="days" class="bn-days" role="group" aria-label="Ramalan harian"></div>
+      <div id="dayNote" class="bn-note bn-note-in" aria-live="polite"></div>
+    </section>
+
     <div>
       <div class="bn-grid-stats bn-pop" style="animation-delay:.15s;">
         <div class="bn-card bn-tilt-l" style="background:#FAECE7; padding:14px; border-color:#26215C;"><svg class="ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#712B13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M12 10.941c2.333 -3.308 .167 -7.823 -1 -8.941c0 3.395 -2.235 5.299 -3.667 6.706c-1.43 1.408 -2.333 3.294 -2.333 5.588c0 3.704 3.134 6.706 7 6.706c3.866 0 7 -3.002 7 -6.706c0 -1.712 -1.232 -4.403 -2.333 -5.588c-2.084 3.353 -3.257 3.353 -4.667 2.235" /></svg>
@@ -167,20 +175,14 @@ h1, h2 { margin:0; font-weight:600; }
       <div id="statSource" class="muted" style="margin-top:8px;"></div>
     </div>
 
-    <section class="bn-card bn-pop" style="padding:1rem 1.1rem; animation-delay:.2s;">
-      <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:4px; flex-wrap:wrap;">
-        <div style="font-size:16px; font-weight:600;" id="outlookTitle">Ramalan</div><div class="muted">Perkiraan model, tap tiap hari</div></div>
-      <div class="sub" style="margin-bottom:6px;">Ramalannya jujur, cuma dikemas agak lebay.</div>
-      <div id="days" class="bn-days" role="group" aria-label="Ramalan harian"></div>
-      <div id="dayNote" class="bn-note bn-note-in" aria-live="polite"></div>
-    </section>
-
-    <section class="bn-card bn-pop" style="padding:1rem 1.1rem; animation-delay:.25s;">
-      <div style="font-size:16px; font-weight:600;">Ritual hari ini</div>
-      <div class="sub" style="margin:2px 0 10px;">Ikutin kalau mau, atau curhat aja ke paru-paru.</div>
-      <div id="advice" style="display:flex; flex-direction:column; gap:8px;"></div>
-    </section>
   </div>
+
+  <section class="bn-card bn-pop" style="padding:1rem 1.1rem;">
+    <div style="font-size:15px; font-weight:600; margin-bottom:4px;">Napas kamu hari ini gimana?</div>
+    <div class="sub" style="margin-bottom:10px;">Pilih satu, nggak ada jawaban salah.</div>
+    <div class="bn-poll" id="poll"></div>
+    <div id="pollNote" class="bn-note" style="margin-top:10px; min-height:0; display:none;" aria-live="polite"></div>
+  </section>
 
   <section class="bn-card bn-pop" style="padding:1rem 1.1rem; animation-delay:.3s; background:#EEEDFE; color:#26215C; border-color:#26215C;">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:6px; flex-wrap:wrap;">
@@ -200,9 +202,7 @@ h1, h2 { margin:0; font-weight:600; }
 
   <div>
     <div class="bn-btn-row" style="display:flex; gap:10px; flex-wrap:wrap;">
-      <button type="button" id="shareBtn" class="bn-btn" style="flex:1 1 160px;"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /> <path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /> <path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /> <path d="M8.7 10.7l6.6 -3.4" /> <path d="M8.7 13.3l6.6 3.4" /></svg>Lempar ke grup</button>
-      <button type="button" id="alertBtn" class="bn-btn" style="flex:1 1 160px;"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /> <path d="M9 17v1a3 3 0 0 0 6 0v-1" /> <path d="M21 6.727a11.05 11.05 0 0 0 -2.794 -3.727" /> <path d="M3 6.727a11.05 11.05 0 0 1 2.792 -3.727" /></svg>Teriakin kalau berubah</button>
-    </div>
+      <button type="button" id="shareBtn" class="bn-btn" style="flex:1 1 160px;"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /> <path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /> <path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /> <path d="M8.7 10.7l6.6 -3.4" /> <path d="M8.7 13.3l6.6 3.4" /></svg>Lempar ke grup</button>    </div>
     <div id="actionNote" class="sub" style="margin-top:6px; min-height:18px; text-align:center;" aria-live="polite"></div>
   </div>
 
@@ -340,14 +340,15 @@ function renderDays(loc){
   const days = loc.outlook, today = localToday();
   const worst = days.reduce((w, d, i) => d.pm25_mean > days[w].pm25_mean ? i : w, 0);
   $("outlookTitle").textContent = "Ramalan " + days.length + " hari";
+  $("days").style.setProperty("--n", days.length);
   $("days").innerHTML = days.map((d, i) => {
     const b = bands[d.band - 1], date = new Date(d.date + "T00:00:00Z");
     return '<button type="button" class="bn-day" data-i="' + i + '" aria-pressed="false" aria-label="' + dayLong.format(date) + ', PM2.5 ' + num.format(d.pm25_mean) + ', ' + b.short + '">' +
-      (i === worst ? '<span class="bn-badge">Paling deg-degan</span>' : '') +
-      '<span style="font-size:12px; font-weight:600;">' + (d.date === today ? "Hari ini" : weekday.format(date)) + '</span>' +
-      '<span class="bn-day-icon" style="background:' + b.body + ';">' + ic(d.rain_mm >= WET_DAY_MM ? "cloud-rain" : "cloud", 22, "#26215C") + '</span>' +
-      '<span style="font-size:11px; font-weight:600;">' + b.short + '</span>' +
-      '<span style="font-size:12px; color:var(--text-secondary);">PM2.5 ' + Math.round(d.pm25_mean) + '</span></button>';
+      (i === worst ? '<span class="bn-badge">Deg-degan</span>' : '') +
+      '<span style="font-size:13px; font-weight:600;">' + (d.date === today ? "Hari ini" : weekday.format(date)) + '</span>' +
+      '<span class="bn-day-icon" style="background:' + b.body + ';">' + ic(d.rain_mm >= WET_DAY_MM ? "cloud-rain" : "cloud", 20, "#26215C") + '</span>' +
+      '<span style="font-size:12px; font-weight:600;">' + b.short + '</span>' +
+      '<span style="font-size:12px; line-height:1.25; color:var(--text-secondary);">PM2.5<br>' + Math.round(d.pm25_mean) + '</span></button>';
   }).join("");
   document.querySelectorAll(".bn-day").forEach(el => el.onclick = () => showDay(loc, +el.dataset.i));
   showDay(loc, worst);
@@ -389,12 +390,14 @@ function fillPicker(){
   const sel = $("city"), ids = report.locations.map(l => l.id).join();
   if (sel.dataset.ids !== ids) {
     sel.innerHTML = "";
-    report.locations.forEach(l => { const o = document.createElement("option"); o.value = l.id; o.textContent = l.name; sel.appendChild(o); });
+    report.locations.forEach(l => { const o = document.createElement("option"); o.value = l.id; o.textContent = l.name.split(",")[0]; sel.appendChild(o); });
     sel.dataset.ids = ids; sel.disabled = false;
   }
   if (!current) {
     const fromHash = decodeURIComponent(location.hash.slice(1));
-    current = report.locations.some(l => l.id === fromHash) ? fromHash : report.locations[0].id;
+    const known = report.locations.some(l => l.id === fromHash);
+    current = known ? fromHash : report.locations[0].id;
+    if (!known) $("locateNote").textContent = "Bukan kotamu? Pilih dari daftar, atau tap Kota terdekat.";
   }
   sel.value = selectedLocation().id;
 }
@@ -418,7 +421,7 @@ async function load(){
   render();
 }
 
-$("city").onchange = e => choose(e.target.value);
+$("city").onchange = e => { $("locateNote").textContent = ""; choose(e.target.value); };
 if (!("geolocation" in navigator)) $("locate").hidden = true;
 $("locate").onclick = () => {
   const note = $("locateNote");
@@ -469,7 +472,6 @@ $("shareBtn").onclick = async () => {
     else { await navigator.clipboard.writeText(text + " " + url); $("actionNote").textContent = "Link disalin, tinggal tempel di grup."; }
   } catch (err) { /* share sheet dismissed */ }
 };
-$("alertBtn").onclick = () => { $("actionNote").textContent = "Notifikasi belum ada. Sementara ini, buka lagi halaman ini ya."; };
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") load(); });
 setInterval(load, REFRESH_MS);
 
