@@ -2,7 +2,7 @@
 
 A playful, mobile-first page that tells people in Indonesia whether the air is safe to go out in during the karhutla (forest and land fire) season.
 
-Status: Phase 1 (ingest). `web/index.html` is the beta prototype with sample data; it is wired to real data in Phase 2.
+Status: Phase 2 done. The ingest job writes real data and `web/index.html` reads it. Hosting, the health review of the band copy and the beta are still to come.
 
 ## How it works
 
@@ -11,9 +11,13 @@ An hourly GitHub Actions job fetches three sources, builds one report, validates
 ```
 npm test                              # unit tests, fixtures only
 FIRMS_MAP_KEY=<key> npm run ingest    # writes data/latest.json
+npm run build                         # dist/ = the page + data/latest.json, ready for any static host
+python3 -m http.server -d dist        # preview at http://localhost:8000
 ```
 
 Node 22.18 or newer runs the TypeScript directly (type stripping). There are no dependencies.
+
+The page refetches `data/latest.json` every 15 minutes and whenever it comes back into view. When data is over 3 hours old it shows a "Data lama" banner. Over 12 hours, or when the fetch fails, it hides the verdict and points to the official ISPU. "Kota terdekat" picks the nearest city in the browser; the position is never stored or sent. `#<city id>` in the URL selects a city, which is what "Lempar ke grup" shares.
 
 ## data/latest.json
 
