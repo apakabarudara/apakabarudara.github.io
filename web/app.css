@@ -91,13 +91,13 @@ ion-card {
 .eyebrow { font-weight: var(--fw-label); }
 .of { font-size: var(--fs-sm); font-weight: var(--fw-label); letter-spacing: 0; white-space: nowrap; }
 .desc { margin: var(--sp-2) 0 0; font-size: var(--fs-xs); }
-.guide { margin: var(--sp-4) 0 0; padding: var(--sp-3); border-radius: var(--r-btn); background: var(--lv-soft); color: var(--lv-soft-ink); font-size: var(--fs-sm); }
-.guide h3 { margin: 0 0 var(--sp-2); font-size: var(--fs-sm); font-weight: var(--fw-display); }
+.guide { margin: var(--sp-3) 0 0; padding: var(--sp-2) 0 0 var(--sp-3); border-left: 3px solid var(--lv-soft); color: var(--lv-ink); font-size: var(--fs-xs); }
+.guide h3 { margin: 0 0 var(--sp-1); font-size: var(--fs-xs); font-weight: var(--fw-label); opacity: .85; }
 .sources { display: grid; gap: var(--sp-1); margin-top: var(--sp-3); }
 button.guide-src { border: 0; background: none; padding: 0; font: inherit; font-size: var(--fs-xs); color: inherit; text-decoration: underline; cursor: pointer; text-align: left; }
 .guide p { margin: 0 0 var(--sp-2); }
-.guide b { font-weight: var(--fw-strong); }
-.guide-src { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--fs-xs); color: var(--lv-soft-ink); text-decoration: underline; }
+.guide b { font-weight: var(--fw-label); }
+.guide-src { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--fs-xs); color: var(--lv-ink); opacity: .85; text-decoration: underline; }
 .symptoms { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); font-weight: var(--fw-label); }
 .note { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); color: var(--ink-2); }
 .note:empty { display: none; }

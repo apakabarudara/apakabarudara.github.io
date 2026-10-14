@@ -122,7 +122,7 @@ export const UI = {
   worseSince: previous => `Perkiraannya memburuk sejak terakhir kamu cek (sebelumnya ${previous}).`,
   improveOn: weekday => `Diperkirakan mulai membaik ${weekday}.`,
   improveNone: days => `Perkiraan ${days} hari ke depan belum menunjukkan perbaikan.`,
-  guideTitle: 'Kalau levelnya memang begini, panduan ISPU-nya:',
+  guideTitle: 'Menurut ISPU, kalau levelnya memang begini:',
   guideSensitive: 'Kelompok sensitif:',
   guideEveryone: 'Setiap orang:',
   guideSource: 'Sumber: ISPU, Kementerian Lingkungan Hidup (dikutip 14 Okt 2026)',

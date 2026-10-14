@@ -104,7 +104,7 @@ describe('OFFICIAL_ISPU', () => {
   });
 
   it('labels and names the source', () => {
-    assert.equal(UI.guideTitle, 'Kalau levelnya memang begini, panduan ISPU-nya:');
+    assert.equal(UI.guideTitle, 'Menurut ISPU, kalau levelnya memang begini:');
     assert.match(UI.guideWho, /WHO\/Europe/);
     assert.match(UI.guideCaution, /meleset/);
     assert.equal(UI.guideSensitive, 'Kelompok sensitif:');
