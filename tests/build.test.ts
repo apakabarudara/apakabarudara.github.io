@@ -52,17 +52,22 @@ describe('buildReport', () => {
   });
 
   it('labels where the wind comes from', () => {
-    assert.equal(palangkaraya.wind_dir, 'Tenggara'); // 133°
-    assert.equal(pontianak.wind_dir, 'Utara'); // 11°
+    assert.equal(palangkaraya.wind_dir, 'Tenggara'); // 127°
+    assert.equal(pontianak.wind_dir, 'Utara'); // 17°
   });
 
-  it('bands each complete outlook day by its 24-hour mean', () => {
+  it('bands each complete outlook day by its 24-hour mean and adds that day’s rain', () => {
     assert.deepEqual(pontianak.outlook, [
-      { date: '2026-10-14', pm25_mean: 98.4, band: 3 },
-      { date: '2026-10-15', pm25_mean: 99.5, band: 3 },
-      { date: '2026-10-16', pm25_mean: 23.5, band: 2 },
-      { date: '2026-10-17', pm25_mean: 51.7, band: 2 }
+      { date: '2026-10-14', pm25_mean: 98.4, band: 3, rain_mm: 18.5 },
+      { date: '2026-10-15', pm25_mean: 99.5, band: 3, rain_mm: 10.1 },
+      { date: '2026-10-16', pm25_mean: 23.5, band: 2, rain_mm: 20.2 },
+      { date: '2026-10-17', pm25_mean: 51.7, band: 2, rain_mm: 13.8 }
     ]);
+  });
+
+  it('throws when an outlook day has no rain forecast', () => {
+    const forecast = SOURCES.forecast.map(f => ({ ...f, daily: { time: f.daily.time.slice(0, 2), precipitation_sum: f.daily.precipitation_sum.slice(0, 2) } }));
+    assert.throws(() => buildReport(LOCATIONS, { ...SOURCES, forecast }, NOW), /no rain forecast for 2026-10-16/);
   });
 
   it('throws when the model does not cover now', () => {
@@ -70,7 +75,7 @@ describe('buildReport', () => {
   });
 
   it('throws when wind is missing', () => {
-    const forecast = SOURCES.forecast.map(f => ({ current: { ...f.current, wind_direction_10m: null } }));
+    const forecast = SOURCES.forecast.map(f => ({ ...f, current: { ...f.current, wind_direction_10m: null } }));
     assert.throws(() => buildReport(LOCATIONS, { ...SOURCES, forecast }, NOW), /no current wind direction/);
   });
 });

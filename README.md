@@ -26,7 +26,7 @@ The shape lives in `ingest/types.ts`.
 | `pm25_model.band` | 1 Baik, 2 Sedang, 3 Tidak Sehat, 4 Sangat Tidak Sehat, 5 Berbahaya. Upper bounds 15.5 / 55.4 / 150.4 / 250.4 µg/m³ from [Permen LHK P.14/2020, Lampiran I](https://peraturan.go.id/files/bn774-2020.pdf). |
 | `hotspots_24h.count` | VIIRS NOAA-20 detections of nominal or high confidence within 100 km, acquired in the last 24 hours. |
 | `wind_dir` | Where the wind blows from, 8-point Indonesian compass. |
-| `outlook` | Mean PM2.5 per complete local day from today, banded like `pm25_model`. CAMS global forecasts 5 days, so expect about 4 entries, not 7. |
+| `outlook` | Mean PM2.5 per complete local day from today, banded like `pm25_model`, plus that day's forecast rain in mm. CAMS global forecasts 5 days, so expect about 4 entries, not 7. |
 
 Cities are in `ingest/locations.ts`.
 
@@ -35,7 +35,7 @@ Cities are in `ingest/locations.ts`.
 | Source | Used for | Terms |
 | --- | --- | --- |
 | [Open-Meteo Air Quality API](https://open-meteo.com/en/docs/air-quality-api) (CAMS global, ~45 km) | PM2.5 now and outlook | Free for non-commercial use only, CC BY 4.0. Link "Weather data by Open-Meteo.com" next to the data and credit CAMS. |
-| [Open-Meteo Forecast API](https://open-meteo.com/en/docs) | Wind direction | As above. |
+| [Open-Meteo Forecast API](https://open-meteo.com/en/docs) | Wind direction, daily rain | As above. |
 | [NASA FIRMS Area API](https://firms.modaps.eosdis.nasa.gov/api/area/) | Hotspots | Free MAP_KEY, 5,000 transactions per 10 minutes. Credit "NASA FIRMS". Suomi NPP stops on 2026-11-02, hence NOAA-20. |
 
 Not used:

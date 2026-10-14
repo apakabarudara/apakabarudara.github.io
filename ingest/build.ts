@@ -25,8 +25,14 @@ export function buildReport(locations: readonly Location[], sources: Sources, no
     locations: locations.map((loc, i) => {
       const current = trailingDayMean(sources.airQuality[i], now);
       const pm25 = round1(current.value);
-      const windDeg = sources.forecast[i].current.wind_direction_10m;
+      const { current: weatherNow, daily } = sources.forecast[i];
+      const windDeg = weatherNow.wind_direction_10m;
       if (windDeg === null) throw new Error(`${loc.id}: Open-Meteo has no current wind direction`);
+      const rainOn = (date: string): number => {
+        const mm = daily.precipitation_sum[daily.time.indexOf(date)];
+        if (mm === null || mm === undefined) throw new Error(`${loc.id}: Open-Meteo has no rain forecast for ${date}`);
+        return mm;
+      };
       return {
         id: loc.id,
         name: loc.name,
@@ -36,7 +42,7 @@ export function buildReport(locations: readonly Location[], sources: Sources, no
         wind_dir: compassLabel(windDeg),
         outlook: dailyMeanFrom(sources.airQuality[i], now).map(day => {
           const mean = round1(day.pm25_mean);
-          return { date: day.date, pm25_mean: mean, band: bandForPm25(mean) };
+          return { date: day.date, pm25_mean: mean, band: bandForPm25(mean), rain_mm: rainOn(day.date) };
         })
       };
     })

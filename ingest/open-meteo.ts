@@ -11,6 +11,7 @@ export interface AirQualityResponse {
 
 export interface ForecastResponse {
   current: { time: string; wind_direction_10m: number | null };
+  daily: { time: string[]; precipitation_sum: (number | null)[] };
 }
 
 export interface DailyMean {
@@ -48,7 +49,7 @@ export function fetchAirQuality(locations: readonly Location[]): Promise<AirQual
 }
 
 export function fetchForecast(locations: readonly Location[]): Promise<ForecastResponse[]> {
-  return getPerLocation<ForecastResponse>(FORECAST_URL, locations, { current: 'wind_direction_10m' });
+  return getPerLocation<ForecastResponse>(FORECAST_URL, locations, { current: 'wind_direction_10m', daily: 'precipitation_sum', forecast_days: '7' });
 }
 
 /** `now` as a local hour key matching Open-Meteo's `hourly.time` format, e.g. 2026-10-14T07:00. */

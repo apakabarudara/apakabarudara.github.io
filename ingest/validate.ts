@@ -39,6 +39,7 @@ export function validateReport(report: LatestReport, expectedIds: readonly strin
       if (i > 0 && day.date <= loc.outlook[i - 1].date) at(`outlook[${i}].date not ascending`);
       if (!isConcentration(day.pm25_mean)) at(`outlook[${i}].pm25_mean invalid: ${day.pm25_mean}`);
       if (!BANDS.has(day.band)) at(`outlook[${i}].band invalid: ${day.band}`);
+      if (!isConcentration(day.rain_mm)) at(`outlook[${i}].rain_mm invalid: ${day.rain_mm}`);
     });
   }
   return problems;

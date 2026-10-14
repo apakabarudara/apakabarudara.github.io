@@ -11,8 +11,8 @@ const location = (overrides: Partial<LocationReport> = {}): LocationReport => ({
   hotspots_24h: { count: 0, radius_km: 100, source: 'NASA FIRMS VIIRS NOAA-20 NRT', updated_at: '2026-10-14T00:30:00.000Z' },
   wind_dir: 'Utara',
   outlook: [
-    { date: '2026-10-14', pm25_mean: 98.4, band: 3 },
-    { date: '2026-10-15', pm25_mean: 99.5, band: 3 }
+    { date: '2026-10-14', pm25_mean: 98.4, band: 3, rain_mm: 18.5 },
+    { date: '2026-10-15', pm25_mean: 99.5, band: 3, rain_mm: 10.1 }
   ],
   ...overrides
 });

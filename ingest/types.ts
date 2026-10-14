@@ -37,6 +37,8 @@ export interface OutlookDay {
   date: string;
   pm25_mean: number;
   band: Band;
+  /** Forecast precipitation for the local day. */
+  rain_mm: number;
 }
 
 export interface LocationReport {
