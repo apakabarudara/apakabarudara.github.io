@@ -234,8 +234,8 @@ describe('estimates and suggestions', () => {
     assert.equal(UI.overviewSub(12), '12 kota di Sumatera dan Kalimantan, diurutkan dari perkiraan asap paling tebal. Pilih kota.');
   });
 
-  it('starts the expired-report share fallback with the estimate prefix', () => {
-    assert.equal(UI.shareFallback('Apa Kabar Udara'), 'Apa Kabar Udara (perkiraan, bukan angka resmi)\nApa Kabar Udara');
+  it('keeps the estimate marker in the expired-report share fallback', () => {
+    assert.equal(UI.shareFallback('Apa Kabar Udara · Perkiraan asap'), 'Apa Kabar Udara · Perkiraan asap\nBukan angka resmi.');
   });
 
   it('keeps the emergency number in the disclaimer and labels the source fold', () => {
@@ -267,21 +267,28 @@ describe('UI', () => {
     assert.equal(UI.levelLabel('Tidak Sehat', 3), 'Tidak Sehat · level 3 dari 5');
   });
 
-  it('starts every shared text with the brand and "perkiraan, bukan angka resmi"', () => {
-    const prefix = /^Apa Kabar Udara \(perkiraan, bukan angka resmi\)\n/;
-    assert.match(UI.shareText('Palembang', 'Rabu 10.00', 3, null), prefix);
-    assert.match(UI.shareOverview, prefix);
+  it('puts the finding first with "perkiraan" inside the first line of every share text', () => {
+    const texts = [
+      ...[1, 2, 3, 4, 5].flatMap(level => [UI.shareText('Palembang', 'Rabu 10.00', level, null), UI.shareText('Palembang', 'Rabu 10.00', level, 'Awan putih.')]),
+      UI.shareOverview,
+      UI.shareFallback('Apa Kabar Udara · Perkiraan asap & kualitas udara hari ini')
+    ];
+    for (const text of texts) {
+      assert.match(text.split('\n')[0], /perkiraan/i, text);
+      assert.doesNotMatch(text, /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i, text);
+    }
   });
 
-  it('dates shared messages with city, weekday, time, level name and "level X dari 5"', () => {
+  it('words the shared city text finding-first, quip on its own line, brand before the link', () => {
     assert.equal(
       UI.shareText('Palembang', 'Rabu 10.00', 3, null),
-      'Apa Kabar Udara (perkiraan, bukan angka resmi)\nPalembang, Rabu 10.00: Tidak Sehat (level 3 dari 5). Panduan resmi ISPU ada di link.'
+      'Udara Palembang Rabu 10.00 (perkiraan): Tidak Sehat, level 3 dari 5.\nBukan angka resmi. Panduan ISPU ada di link.\nApa Kabar Udara'
     );
     assert.equal(
       UI.shareText('Palembang', 'Rabu 10.00', 1, 'Awan putih, langit biru.'),
-      'Apa Kabar Udara (perkiraan, bukan angka resmi)\nPalembang, Rabu 10.00: Baik (level 1 dari 5). Awan putih, langit biru. Panduan resmi ISPU ada di link.'
+      'Udara Palembang Rabu 10.00 (perkiraan): Baik, level 1 dari 5.\nAwan putih, langit biru.\nBukan angka resmi. Panduan ISPU ada di link.\nApa Kabar Udara'
     );
+    assert.equal(UI.shareOverview, 'Perkiraan asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.\nBukan angka resmi.\nApa Kabar Udara');
   });
 
   it('words the new lines as agreed', () => {

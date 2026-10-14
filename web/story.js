@@ -124,11 +124,44 @@ const INK = '#261F27';
 const RANK_TOP = 395;
 const RANK_BOTTOM = 1295;
 
-function centered(ctx, value, y, size, weight, color) {
+/** Centred text, wrapped to maxWidth; returns the last baseline. */
+function centered(ctx, value, y, size, weight, color, maxWidth = W) {
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
   ctx.font = `${weight} ${size}px ${FONT}`;
-  ctx.fillText(value, W / 2, y);
+  const rows = wrap(ctx, value, maxWidth);
+  rows.forEach((row, i) => ctx.fillText(row, W / 2, y + i * size * 1.2));
+  return y + (rows.length - 1) * size * 1.2;
+}
+
+// The app's rain chip colours (--rain, --rain-bg in app.css, light theme) and its drop path (#i-drop, 24-unit box).
+const RAIN = '#1558A6';
+const RAIN_BG = '#E3F0FD';
+
+/** The blue drop on its own pale disc, then the word, centred on `cx`. */
+function rainMark(ctx, cx, cy, word, color) {
+  ctx.font = `700 36px ${FONT}`;
+  const textW = ctx.measureText(word).width;
+  const r = 30;
+  const left = cx - (2 * r + 12 + textW) / 2;
+  ctx.fillStyle = RAIN_BG;
+  ctx.beginPath();
+  ctx.arc(left + r, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+  const k = 40 / 24;
+  const ox = left + r - 12 * k;
+  const oy = cy - 12 * k;
+  ctx.fillStyle = RAIN;
+  ctx.beginPath();
+  ctx.moveTo(ox + 12 * k, oy + 3.5 * k);
+  ctx.bezierCurveTo(ox + 15.2 * k, oy + 7.5 * k, ox + 17.5 * k, oy + 10.3 * k, ox + 17.5 * k, oy + 13.5 * k);
+  ctx.arc(ox + 12 * k, oy + 13.5 * k, 5.5 * k, 0, Math.PI);
+  ctx.bezierCurveTo(ox + 6.5 * k, oy + 10.3 * k, ox + 8.8 * k, oy + 7.5 * k, ox + 12 * k, oy + 3.5 * k);
+  ctx.fill();
+  ctx.fillStyle = color;
+  ctx.textAlign = 'left';
+  ctx.fillText(word, left + 2 * r + 12, cy + 12);
+  ctx.textAlign = 'center';
 }
 
 /** The 3-day outlook card: city, today's level and scale, then one level-coloured tile per upcoming day. */
@@ -138,7 +171,7 @@ function drawOutlook(ctx, lines) {
   ctx.font = `800 ${size}px ${FONT}`;
   while (ctx.measureText(lines.city).width > 880 && size > 60) ctx.font = `800 ${--size}px ${FONT}`;
   centered(ctx, lines.city, 360, size, 800, INK);
-  centered(ctx, lines.levelName, 450, 56, 800, c.label);
+  centered(ctx, lines.levelName, 450, 56, 800, lines.level === 5 ? INK : c.label); // level 5's label is made for the dark card
   scale(ctx, W / 2, 540, lines.level);
   centered(ctx, lines.heading, 690, 44, 700, INK_2);
   const gap = 30;
@@ -148,7 +181,7 @@ function drawOutlook(ctx, lines) {
     const x = x0 + i * (tw + gap);
     const t = LEVEL[tile.level];
     ctx.fillStyle = t.mascot;
-    roundRect(ctx, x, 750, tw, 400, 48);
+    roundRect(ctx, x, 750, tw, 450, 48);
     ctx.fill();
     ctx.fillStyle = t.eye;
     ctx.textAlign = 'center';
@@ -157,16 +190,17 @@ function drawOutlook(ctx, lines) {
     ctx.font = `700 40px ${FONT}`;
     const rows = wrap(ctx, tile.name, tw - 48);
     rows.forEach((row, r) => ctx.fillText(row, x + tw / 2, 1010 + r * 50));
+    if (tile.wet) rainMark(ctx, x + tw / 2, 1138, lines.rain, t.eye);
   });
-  centered(ctx, lines.stamp, 1215, 34, 600, INK_2);
-  centered(ctx, lines.salam, 1262, 30, 600, INK_2);
-  centered(ctx, lines.url, 1312, 38, 600, BRAND);
+  centered(ctx, lines.stamp, 1285, 40, 600, INK_2);
+  centered(ctx, lines.salam, 1345, 40, 600, INK_2, 880);
+  centered(ctx, lines.url, 1460, 44, 600, BRAND);
 }
 
 /** The ranking card: all cities in rows of equal height, a ring on the viewer's city. */
 function drawRanking(ctx, lines) {
   centered(ctx, lines.title, 320, 60, 800, INK);
-  centered(ctx, lines.stamp, 366, 32, 600, INK_2);
+  centered(ctx, lines.stamp, 374, 40, 600, INK_2);
   const h = Math.floor((RANK_BOTTOM - RANK_TOP) / lines.rows.length);
   lines.rows.forEach((row, i) => {
     const y = RANK_TOP + i * h;
@@ -192,8 +226,8 @@ function drawRanking(ctx, lines) {
     ctx.fillText(row.name, W - 112, mid);
     ctx.textBaseline = 'alphabetic';
   });
-  centered(ctx, lines.salam, 1328, 30, 600, INK_2);
-  centered(ctx, lines.url, 1378, 38, 600, BRAND);
+  centered(ctx, lines.salam, 1345, 40, 600, INK_2, 880);
+  centered(ctx, lines.url, 1460, 44, 600, BRAND);
 }
 
 /** Waits for the self-hosted font, draws the card and resolves with a PNG blob. */
@@ -213,22 +247,22 @@ export async function renderStory(lines) {
   return new Promise((resolve, reject) => canvas.toBlob(blob => (blob ? resolve(blob) : reject(new Error('no blob'))), 'image/png'));
 }
 
-/** The default card: city, level, scale, quip, stamp. */
+/** The default card: city, level, scale, the finding as headline (quip or the quoted ISPU sentence), stamp. */
 function drawCity(ctx, lines) {
   const c = LEVEL[lines.level];
   const mid = W / 2;
 
-  // Levels 1–2 have a quip and room to spare: a taller card and a bigger mascot fill the top and bottom bands, text still inside the safe zones.
+  // Levels 1–2 have a one-line quip; 3–5 have a longer quoted sentence, so the head block sits higher. Text stays between y = 250 and 1580.
   const light = lines.level <= 2;
   const at = light
-    ? { cardTop: 400, cardBottom: 1420, mascotY: 262, mascotW: 420, city: 790, name: 880, scale: 960, headline: 1080, quipGap: 80, quipSize: 46, footer: 1512, url: 1566 }
-    : { cardTop: 430, cardBottom: 1380, mascotY: 300, mascotW: 320, city: 740, name: 830, scale: 910, headline: 1030, quipGap: 72, quipSize: 40, footer: 1452, url: 1514 };
-  const { cardTop, cardBottom } = at;
+    ? { cardTop: 400, mascotY: 262, mascotW: 420, city: 790, name: 880, scale: 960, headline: 1090 }
+    : { cardTop: 380, mascotY: 262, mascotW: 360, city: 690, name: 765, scale: 830, headline: 925 };
+  const cardBottom = 1380;
   ctx.shadowColor = 'rgba(38, 31, 39, .18)';
   ctx.shadowBlur = 60;
   ctx.shadowOffsetY = 24;
   ctx.fillStyle = c.surface;
-  roundRect(ctx, 70, cardTop, W - 140, cardBottom - cardTop, 72);
+  roundRect(ctx, 70, at.cardTop, W - 140, cardBottom - at.cardTop, 72);
   ctx.fill();
   ctx.shadowColor = 'transparent';
   mascot(ctx, mid - at.mascotW / 2, at.mascotY, at.mascotW, lines.level, c);
@@ -245,14 +279,26 @@ function drawCity(ctx, lines) {
   ctx.font = `800 ${size}px ${FONT}`;
   while (ctx.measureText(lines.city).width > 800 && size > 60) ctx.font = `800 ${--size}px ${FONT}`;
   text(lines.city, at.city, size, 800, c.ink);
-  text(lines.levelName, at.name, 60, 800, c.label);
+  let ns = 60; // "Perkiraan: Sangat Tidak Sehat" must stay on one row
+  ctx.font = `800 ${ns}px ${FONT}`;
+  while (ctx.measureText(lines.levelName).width > 880 && ns > 48) ctx.font = `800 ${--ns}px ${FONT}`;
+  text(lines.levelName, at.name, ns, 800, c.label, 880);
   scale(ctx, mid, at.scale, lines.level);
-  let y = text(lines.guide, at.headline, 56, 800, c.ink, 800, 1.18);
-  if (lines.quip) y = text(lines.quip, y + at.quipGap, at.quipSize, 600, c.ink, 800, 1.3);
-  if (lines.improve) y = text(lines.improve, y + 76, 40, 700, c.label, 860, 1.3);
-  text(lines.stamp, cardBottom - 96, 34, 600, c.label);
 
-  text(lines.salam, cardBottom - 52, 28, 600, c.label);
-  text(lines.footer, at.footer, 48, 800, BRAND);
-  text(lines.url, at.url, 38, 600, INK_2);
+  let y = at.headline;
+  if (lines.guide) {
+    // The quoted sentence, at most 3 rows: shrink from 54 px until it fits.
+    let gs = 54;
+    ctx.font = `800 ${gs}px ${FONT}`;
+    while (wrap(ctx, lines.guide, 840).length > 3 && gs > 44) ctx.font = `800 ${--gs}px ${FONT}`;
+    y = text(lines.guide, y, gs, 800, c.ink, 840, 1.2);
+    y = text(lines.source, y + 58, 40, 700, c.label);
+  } else if (lines.quip) y = text(lines.quip, y, 60, 800, c.ink, 840, 1.2);
+  if (lines.improve) y = text(lines.improve, y + 64, 40, 700, c.label, 860, 1.3);
+  text(lines.stamp, cardBottom - 100, 40, 600, c.label);
+  text(lines.estimate, cardBottom - 48, 38, 600, c.label);
+
+  text(lines.salam, 1426, 40, 600, INK_2, 900, 1.2);
+  text(lines.footer, 1530, 48, 800, BRAND);
+  text(lines.url, 1572, 44, 600, INK_2);
 }

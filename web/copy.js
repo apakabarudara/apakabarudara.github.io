@@ -88,11 +88,8 @@ export const EMERGENCY_NUMBER = '119';
 /** The public address, written once. The Open Graph tags in index.html and the README repeat it as static text. */
 export const SITE_HOST = 'apakabarudara.github.io';
 
-/** First line of every shared text: forwarded without context, a claim reads as a hoax unless it says it is an estimate. */
-/** Shared texts and the Story card carry the level and this pointer, never our own advice. */
-const GUIDE_IN_LINK = 'Panduan resmi ISPU ada di link.';
-
-const SHARE_PREFIX = 'Apa Kabar Udara (perkiraan, bukan angka resmi)\n';
+/** Shared texts carry the level and this pointer, never our own advice. */
+const GUIDE_IN_LINK = 'Bukan angka resmi. Panduan ISPU ada di link.';
 
 export const UI = {
   loadingHeadline: 'Mengecek udara…',
@@ -187,7 +184,8 @@ export const UI = {
     const line = `${level === 1 ? 'Udara paling segar' : 'Asap paling tipis'} di siang hari: ${dayWord}, ${from}–${to}`;
     return level >= 3 && windowBand >= 3 ? `${line} (perkiraan: masih ${LEVELS[windowBand].name})` : line;
   },
-  shareFallback: title => `${SHARE_PREFIX}${title}`,
+  // First line of every shared text says "perkiraan": forwarded without context, a claim reads as a hoax unless it says it is an estimate.
+  shareFallback: title => `${title}\nBukan angka resmi.`,
   dayWord: { today: 'hari ini', tomorrow: 'besok' },
   stripLabel: (range, window) => `Asap per jam, 24 jam ke depan, ${range}.${window}`,
   stripRange: (low, high) => (low === high ? `semuanya ${low}` : `dari ${low} sampai ${high}`),
@@ -224,8 +222,8 @@ export const UI = {
   storyTapAgain: 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.',
   storyFailed: 'Gambar belum bisa dibuat. Coba lagi.',
   shared: 'Link disalin. Tinggal tempel di grup.',
-  shareText: (city, day, level, quip) => `${SHARE_PREFIX}${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5).${quip ? ` ${quip}` : ''} ${GUIDE_IN_LINK}`,
-  shareOverview: `${SHARE_PREFIX}Kondisi asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.`,
+  shareText: (city, day, level, quip) => `Udara ${city} ${day} (perkiraan): ${LEVELS[level].name}, level ${level} dari 5.${quip ? `\n${quip}` : ''}\n${GUIDE_IN_LINK}\nApa Kabar Udara`,
+  shareOverview: 'Perkiraan asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.\nBukan angka resmi.\nApa Kabar Udara',
 
   preview: 'Pratinjau: level contoh untuk melihat tampilan, bukan data nyata.',
   stale: when => `Data lama: terakhir diperbarui ${when}. Cek juga angka resmi (ISPU).`,
@@ -277,11 +275,12 @@ export const FACTS = [
 export const STORY = {
   levelName: name => `Perkiraan: ${name}`,
   stamp: day => `Diperbarui ${day}`,
-  guide: GUIDE_IN_LINK,
+  guideSource: '— ISPU, KLHK',
+  estimate: 'Perkiraan model, bisa meleset',
+  rain: 'hujan',
   outlookHeading: days => `Perkiraan ${days} hari ke depan`,
   rankTitle: 'Perkiraan asap hari ini',
   salam: 'Turut prihatin untuk warga yang terdampak asap.',
-  footer: 'Cek kota sebelum keluar',
-  footerLight: 'Cek kotamu sebelum keluar',
+  footer: 'Cek kotamu sebelum keluar',
   url: SITE_HOST
 };

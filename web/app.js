@@ -444,7 +444,7 @@ function storyCards(loc) {
   const level = loc.pm25_model.band;
   const day = dayTime.format(new Date(loc.pm25_model.updated_at));
   const days = upcomingDays(loc.outlook, localDate(new Date()));
-  const cards = [{ label: UI.storyChoiceToday, lines: storyLines({ city: cityName(loc), level, copy: LEVELS[level], story: STORY, quip: quipFor(level), improve: improveText(loc, level), day }) }];
+  const cards = [{ label: UI.storyChoiceToday, lines: storyLines({ city: cityName(loc), level, copy: LEVELS[level], story: STORY, official: OFFICIAL_ISPU[level].everyone, quip: quipFor(level), improve: improveText(loc, level), day }) }];
   if (days.length > 0) {
     cards.push({
       label: UI.storyChoice3d,

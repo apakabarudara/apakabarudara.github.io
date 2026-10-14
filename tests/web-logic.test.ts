@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { LEVELS, STORY } from '../web/copy.js';
+import { LEVELS, OFFICIAL_ISPU, STORY } from '../web/copy.js';
 import {
   activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
   icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom
@@ -223,32 +223,42 @@ describe('install control', () => {
 });
 
 describe('storyLines', () => {
-  const make = (level: number) => storyLines({ city: 'Palembang', level, copy: LEVELS[level], story: STORY, quip: dailyQuip(LEVELS[level].quips, '2026-10-14'), improve: null, day: 'Rabu 10.00' });
+  const make = (level: number) => storyLines({ city: 'Palembang', level, copy: LEVELS[level], story: STORY, official: OFFICIAL_ISPU[level].everyone, quip: dailyQuip(LEVELS[level].quips, '2026-10-14'), improve: null, day: 'Rabu 10.00' });
 
-  it('carries city, level, the pointer to the official guidance and the time, and no numbers from the data', () => {
+  it('carries city, level, the quoted ISPU sentence with its source and the time, and no numbers from the data', () => {
     const lines = make(3);
     assert.equal(lines.levelName, 'Perkiraan: Tidak Sehat');
-    assert.equal(lines.guide, 'Panduan resmi ISPU ada di link.');
+    assert.equal(lines.guide, 'Kurangi aktivitas fisik yang terlalu lama di luar ruangan.');
+    assert.equal(lines.source, '— ISPU, KLHK');
+    assert.equal(lines.estimate, 'Perkiraan model, bisa meleset');
     assert.ok(!('headline' in lines));
     assert.equal(lines.stamp, 'Diperbarui Rabu 10.00');
     assert.equal(lines.url, 'apakabarudara.github.io');
     assert.doesNotMatch(JSON.stringify(lines), /µg|PM2/);
   });
 
-  it('is light at levels 1–2 and calm, without "kamu" or a quip, at 3–5', () => {
-    assert.ok(make(1).quip && make(2).quip);
-    assert.match(make(1).footer, /kotamu/);
+  it('has a quip headline at levels 1–2 and the quoted ISPU "everyone" sentence, no quip, at 3–5', () => {
+    for (const level of [1, 2]) {
+      assert.ok(make(level).quip);
+      assert.equal(make(level).guide, null);
+      assert.equal(make(level).source, null);
+    }
     for (const level of [3, 4, 5]) {
       const lines = make(level);
       assert.equal(lines.quip, null);
-      assert.doesNotMatch(Object.values(lines).join(' '), /\bkamu|kotamu/i);
+      assert.equal(lines.guide, OFFICIAL_ISPU[level].everyone);
+      assert.doesNotMatch(Object.values(lines).join(' '), /\bkamu\b/i);
     }
+  });
+
+  it('has the same call to action at every level', () => {
+    for (const level of [1, 2, 3, 4, 5]) assert.equal(make(level).footer, 'Cek kotamu sebelum keluar');
   });
 });
 
 describe('storyKey', () => {
   const make = (level: number, improve: string | null = null, day = 'Rabu 10.00', city = 'Palembang') =>
-    storyKey(storyLines({ city, level, copy: LEVELS[level], story: STORY, quip: dailyQuip(LEVELS[level].quips, '2026-10-14'), improve, day }));
+    storyKey(storyLines({ city, level, copy: LEVELS[level], story: STORY, official: OFFICIAL_ISPU[level].everyone, quip: dailyQuip(LEVELS[level].quips, '2026-10-14'), improve, day }));
 
   it('is stable for the same card and changes with city, level, day or improve line', () => {
     assert.equal(make(3), make(3));
@@ -365,9 +375,16 @@ describe('Story outlook and ranking cards', () => {
     assert.equal(outlook.kind, 'outlook');
     assert.equal(outlook.levelName, 'Perkiraan: Tidak Sehat');
     assert.deepEqual(outlook.tiles, [
-      { label: 'H15', level: 2, name: 'Sedang' }, { label: 'H16', level: 4, name: 'Sangat Tidak Sehat' }, { label: 'H17', level: 5, name: 'Berbahaya' }
+      { label: 'H15', level: 2, name: 'Sedang', wet: false }, { label: 'H16', level: 4, name: 'Sangat Tidak Sehat', wet: false }, { label: 'H17', level: 5, name: 'Berbahaya', wet: false }
     ]);
     assert.equal(outlook.heading, 'Perkiraan 3 hari ke depan');
+  });
+
+  it('outlook: a day is wet from rainKind, and rain changes the card key', () => {
+    const wetDay = { ...day('2026-10-15', 2), rain_mm: 3 };
+    const make = (days: unknown[]) => outlookLines({ city: 'Palembang', level: 3, copy: LEVELS[3], story: STORY, levelName, weekday: (d: string) => d, day: 'Rabu 10.00', days });
+    assert.deepEqual(make([wetDay, day('2026-10-16', 2), { ...day('2026-10-17', 2), rain_mm: 0.9 }]).tiles.map((t: { wet: boolean }) => t.wet), [true, false, false]);
+    assert.notEqual(storyKey(make([wetDay])), storyKey(make([day('2026-10-15', 2)])));
   });
 
   it('ranking: all rows thickest smoke first, the viewer city marked', () => {

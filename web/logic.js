@@ -208,19 +208,21 @@ export function storyKey(lines) {
   return JSON.stringify(lines);
 }
 
-/** What the Story card says, in order: the level, the pointer to the official guidance, no advice of our own. Levels 1–2 add a quip. */
-export function storyLines({ city, level, copy, story, quip, improve, day }) {
+/** What the Story card says: the level, then the finding as headline. Levels 1–2: a quip. Levels 3–5: the official ISPU sentence for everyone (`official`, quoted) with its source; no advice of our own. */
+export function storyLines({ city, level, copy, story, official, quip, improve, day }) {
   const light = level <= 2;
   return {
     kind: 'city',
     city,
     level,
     levelName: story.levelName(copy.name),
-    guide: story.guide,
+    guide: light ? null : official,
+    source: light ? null : story.guideSource,
     quip: light ? quip : null,
     improve,
     stamp: story.stamp(day),
-    footer: light ? story.footerLight : story.footer,
+    estimate: story.estimate,
+    footer: story.footer,
     salam: story.salam,
     url: story.url
   };
@@ -250,7 +252,8 @@ export function outlookLines({ city, level, copy, story, days, weekday, levelNam
     level,
     levelName: story.levelName(copy.name),
     heading: story.outlookHeading(next.length),
-    tiles: next.map(d => ({ label: weekday(d.date), level: d.band, name: levelName(d.band) })),
+    tiles: next.map(d => ({ label: weekday(d.date), level: d.band, name: levelName(d.band), wet: rainKind(d.rain_mm) !== 'none' })),
+    rain: story.rain,
     stamp: story.stamp(day),
     salam: story.salam,
     url: story.url
