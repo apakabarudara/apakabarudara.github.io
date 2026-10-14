@@ -772,14 +772,78 @@ function showPhoto(note) {
 }
 // Optional extra: where the last 24 h of fires are. Anything but a good file means no "Di sekitarmu" card, quietly.
 const getHotspots = () => fetch('./data/hotspots.json', { cache: 'no-cache' }).then(res => (res.ok ? res.json() : null)).catch(() => null);
-function showNearby(lines) {
+let satPoint = null; // the tapped or GPS point, for the report
+let satHotspots = null;
+function showNearby(lines, point) {
   if (!satMap) return; // a late GPS answer after the sheet closed
+  satPoint = point ?? null;
   $('satNearbyText').textContent = lines.join(' ');
+  $('reportBtn').hidden = !satPoint;
   $('satNearby').hidden = false;
 }
 function resetNearby() {
+  satPoint = null;
+  $('reportBtn').hidden = true;
   $('satNearby').hidden = true;
 }
+// "Lapor titik api": report.js loads on the first tap.
+let reportMod = null;
+$('reportSheet').breakpoints = [0, 1];
+$('reportSheet').initialBreakpoint = 1;
+$('reportClose').addEventListener('click', () => $('reportSheet').dismiss());
+$('reportBtn').addEventListener('click', async () => {
+  const loc = selected();
+  if (!satPoint || !loc) return;
+  count('lapor-api-buka');
+  reportMod ??= await import('./report.js');
+  const { REPORT, buildReport } = reportMod;
+  const set = (id, text) => { $(id).textContent = text; };
+  set('reportTitle', REPORT.title);
+  set('reportLead', REPORT.lead);
+  set('reportCaution', REPORT.caution);
+  set('reportLabel', REPORT.textLabel);
+  set('reportCopy', REPORT.copy);
+  set('reportShare', REPORT.share);
+  set('reportStatus', '');
+  set('reportCoordNote', REPORT.coordNote);
+  set('reportContactsTitle', REPORT.contactsTitle);
+  set('reportLocal', REPORT.local);
+  set('reportNotSent', REPORT.notSent);
+  $('reportShare').hidden = !navigator.share;
+  $('reportContacts').replaceChildren(...REPORT.contacts.map(c => {
+    const li = el('li');
+    const a = el('a');
+    a.href = `tel:${c.tel}`;
+    a.setAttribute('aria-label', `${REPORT.call(c.tel)}, ${c.name}`);
+    const num = el('b');
+    num.textContent = c.tel;
+    const info = el('span');
+    const strong = el('strong');
+    strong.textContent = c.name;
+    info.append(strong, c.note);
+    a.append(num, info);
+    li.append(a);
+    return li;
+  }));
+  $('reportText').value = buildReport({ lat: satPoint.lat, lon: satPoint.lon, city: cityName(loc), hotspots: satHotspots });
+  $('reportSheet').present();
+});
+$('reportSheet').addEventListener('didPresent', () => { $('reportText').focus(); $('reportText').scrollTop = 0; });
+$('reportCopy').addEventListener('click', async () => {
+  count('lapor-api-salin');
+  const box = $('reportText');
+  try {
+    await navigator.clipboard.writeText(box.value);
+    $('reportStatus').textContent = reportMod.REPORT.copied;
+  } catch {
+    box.select();
+    $('reportStatus').textContent = document.execCommand?.('copy') ? reportMod.REPORT.copied : reportMod.REPORT.copyManual;
+  }
+});
+$('reportShare').addEventListener('click', async () => {
+  count('lapor-api-bagikan');
+  try { await navigator.share({ text: $('reportText').value }); } catch { /* share sheet dismissed */ }
+});
 async function mountSatMap() {
   const loc = selected();
   const date = $('satThumb').dataset.date;
@@ -788,6 +852,7 @@ async function mountSatMap() {
   try {
     const [{ createSatMap }, hotspots] = await Promise.all([import('./satmap.js'), getHotspots()]);
     if (!satOpen) return;
+    satHotspots = hotspots;
     satMap = createSatMap($('satMap'), { lat: loc.lat, lon: loc.lon, name: cityName(loc), date, credit: UI.satMapCredit, onFail: () => showPhoto(UI.satMapFail), onTile: () => { $('satSkel').hidden = true; }, onInteract: hideHint, hotspots, windDir: loc.wind_dir, onResult: showNearby });
     if (satMap.areaNote) $('satBigCaption').textContent += ` ${satMap.areaNote}`;
     if (store.read(MAP_HINT_KEY) !== '1') {

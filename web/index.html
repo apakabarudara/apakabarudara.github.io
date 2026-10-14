@@ -287,11 +287,33 @@ addEventListener('error', e => {
       </div>
       <div class="sat-frame" hidden><img id="satBig" class="sat-big" width="480" height="480" alt=""><span class="pin" aria-hidden="true"></span></div>
       <div id="satStage" class="sat-stage"><div id="satMap" class="sat-map" role="application"></div><span id="satSkel" class="sk sat-skel" aria-hidden="true"></span><p id="satHint" class="sat-hint" role="status" hidden data-copy="satHint"></p></div>
-      <div id="satNearby" class="sat-nearby" role="status" aria-live="polite" hidden><p id="satNearbyText" class="small"></p></div>
+      <div id="satNearby" class="sat-nearby" role="status" aria-live="polite" hidden><p id="satNearbyText" class="small"></p><button id="reportBtn" class="sheet-link" type="button" hidden>Lapor titik api</button></div>
       <p id="satMapNote" class="small" role="status" hidden></p>
       <p id="satBigCaption" class="small"></p>
       <a id="satLink" class="small" target="_blank" rel="noopener" hidden data-copy="satLink"></a>
       <p class="small" data-copy="satNote"></p>
+    </div>
+  </ion-modal>
+  <ion-modal id="reportSheet" class="sheet" aria-labelledby="reportTitle">
+    <div class="sheet-body">
+      <div class="sheet-head">
+        <h2 id="reportTitle"></h2>
+        <ion-button id="reportClose" fill="clear"><span data-copy="close"></span></ion-button>
+      </div>
+      <p id="reportLead" class="report-lead"></p>
+      <p id="reportCaution" class="report-caution"></p>
+      <label id="reportLabel" for="reportText" class="small"></label>
+      <textarea id="reportText" class="report-text" rows="9"></textarea>
+      <p id="reportCoordNote" class="small"></p>
+      <div class="share-row">
+        <ion-button id="reportCopy" class="wide" expand="block"></ion-button>
+        <ion-button id="reportShare" class="wide soft" expand="block" hidden></ion-button>
+      </div>
+      <p id="reportStatus" class="small" role="status" aria-live="polite"></p>
+      <h3 id="reportContactsTitle" class="report-h"></h3>
+      <ul id="reportContacts" class="report-contacts"></ul>
+      <p id="reportLocal" class="small"></p>
+      <p id="reportNotSent" class="small"></p>
     </div>
   </ion-modal>
   <ion-modal id="method" class="sheet" aria-labelledby="methodTitle">
