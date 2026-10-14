@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { LEVELS, STORY } from '../web/copy.js';
 import {
-  activityStatuses, ago, bestWindow, freshness, greeting, improvement, installMode, isIosSafari, mapsSearchUrl, nearest, normalizeWatch, previewOverride,
-  rainKind, rankByLevel, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow
+  activityStatuses, ago, bestWindow, feedbackUrl, freshness, greeting, hourBands, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
+  previewOverride, rainKind, rankByLevel, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow
 } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
@@ -245,5 +245,34 @@ describe('storyKey', () => {
     assert.notEqual(make(3), make(3, null, 'Rabu 11.00'));
     assert.notEqual(make(3), make(3, 'Besok membaik.'));
     assert.notEqual(make(3), make(3, null, 'Rabu 10.00', 'Jambi'));
+  });
+});
+
+describe('hourly strip levels', () => {
+  it('bands each hour by the PM2.5 breakpoints and reports the range', () => {
+    const bands = hourBands([{ pm25: 10 }, { pm25: 15.6 }, { pm25: 150.4 }, { pm25: 400 }, { pm25: 851 }]);
+    assert.deepEqual(bands, [1, 2, 3, 5, 5]);
+    assert.deepEqual(levelRange(bands), { min: 1, max: 5 });
+  });
+});
+
+describe('relativeDay', () => {
+  it('says today or tomorrow by the viewer\'s local date', () => {
+    const now = new Date(2026, 9, 14, 11, 53);
+    assert.equal(relativeDay(new Date(2026, 9, 14, 13).toISOString(), now), 'today');
+    assert.equal(relativeDay(new Date(2026, 9, 15, 9).toISOString(), now), 'tomorrow');
+  });
+});
+
+describe('feedbackUrl', () => {
+  const base = 'https://docs.google.com/forms/d/e/abc/viewform';
+  it('prefills the city when the entry id is set, and handles a base with a query', () => {
+    assert.equal(feedbackUrl(base, '123', 'Pangkal Pinang'), `${base}?usp=pp_url&entry.123=Pangkal%20Pinang`);
+    assert.equal(feedbackUrl(`${base}?hl=id`, '123', 'Jambi'), `${base}?hl=id&usp=pp_url&entry.123=Jambi`);
+  });
+
+  it('returns the base without an entry id or a city', () => {
+    assert.equal(feedbackUrl(base, '', 'Jambi'), base);
+    assert.equal(feedbackUrl(base, '123', ''), base);
   });
 });

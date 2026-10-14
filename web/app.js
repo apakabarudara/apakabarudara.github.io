@@ -1,12 +1,14 @@
 import './ionic.js';
 import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, POLLS, RAIN, STORY, UI } from './copy.js';
 import {
-  activityStatuses, ago, bestWindow, freshness, greeting, improvement, installMode, isIosSafari, localDate, mapsSearchUrl, nearest, normalizeWatch,
-  previewOverride, rainKind, rankByLevel, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, WET_DAY_MM
+  activityStatuses, ago, bestWindow, feedbackUrl, freshness, greeting, hourBands, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
+  nearest, normalizeWatch, previewOverride, rainKind, rankByLevel, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, WET_DAY_MM
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
 const ISPU_URL = 'https://ispu.kemenlh.go.id/app/#/';
+const FEEDBACK_URL = ''; // Google Form link; empty hides the feedback row
+const FEEDBACK_CITY_ENTRY = ''; // the form's "entry.<id>" for its city question; empty skips the prefill
 const CITY_KEY = 'bisanapasgak.city';
 const WATCH_KEY = 'bisanapasgak.watch';
 const INSTALL_KEY = 'bisanapasgak.installHidden';
@@ -137,6 +139,7 @@ function renderAnswer(loc, level) {
   $('actions').replaceChildren(...[...copy.everyone.map(text => el('li', null, text)), ...sensitive].slice(0, 3));
   $('symptoms').hidden = !copy.health;
   $('shareGood').hidden = !copy.goodNews;
+  $('goodNewsLabel').textContent = copy.goodNews ?? '';
   $('health').hidden = !copy.health;
   $('call').hidden = !copy.emergency;
   $('stamp').textContent = UI.stamp(clock.format(new Date(loc.pm25_model.updated_at)));
@@ -156,17 +159,21 @@ function renderToday(loc, level) {
   const win = level <= 3 && hours.length > 0 ? bestWindow(hours, BEST) : null;
   const from = win ? hm.format(new Date(win.start)) : '';
   const to = win ? hm.format(new Date(win.end)) : '';
-  $('best').textContent = level >= 4 ? UI.windowsShut : win ? UI.bestWindow(level, from, to) : '';
+  const dayWord = win ? UI.dayWord[relativeDay(win.start, new Date())] : '';
+  $('best').textContent = level >= 4 ? UI.windowsShut : win ? UI.bestWindow(level, dayWord, from, to) : '';
   $('best').hidden = !$('best').textContent;
 
   const peak = Math.max(...hours.map(h => h.pm25), 1);
   const best = new Set(win?.indexes ?? []);
+  const bands = hourBands(hours);
   $('strip').replaceChildren(...hours.map((h, i) => {
-    const bar = el('i', best.has(i) ? 'best' : i === 0 ? 'now' : '');
+    const bar = el('i', [best.has(i) ? 'best' : '', i === 0 ? 'now' : ''].join(' ').trim());
+    bar.dataset.bar = String(bands[i]);
     bar.style.height = `${Math.max(10, (h.pm25 / peak) * 100)}%`;
     return bar;
   }));
-  $('strip').setAttribute('aria-label', win ? UI.stripLabel(from, to) : UI.stripLegend);
+  const range = hours.length ? levelRange(bands) : null;
+  $('strip').setAttribute('aria-label', range ? UI.stripLabel(UI.stripRange(LEVELS[range.min].name, LEVELS[range.max].name), win ? UI.stripBest(from, to) : '') : '');
   $('ticks').replaceChildren(...hours.filter((_, i) => i % TICK_EVERY === 0).map((h, i) => el('span', null, i === 0 ? UI.stripNow : hm.format(new Date(h.time)))));
   for (const id of ['strip', 'ticks', 'stripLegend']) $(id).hidden = hours.length === 0;
 }
@@ -174,7 +181,7 @@ function renderToday(loc, level) {
 function showDay(days, idx) {
   dayIndex = idx;
   const day = days[idx];
-  $('dayDetail').replaceChildren(el('strong', null, `${dayLong.format(dateOf(day.date))} · ${levelText(day.band)}`), `${LEVELS[day.band].dayLine} ${RAIN[rainKind(day.rain_mm)]}.`);
+  $('dayDetail').replaceChildren(el('strong', null, `${dayLong.format(dateOf(day.date))} · ${LEVELS[day.band].name}`), `${LEVELS[day.band].dayLine} ${RAIN[rainKind(day.rain_mm)]}.`);
   [...$('days').children].forEach((chip, i) => chip.setAttribute('aria-pressed', String(i === idx)));
 }
 
@@ -217,6 +224,7 @@ function render() {
   $('banner').hidden = state !== 'stale';
   $('banner').textContent = UI.stale(when(report.generated_at));
   const loc = selected();
+  $('feedbackBtn').href = feedbackUrl(FEEDBACK_URL, FEEDBACK_CITY_ENTRY, loc ? cityName(loc) : '');
   if (!loc) {
     renderOverview();
     return;
@@ -516,8 +524,8 @@ for (const node of document.querySelectorAll('[data-copy-credit]')) node.textCon
 for (const node of document.querySelectorAll('[data-copy-label]')) node.setAttribute('aria-label', UI[node.dataset.copyLabel]);
 $('iosStep1').textContent = UI.iosSteps[0];
 $('iosStep2').textContent = UI.iosSteps[1];
-$('sensitive').textContent = UI.sensitive;
 $('health').href = mapsSearchUrl(UI.healthQuery);
+$('feedbackRow').hidden = !FEEDBACK_URL;
 $('call').setAttribute('aria-label', UI.call(EMERGENCY_NUMBER));
 $('locate').setAttribute('aria-label', UI.nearestLabel);
 $('select').setAttribute('aria-label', UI.pickCity);
@@ -535,14 +543,6 @@ for (const id of ['locate', 'locateOverview']) {
 $('share').addEventListener('click', () => share(false));
 $('shareGood').addEventListener('click', () => share(true));
 $('factsNext').addEventListener('click', nextFact);
-$('feedback').addEventListener('input', () => { $('fbNote').textContent = ''; });
-$('sendFb').addEventListener('click', () => {
-  const note = $('fbNote');
-  const empty = !$('feedback').value.trim();
-  note.textContent = empty ? UI.feedbackEmpty : UI.feedbackThanks;
-  note.classList.toggle('warn', empty);
-  if (!empty) $('feedback').value = '';
-});
 
 // Bottom sheets that fit their content: "Apa ini?", the iOS install steps, "Pantau kota lain".
 for (const id of ['about', 'iosSheet', 'watchSheet']) {

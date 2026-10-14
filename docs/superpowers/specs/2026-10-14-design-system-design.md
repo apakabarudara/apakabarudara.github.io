@@ -17,8 +17,8 @@ Residents living in the smoke, opening the page in the morning before going out.
 | City | Remembered on the device (localStorage). Precedence: `#city` in the link, then the saved city, then the overview. GPS position is never stored or sent. |
 | First visit | Welcome card with the mascot ("Pagi! Kamu di kota mana?") and "Pakai lokasiku", then every city as a compact two-column chip grid ranked worst first. Tapping a chip opens and remembers it. Never a verdict for a city nobody picked. "Lihat semua kota" returns to it. Added after a UX review on 2026-10-14. |
 | Everyday calls | "Hari ini cocok untuk…": laundry, outdoor exercise, opening windows, kids outside, each ✓ / ! / ✕ from the level (rain turns ok laundry into caution). Health-related statuses are drafts for the reviewer. |
-| Freshest hours | The two cleanest consecutive hours between 06:00 and 21:00 in the next 24, from `next_hours`; levels 4–5 say windows stay shut instead. A neutral 24-bar strip shows the hours, best ones in brand colour. |
-| Good news | Levels 1–2 get "Kabari grup: udara lagi bagus", a share of good air. |
+| Freshest hours | The two cleanest consecutive hours between 06:00 and 21:00 in the next 24, from `next_hours`; levels 4–5 say windows stay shut instead. The label names the day ("hari ini" or "besok") and says it is limited to daytime. The 24-bar strip colours each bar by that hour's ISPU level (`--l1-bar` … `--l5-bar`, 3:1 on the surface in both themes); "now" is a dot above its bar and the best window a brand underline, so neither overrides the level colour. The aria-label names the level range across the 24 hours. |
+| Good news | Levels 1–2 get a share of good air: "Kabari grup: udara lagi bagus" (level 1), "… udara masih oke" (level 2). |
 | Health access | By urgency: a mild line and a severe line from level 3, "Cari fasilitas kesehatan" (Google Maps search; the page sends no position) from level 3, "119" from level 4 ([Kemenkes](https://kemkes.go.id/id/terjadi-darurat-kesehatan-saat-mudik-hubungi-119)). Never "puskesmas", "RS", "IGD" or "faskes". |
 | Preview | `?level=` works only with `&preview=1` and shows a "Pratinjau" banner, so a shared link cannot show a fake level. |
 | Offline | Service worker: cache-first shell, network-first data with the cached copy as fallback; the stale and expired rules then apply. |
@@ -37,7 +37,7 @@ Residents living in the smoke, opening the page in the morning before going out.
 
 ## Components
 
-TopBar · CityPicker · AnswerCard (dots, level label, headline, quip, actions, buttons, data stamp, official ISPU link, mascot) · StatusBanner · OutlookStrip with day detail · ReasonList · Ionic accordions ("Kenapa begini?", "Lainnya": facts, poll, feedback) · "Apa ini?" bottom-sheet modal · pull-to-refresh · Button · Footer.
+TopBar · CityPicker · AnswerCard (dots, level label, headline, quip, actions, buttons, data stamp, official ISPU link, mascot) · StatusBanner · OutlookStrip with day detail · ReasonList · Ionic accordions ("Kenapa begini?", "Lainnya": facts, poll) · "Apa ini?" bottom-sheet modal · pull-to-refresh · Button · Footer.
 
 ## Copy (`web/copy.js`)
 
@@ -61,6 +61,8 @@ Voice, after a UX-writer review and a plain-language research pass on 2026-10-14
 - **PWA install**: manifest plus icons, install control in the welcome card and under the city view, dismissible; iOS Safari gets a two-step sheet.
 - **Pantau kota lain**: up to 3 pinned cities as chips at the top of the city view, picked in a sheet with checkboxes; works offline.
 - **Bagikan ke Story**: canvas card, Web Share with a file, download fallback; text kept between 14% and 80% of the height.
+- **Feedback**: a "Kirim masukan" button above the footer opens an external Google Form in a new tab (`FEEDBACK_URL` and `FEEDBACK_CITY_ENTRY` in `web/app.js`; the row stays hidden while `FEEDBACK_URL` is empty). Nothing is typed into or sent from the page.
+- **Sensitive group**: the answer card names the full list (children, older people, pregnant women, lung or heart disease) instead of "Anak & lansia".
 - **Tagline** in title, header, manifest and Open Graph tags.
 
 ## States

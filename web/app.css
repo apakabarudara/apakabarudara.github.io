@@ -145,10 +145,16 @@ ion-badge.lv { --background: var(--lv-soft); --color: var(--lv-soft-ink); --padd
 .activity .label { font-size: var(--fs-xs); font-weight: var(--fw-label); line-height: 1.25; color: var(--ink-2); }
 .activity .status { font-size: var(--fs-sm); font-weight: var(--fw-strong); line-height: 1.25; }
 .best { margin: var(--sp-4) 0 var(--sp-2); font-weight: var(--fw-strong); }
-.strip { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); align-items: end; gap: 3px; height: 48px; }
-.strip i { border-radius: 4px 4px 1px 1px; background: var(--line); }
-.strip i.now { background: color-mix(in srgb, var(--ink-2) 55%, transparent); }
-.strip i.best { background: var(--brand); }
+/* Bars take their hour's level colour. "Now" is a dot above its bar and the best window a brand underline, so neither overrides the level. */
+.strip { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); align-items: end; gap: 3px; height: 64px; padding: 8px 0 7px; box-sizing: border-box; }
+.strip i { position: relative; border-radius: 4px 4px 1px 1px; background: var(--line); }
+.strip i[data-bar="1"] { background: var(--l1-bar); }
+.strip i[data-bar="2"] { background: var(--l2-bar); }
+.strip i[data-bar="3"] { background: var(--l3-bar); }
+.strip i[data-bar="4"] { background: var(--l4-bar); }
+.strip i[data-bar="5"] { background: var(--l5-bar); }
+.strip i.now::before { content: ""; position: absolute; left: 50%; top: -7px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--ink); }
+.strip i.best { box-shadow: 0 3px 0 var(--surface), 0 6px 0 var(--brand); }
 .ticks { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: var(--sp-1); font-size: var(--fs-xs); color: var(--ink-2); font-variant-numeric: tabular-nums; }
 /* 320–360px: tighter cards, tiles stack their icon, level buttons drop their decorative icon so text fits. */
 @media (max-width: 360px) {
@@ -166,8 +172,6 @@ ion-modal.sheet { --height: auto; --background: var(--surface); --border-radius:
 .sheet-head h2 { margin: 0; font-size: var(--fs-lg); font-weight: var(--fw-display); }
 #aboutClose { height: 44px; font-size: var(--fs-sm); --padding-start: var(--sp-2); --padding-end: var(--sp-2); }
 .explain p { margin: var(--sp-2) 0 0; }
-.who { display: flex; flex-direction: column; margin: var(--sp-4) 0 0; padding: var(--sp-3) var(--sp-4); border-radius: var(--r-btn); background: var(--bg); }
-.who span { font-size: var(--fs-xs); color: var(--ink-2); }
 #official { --color: var(--brand); --border-color: var(--brand); --border-width: 1.5px; }
 
 /* Mascot: one SVG; the face follows the level, and at levels 4–5 it wears a mask. */
@@ -243,11 +247,8 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); }
 .choice { min-height: 50px; padding: var(--sp-2); border: 0; border-radius: var(--r-btn); background: var(--bg); color: var(--ink); font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-label); cursor: pointer; }
 .choice[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
-.textarea { display: block; width: 100%; min-height: 96px; margin-top: var(--sp-2); padding: var(--sp-3); border: 0; border-radius: var(--r-btn); background: var(--bg); color: var(--ink); font: inherit; font-size: 16px; resize: none; }
-.end { display: flex; justify-content: flex-end; margin-top: var(--sp-2); }
-.end ion-button { min-height: 44px; margin: 0; --border-radius: var(--r-btn); }
-.note.warn { color: var(--ink); font-weight: var(--fw-strong); }
-#shareBlock .note { text-align: center; }
+#shareBlock .note, .feedback-row .note { text-align: center; }
+.feedback-row ion-button.wide { margin-top: 0; }
 
 /* Footer: credits stay visible; privacy is folded */
 .footer { display: flex; flex-direction: column; gap: var(--sp-3); margin-top: var(--sp-2); padding-top: var(--sp-5); border-top: 1px solid var(--line); font-size: var(--fs-xs); color: var(--ink-2); line-height: 1.5; }

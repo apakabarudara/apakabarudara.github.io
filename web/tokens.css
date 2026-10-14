@@ -46,6 +46,8 @@
   --l5-solid: #2A2230; --l5-surface: #221C28; --l5-ink: #FFF3EC; --l5-label: #FFB4A2; --l5-soft: #3A3044; --l5-soft-ink: #FFD9CF;
   --l5-btn: #FFFFFF; --l5-btn-ink: #221C28; --l5-mascot: #4A3F55; --l5-eye: #FFFFFF; --l5-shadow: rgba(20, 12, 28, .3); --l5-border: transparent;
   --l5-dot: #FFB4A2;
+  /* Hourly strip bars: each at least 3:1 on --surface (WCAG 1.4.11), unlike the solids, which are decorative. */
+  --l1-bar: #22A06B; --l2-bar: #3D7BF2; --l3-bar: #B87A00; --l4-bar: #E5484D; --l5-bar: #2A2230;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -77,6 +79,7 @@
     --l4-btn: #FF8A8E; --l4-btn-ink: #2E1416; --l4-shadow: rgba(0, 0, 0, .5); --l4-border: #552426;
     --l5-surface: #0B080E; --l5-ink: #FFF3EC; --l5-label: #FFB4A2; --l5-soft: #2A2230; --l5-soft-ink: #FFD9CF;
     --l5-btn: #FFF3EC; --l5-btn-ink: #0B080E; --l5-shadow: rgba(0, 0, 0, .6); --l5-border: #3A3044;
+    --l1-bar: #5FD39A; --l2-bar: #8DB4FF; --l3-bar: #F5C542; --l4-bar: #FF8A8E; --l5-bar: #FFB4A2;
   }
 }
 

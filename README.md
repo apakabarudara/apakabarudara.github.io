@@ -31,7 +31,7 @@ Node 22.18 or newer runs the ingest TypeScript directly (type stripping); Vite i
 
 ### Size (first visit, gzip, as GitHub Pages serves it)
 
-HTML 4.3 KB, CSS 9.0 KB, JS 126.5 KB, font 27.4 KB, data 3.2 KB: about 170 KB in total (raw 17.4 + 40.0 + 547 + 27.3 + 44.3 KB). Icons and the manifest (about 25 KB) are precached by the service worker, not part of the first load; the link-preview image is only fetched by crawlers. Later visits and offline reloads come from the service worker cache.
+HTML 4.2 KB, CSS 9.1 KB, JS 127.1 KB, font 27.4 KB, data 3.3 KB: about 171 KB in total (raw 17.2 + 40.0 + 549 + 27.3 + 44.3 KB). Icons and the manifest (about 25 KB) are precached by the service worker, not part of the first load; the link-preview image is only fetched by crawlers. Later visits and offline reloads come from the service worker cache.
 
 ### Brand, install, family cities, Story card
 
@@ -56,7 +56,7 @@ HTML 4.3 KB, CSS 9.0 KB, JS 126.5 KB, font 27.4 KB, data 3.2 KB: about 170 KB in
 
 A first visit opens a welcome card ("Pagi! Kamu di kota mana?") with "Pakai lokasiku", then every city worst first, so nobody sees a verdict for a city they did not pick. The chosen city is remembered on the device (localStorage, in try/catch). Precedence: `#city` in the URL, then the saved city, then the overview; "Lihat semua kota" returns to the overview. "Terdekat" picks the nearest city in the browser; the position is never stored or sent.
 
-The city view: answer card (headline, actions, symptom lines from level 3, "Cari fasilitas kesehatan" from level 3, 119 from level 4, "Kabari grup" at levels 1–2, "Apa ini?" as a bottom sheet), "Hari ini cocok untuk…" (activities, freshest two hours, labelled 24-hour strip), "Besok gimana?" from tomorrow with day detail, "Kenapa begini?" and "Lainnya" folded (accordions), "Bagikan ke grup", and a footer with the data credits (Open-Meteo CC BY 4.0, Copernicus CAMS with the year, NASA FIRMS, ISPU).
+The city view: answer card (headline, actions, symptom lines from level 3, "Cari fasilitas kesehatan" from level 3, 119 from level 4, "Kabari grup" at levels 1–2, "Apa ini?" as a bottom sheet), "Hari ini cocok untuk…" (activities, freshest two daytime hours with the day named, 24-hour strip coloured by each hour's level), "Besok gimana?" from tomorrow with day detail, "Kenapa begini?" and "Lainnya" folded (accordions), "Bagikan ke grup", a "Kirim masukan" link to an external Google Form (hidden until `FEEDBACK_URL` in `web/app.js` is set; `FEEDBACK_CITY_ENTRY` prefills the city), and a footer with the data credits (Open-Meteo CC BY 4.0, Copernicus CAMS with the year, NASA FIRMS, ISPU).
 
 The page refetches `data/latest.json` every 15 minutes, when it returns to the tab and on pull-to-refresh. Over 3 hours old it shows "Data lama". Over 12 hours, or on a failed first load, it hides the verdict and points to the official ISPU. A failed refresh keeps the last data.
 
@@ -74,7 +74,7 @@ The shape lives in `ingest/types.ts`.
 | `hotspots_24h.count` | VIIRS NOAA-20 detections of nominal or high confidence within 100 km, acquired in the last 24 hours. |
 | `wind_dir` | Where the wind blows from, 8-point Indonesian compass. |
 | `outlook` | Mean PM2.5 per complete local day from today, banded like `pm25_model`, plus that day's forecast rain in mm. CAMS global forecasts 5 days, so expect about 4 entries, not 7. |
-| `next_hours` | Modelled PM2.5 for each of the next 24 hours from the current hour, UTC times. Hourly values, so the page never bands them. |
+| `next_hours` | Modelled PM2.5 for each of the next 24 hours from the current hour, UTC times. Hourly values. The strip colours each bar with the daily PM2.5 breakpoints as a guide; the level itself always comes from `pm25_model.band`. |
 
 Cities are in `ingest/locations.ts`.
 

@@ -26,6 +26,9 @@ const PAIRS: [string, string][] = [
   ])
 ];
 
+// Graphics (the hourly strip bars) need 3:1, not the 4.5:1 of text: WCAG 1.4.11.
+const GRAPHIC_PAIRS: [string, string][] = [1, 2, 3, 4, 5].map((n): [string, string] => [`l${n}-bar`, 'surface']);
+
 describe('tokens.css contrast', () => {
   const themes = { light: parse(light), dark: { ...parse(light), ...parse(dark) } };
   for (const [theme, tokens] of Object.entries(themes)) {
@@ -34,6 +37,13 @@ describe('tokens.css contrast', () => {
         assert.ok(tokens[fg] && tokens[bg], `missing --${fg} or --${bg}`);
         const ratio = contrast(tokens[fg], tokens[bg]);
         assert.ok(ratio >= 4.5, `${ratio.toFixed(2)}:1`);
+      });
+    }
+    for (const [fg, bg] of GRAPHIC_PAIRS) {
+      it(`${theme}: --${fg} on --${bg} reaches 3:1`, () => {
+        assert.ok(tokens[fg] && tokens[bg], `missing --${fg} or --${bg}`);
+        const ratio = contrast(tokens[fg], tokens[bg]);
+        assert.ok(ratio >= 3, `${ratio.toFixed(2)}:1`);
       });
     }
   }

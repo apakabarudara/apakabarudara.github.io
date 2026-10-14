@@ -105,7 +105,7 @@
           <p id="improve" class="improve" hidden></p>
           <div id="symptoms" class="symptoms"><p data-copy="symptomsMild"></p><p data-copy="symptomsEmergency"></p></div>
           <div class="btns">
-            <ion-button id="shareGood" class="lv-btn"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-sun"/></svg><span data-copy="goodNews"></span></ion-button>
+            <ion-button id="shareGood" class="lv-btn"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-sun"/></svg><span id="goodNewsLabel"></span></ion-button>
             <ion-button id="health" class="lv-btn" target="_blank" rel="noopener"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-plus"/></svg><span data-copy="healthButton"></span></ion-button>
             <ion-button id="call" class="lv-ghost" fill="outline" href="tel:119"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-phone"/></svg>119</ion-button>
           </div>
@@ -171,17 +171,15 @@
                 <div id="poll" class="choices"></div>
                 <p id="pollNote" class="note" aria-live="polite"></p>
               </div>
-              <div>
-                <h3><label for="feedback" data-copy="feedbackTitle"></label></h3>
-                <p class="note" data-copy="feedbackNote"></p>
-                <textarea id="feedback" class="textarea"></textarea>
-                <div class="end"><ion-button id="sendFb" fill="solid" class="soft"><span data-copy="feedbackSend"></span></ion-button></div>
-                <p id="fbNote" class="note" aria-live="polite"></p>
-              </div>
             </div>
           </ion-accordion>
         </ion-accordion-group>
       </ion-card>
+
+      <div id="feedbackRow" class="feedback-row" hidden>
+        <ion-button id="feedbackBtn" class="wide soft" expand="block" target="_blank" rel="noopener"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-arrow"/></svg><span data-copy="feedbackButton"></span></ion-button>
+        <p class="note" data-copy="feedbackNote"></p>
+      </div>
 
       <footer class="footer">
         <p data-copy="footerDisclaimer"></p>
@@ -203,7 +201,6 @@
       </div>
       <div id="explain" class="explain"></div>
       <p class="small" data-copy="medicalNote"></p>
-      <p class="who"><span data-copy="sensitiveIntro"></span><strong id="sensitive"></strong></p>
       <ion-button id="official" class="wide" expand="block" fill="outline" target="_blank" rel="noopener"><span data-copy="official"></span><svg class="ic" slot="end" aria-hidden="true"><use href="#i-arrow"/></svg></ion-button>
     </div>
   </ion-modal>

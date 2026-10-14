@@ -19,7 +19,7 @@ export const LEVELS = {
     sensitive: [],
     dayLine: 'Udara diperkirakan bagus.',
     activities: { laundry: 'ok', exercise: 'ok', windows: 'ok', kids: 'ok' },
-    goodNews: true,
+    goodNews: 'Kabari grup: udara lagi bagus',
     health: false,
     emergency: false
   },
@@ -31,7 +31,7 @@ export const LEVELS = {
     sensitive: ['Kurangi olahraga berat yang lama di luar'],
     dayLine: 'Masih oke, hindari olahraga yang terlalu berat.',
     activities: { laundry: 'ok', exercise: 'caution', windows: 'ok', kids: 'ok' },
-    goodNews: true,
+    goodNews: 'Kabari grup: udara masih oke',
     health: false,
     emergency: false
   },
@@ -43,7 +43,7 @@ export const LEVELS = {
     sensitive: ['Lebih banyak di dalam ruangan'],
     dayLine: 'Kurangi aktivitas berat di luar.',
     activities: { laundry: 'no', exercise: 'no', windows: 'caution', kids: 'caution' },
-    goodNews: false,
+    goodNews: null,
     health: true,
     emergency: false
   },
@@ -55,7 +55,7 @@ export const LEVELS = {
     sensitive: ['Tetap di dalam ruangan'],
     dayLine: 'Rencanakan kegiatan di dalam ruangan.',
     activities: { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' },
-    goodNews: false,
+    goodNews: null,
     health: true,
     emergency: true
   },
@@ -67,7 +67,7 @@ export const LEVELS = {
     sensitive: ['Tetap di dalam ruangan sepanjang hari'],
     dayLine: 'Tetap di dalam ruangan sepanjang hari.',
     activities: { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' },
-    goodNews: false,
+    goodNews: null,
     health: true,
     emergency: true
   }
@@ -76,7 +76,7 @@ export const LEVELS = {
 /** "Hari ini cocok untuk…" tiles. Statuses come from LEVELS[n].activities. */
 export const ACTIVITIES = [
   { id: 'laundry', icon: 'shirt', label: 'Jemur baju', notes: { ok: 'Oke', caution: 'Bisa hujan', no: 'Bisa bau asap' } },
-  { id: 'exercise', icon: 'run', label: 'Olahraga di luar', notes: { ok: 'Oke', caution: 'Yang sensitif: ringan saja', no: 'Tunda dulu' } },
+  { id: 'exercise', icon: 'run', label: 'Olahraga di luar', notes: { ok: 'Oke', caution: 'Ringan saja', no: 'Tunda dulu' } },
   { id: 'windows', icon: 'window', label: 'Buka jendela', notes: { ok: 'Oke', caution: 'Saat asap tipis', no: 'Tutup' } },
   { id: 'kids', icon: 'child', label: 'Anak main di luar', notes: { ok: 'Oke', caution: 'Sebentar saja', no: 'Di dalam saja' } }
 ];
@@ -108,20 +108,17 @@ export const UI = {
   scaleLabel: level => `level ${level} dari 5`,
   improveOn: weekday => `Diperkirakan mulai membaik ${weekday}.`,
   improveNone: days => `Belum ada tanda membaik dalam ${days} hari ke depan.`,
-  sensitivePrefix: 'Anak & lansia:',
-  sensitive: SENSITIVE,
-  sensitiveIntro: '“Anak & lansia” berarti',
+  sensitivePrefix: `${SENSITIVE}:`,
   symptomsMild: 'Batuk terus atau mata perih? Ada baiknya periksa ke fasilitas kesehatan.',
   symptomsEmergency: `Sesak napas atau nyeri dada? Sebaiknya segera cari pertolongan medis, atau hubungi ${EMERGENCY_NUMBER}.`,
   medicalNote: 'Saran kesehatan di sini mengikuti panduan Kemenkes, bukan pengganti pemeriksaan dokter.',
-  goodNews: 'Kabari grup: udara lagi bagus',
   healthButton: 'Cari fasilitas kesehatan',
   healthQuery: 'fasilitas kesehatan terdekat',
   call: number => `Telepon ${number}`,
   stamp: time => `Perkiraan · ${time} ·`,
   explainTitle: 'Apa ini?',
   explain: pm => [
-    'Angka ini perkiraan komputer dari data satelit dan cuaca, bukan hasil alat ukur di kota ini.',
+    'Level ini perkiraan komputer dari data satelit dan cuaca, bukan hasil alat ukur di kota ini.',
     'Di dekat kebakaran gambut, asap bisa lebih tebal dari perkiraan. Kalau asap di sekitar terlihat tebal, ikuti yang terlihat.',
     `PM2.5 adalah partikel asap yang sangat halus dan bisa masuk sampai ke paru-paru. Rata-rata 24 jam terakhir: ${pm} µg/m³ (mikrogram per meter kubik udara).`,
     'Level 1 sampai 5 memakai batas resmi pemerintah (ISPU).'
@@ -129,10 +126,13 @@ export const UI = {
   official: 'Cek angka resmi pemerintah (ISPU)',
 
   todayTitle: 'Hari ini cocok untuk…',
-  bestWindow: (level, from, to) => `${level === 1 ? 'Udara paling segar' : 'Asap paling tipis'}: ${from}–${to}`,
+  bestWindow: (level, dayWord, from, to) => `${level === 1 ? 'Udara paling segar' : 'Asap paling tipis'} di siang hari: ${dayWord}, ${from}–${to}`,
+  dayWord: { today: 'hari ini', tomorrow: 'besok' },
   windowsShut: 'Sebaiknya jendela ditutup hari ini.',
-  stripLabel: (from, to) => `Asap per jam, 24 jam ke depan. Paling tipis ${from}–${to}.`,
-  stripLegend: 'Makin tinggi batang, makin tebal asap',
+  stripLabel: (range, window) => `Asap per jam, 24 jam ke depan, ${range}.${window}`,
+  stripRange: (low, high) => (low === high ? `semuanya ${low}` : `dari ${low} sampai ${high}`),
+  stripBest: (from, to) => ` Paling tipis ${from}–${to}.`,
+  stripLegend: 'Warna batang = level per jam. Makin tinggi, makin tebal asap.',
   stripNow: 'Sekarang',
 
   outlookTitle: 'Besok gimana?',
@@ -178,13 +178,10 @@ export const UI = {
   factsTitle: 'Fakta singkat',
   factsNext: 'Fakta lain',
   pollTitle: 'Bagaimana napas hari ini?',
-  feedbackTitle: 'Lapor masalah atau saran',
-  feedbackNote: 'Versi uji coba: masukan belum terkirim ke mana pun.',
-  feedbackSend: 'Kirim',
-  feedbackEmpty: 'Tulis dulu, ya.',
-  feedbackThanks: 'Terima kasih. Versi uji coba: masukan ini belum terkirim.',
+  feedbackButton: 'Kirim masukan',
+  feedbackNote: 'Terbuka di Google Form. Bisa lapor masalah, kasih saran, atau minta kota baru.',
 
-  footerDisclaimer: `Angka di sini perkiraan, bukan hasil alat ukur. Untuk keputusan kesehatan, ikuti panduan resmi. Darurat kesehatan: ${EMERGENCY_NUMBER}.`,
+  footerDisclaimer: `Level dan angka di sini perkiraan, bukan hasil alat ukur. Untuk keputusan kesehatan, ikuti panduan resmi. Darurat kesehatan: ${EMERGENCY_NUMBER}.`,
   creditsIntro: 'Sumber data:',
   creditOpenMeteo: 'Weather data by Open-Meteo.com',
   creditOpenMeteoLicence: '(CC BY 4.0)',
@@ -192,7 +189,7 @@ export const UI = {
   creditFirms: 'NASA FIRMS',
   creditIspu: 'batas level: ISPU (Permen LHK P.14/2020).',
   privacyTitle: 'Privasi',
-  privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban polling dan masukan belum dikirim ke mana pun.',
+  privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban "Bagaimana napas hari ini?" tidak dikirim ke mana pun. Masukan lewat Google Form tersimpan di Google.',
   creditLine: ['Proyek sukarela oleh ', 'Khi Hady', ' · kodenya terbuka di ', 'GitHub']
 };
 

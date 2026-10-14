@@ -1,4 +1,5 @@
 // Pure functions for the page. No DOM, so tests/web-logic.test.ts can import them in Node.
+import { bandForPm25 } from '../ingest/bands.ts';
 
 export const STALE_MS = 3 * 3600e3;
 export const EXPIRED_MS = 12 * 3600e3;
@@ -188,4 +189,19 @@ export function storyLines({ city, level, copy, story, improve, day }) {
     footer: light ? story.footerLight : story.footer,
     url: story.url
   };
+}
+
+/** ISPU band of each hour, from the same PM2.5 breakpoints as the daily level. Hourly values are not 24-hour means, so this is a guide to the strip. */
+export const hourBands = hours => hours.map(h => bandForPm25(h.pm25));
+
+/** Lowest and highest band in a list of bands. */
+export const levelRange = bands => ({ min: Math.min(...bands), max: Math.max(...bands) });
+
+/** 'today' or 'tomorrow' for an hour inside the 24-hour strip, by the viewer's local dates. */
+export const relativeDay = (iso, now) => (localDate(new Date(iso)) === localDate(now) ? 'today' : 'tomorrow');
+
+/** Link to the feedback form. With an entry id the city is prefilled (Google Forms "pp_url"); without one the base link is used as is. */
+export function feedbackUrl(base, entryId, cityName) {
+  if (!entryId || !cityName) return base;
+  return `${base}${base.includes('?') ? '&' : '?'}usp=pp_url&entry.${entryId}=${encodeURIComponent(cityName)}`;
 }

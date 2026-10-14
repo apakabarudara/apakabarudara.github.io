@@ -45,7 +45,7 @@ describe('LEVELS', () => {
     it(`level ${level} offers health access from level 3, 119 from level 4, good news up to level 2`, () => {
       assert.equal(copy.health, level >= 3);
       assert.equal(copy.emergency, level >= 4);
-      assert.equal(copy.goodNews, level <= 2);
+      assert.equal(typeof copy.goodNews === 'string', level <= 2);
     });
 
     it(`level ${level} has a status for every activity, consistent with the safety actions`, () => {
@@ -153,6 +153,22 @@ describe('UI', () => {
     assert.equal(UI.storySaved, 'Gambar diunduh. Unggah ke Story dari galeri. Kalau tidak muncul, buka halaman ini di Safari atau Chrome.');
     assert.equal(UI.storyTapAgain, 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.');
     assert.equal(UI.tagline, 'Cek asap dan kualitas udara hari ini');
+  });
+
+  it('words the batch 3 P0 lines as agreed', () => {
+    assert.equal(LEVELS[1].goodNews, 'Kabari grup: udara lagi bagus');
+    assert.equal(LEVELS[2].goodNews, 'Kabari grup: udara masih oke');
+    assert.equal(UI.bestWindow(3, 'besok', '09.00', '11.00'), 'Asap paling tipis di siang hari: besok, 09.00–11.00');
+    assert.equal(UI.bestWindow(1, 'hari ini', '13.00', '15.00'), 'Udara paling segar di siang hari: hari ini, 13.00–15.00');
+    assert.equal(UI.sensitivePrefix, 'Anak, lansia, ibu hamil, sakit paru/jantung:');
+    assert.equal(ACTIVITIES.find(a => a.id === 'exercise')?.notes.caution, 'Ringan saja');
+    assert.match(UI.explain(10)[0], /^Level ini perkiraan komputer dari data satelit dan cuaca/);
+    assert.match(UI.footerDisclaimer, /^Level dan angka di sini perkiraan, bukan hasil alat ukur\./);
+    assert.equal(UI.stripLegend, 'Warna batang = level per jam. Makin tinggi, makin tebal asap.');
+    assert.equal(UI.stripRange('Sangat Tidak Sehat', 'Berbahaya'), 'dari Sangat Tidak Sehat sampai Berbahaya');
+    assert.equal(UI.stripRange('Berbahaya', 'Berbahaya'), 'semuanya Berbahaya');
+    assert.match(UI.privacy, /tidak dikirim ke mana pun\. Masukan lewat Google Form tersimpan di Google\./);
+    assert.ok(!('feedbackSend' in UI) && !('feedbackThanks' in UI) && !('sensitiveIntro' in UI));
   });
 
   it('credits the data sources', () => {
