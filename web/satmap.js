@@ -14,13 +14,13 @@ const MIN_ZOOM = 5;
 const AREA_KM = 40; // the air model grid is about 40 km
 const GIBS_WMS = 'https://gibs.earthdata.nasa.gov/wms/epsg3857/best/wms.cgi';
 
-/** Mounts the map in `el`; calls `onFail` when no tile could be loaded and `onInteract` on the first gesture. With hotspots.json data, taps call `onResult(lines)`. Returns { destroy, areaNote }; areaNote is empty without usable hotspots. */
-export function createSatMap(el, { lat, lon, name, date, credit, onFail, onInteract, hotspots: data = null, windDir = '', onResult = () => {} }) {
+/** Mounts the map in `el`; calls `onTile` on the first tile and `onFail` when none could be loaded, and `onInteract` on the first gesture. With hotspots.json data, taps call `onResult(lines)`. Returns { destroy, areaNote }; areaNote is empty without usable hotspots. */
+export function createSatMap(el, { lat, lon, name, date, credit, onFail, onTile = () => {}, onInteract, hotspots: data = null, windDir = '', onResult = () => {} }) {
   const map = L.map(el, { center: [lat, lon], zoom: 7, minZoom: MIN_ZOOM, maxZoom: 9, maxBounds: mapBounds(lat, lon), attributionControl: false, preferCanvas: true });
   L.control.attribution({ prefix: false }).addAttribution(credit).addTo(map);
   let loaded = false;
   const tiles = L.tileLayer(gibsTileUrl(LAYER, date), { maxNativeZoom: 9, maxZoom: 9, tileSize: 256, minZoom: MIN_ZOOM });
-  tiles.on('tileload', () => { loaded = true; });
+  tiles.on('tileload', () => { if (!loaded) onTile(); loaded = true; });
   tiles.on('load', () => { if (!loaded) onFail(); });
   tiles.addTo(map);
   L.tileLayer(`${GIBS_WMTS}/${COASTLINES}/default/GoogleMapsCompatible_Level13/{z}/{y}/{x}.png`, { maxNativeZoom: 9, maxZoom: 9, minZoom: MIN_ZOOM, tileSize: 256, className: 'map-coast' }).addTo(map);

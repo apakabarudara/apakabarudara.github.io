@@ -227,10 +227,45 @@ ion-modal.sheet { --height: auto; --background: var(--surface); --border-radius:
 /* Banners: stale data and preview */
 .banner { border-radius: var(--r-btn); padding: var(--sp-3) var(--sp-4); background: var(--notice); color: var(--notice-ink); font-size: var(--fs-sm); font-weight: var(--fw-label); }
 
-/* Loading card */
-.skeleton { display: flex; flex-direction: column; gap: var(--sp-2); margin-top: var(--sp-4); }
-.skeleton span { display: block; height: 14px; width: 85%; border-radius: var(--r-sm); background: currentColor; opacity: .12; }
-.skeleton span + span { width: 60%; }
+/* Loading skeleton: the same boxes as the real city view (or the overview), a soft sweep on top. Reduced motion stills the sweep (rule above). */
+.sk { position: relative; overflow: hidden; display: block; border-radius: var(--r-sm); background: color-mix(in srgb, var(--ink) 10%, transparent); }
+.sk::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ink) 9%, transparent), transparent); animation: sk-sweep 1.4s ease-in-out infinite; }
+@keyframes sk-sweep { to { transform: translateX(100%); } }
+html[data-boot="overview"] .sk-city, html:not([data-boot="overview"]) .sk-ov { display: none; }
+#message { display: block; }
+#message[aria-busy="true"] > .mascot { visibility: hidden; }
+#message[aria-busy="true"] .headline { font-size: var(--fs-sm); font-weight: var(--fw-label); letter-spacing: 0; line-height: 1.5; color: var(--ink-2); }
+.skeleton { display: flex; flex-direction: column; gap: var(--sp-3); margin-top: var(--sp-3); }
+.sk-mascot { position: absolute; top: -22px; right: var(--sp-4); width: 76px; height: 64px; border-radius: 50%; }
+.sk-name { width: 72%; height: 32px; }
+.sk-level { width: 46%; height: 18px; }
+.sk-scale, .sk-btns, .sk-strip, .sk-days { display: flex; gap: 4px; }
+.sk-scale i { width: 26px; height: 8px; border-radius: 4px; }
+.sk-line { height: 14px; width: 92%; }
+.sk-line:nth-child(even) { width: 64%; }
+.sk-guide { display: flex; flex-direction: column; gap: 17px; }
+.sk-guide i { height: 14px; width: 94%; }
+.sk-guide i:nth-child(3n) { width: 78%; }
+.sk-guide i:nth-child(4n) { width: 55%; }
+.sk-symptoms { height: 76px; border-radius: var(--r-btn); }
+.sk-btns { gap: var(--sp-2); margin-top: var(--sp-2); }
+.sk-btns i { flex: 1 1 auto; height: 50px; border-radius: var(--r-btn); }
+.sk-btns i + i { flex: 0 0 76px; }
+.sk-bar { height: 44px; margin-bottom: 6px; border-radius: var(--r-btn); }
+.sk-card { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-panel); border-radius: var(--r-card); background: var(--surface); box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--hairline); }
+.sk-title { width: 58%; height: 22px; }
+.sk-strip { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); align-items: end; gap: 3px; height: 64px; }
+.sk-strip i { border-radius: 4px 4px 1px 1px; height: 40%; }
+.sk-strip i:nth-child(3n) { height: 62%; }
+.sk-strip i:nth-child(4n + 1) { height: 85%; }
+.sk-strip i:nth-child(5n + 2) { height: 52%; }
+.sk-days { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-2); }
+.sk-days i { height: 118px; border-radius: var(--r-btn); }
+.sk-row { display: flex; align-items: center; gap: var(--sp-3); height: 52px; }
+.sk-row i { flex: none; width: 14px; height: 14px; border-radius: 50%; }
+.sk-row b { flex: 1 1 auto; height: 14px; max-width: 45%; }
+.sk-row u { height: 14px; width: 64px; margin-left: auto; }
+.sat-skel { position: absolute; inset: 0; z-index: 700; border-radius: var(--r-md, 12px); background: color-mix(in srgb, var(--ink) 10%, var(--surface)); pointer-events: none; } /* above Leaflet's panes (<=650), below its controls */
 #message ion-button.wide { --color: var(--lv-ink); --border-color: currentColor; --border-width: 1.5px; }
 #message[aria-busy="true"] ion-button { display: none; }
 

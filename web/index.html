@@ -25,6 +25,11 @@
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <script>
 // A deploy can delete the hashed files a stale page still wants: if the app script fails to load, reload once. app.js clears the flag when it boots.
+// Which skeleton to paint before the app script runs: a link or a saved city means a city view is coming, otherwise the overview.
+try {
+  const coming = decodeURIComponent(location.hash.slice(1)) || localStorage.getItem('bisanapasgak.city') || /[?&]city=/.test(location.search);
+  if (!coming) document.documentElement.dataset.boot = 'overview';
+} catch (_) { /* default: the city skeleton */ }
 addEventListener('error', e => {
   if (e.target.tagName !== 'SCRIPT') return;
   try { if (sessionStorage.getItem('bng-reloaded')) return; sessionStorage.setItem('bng-reloaded', '1'); } catch (_) { return; }
@@ -82,14 +87,60 @@ addEventListener('error', e => {
       <div id="previewBanner" class="banner" role="status" hidden></div>
       <div id="banner" class="banner" role="status" hidden></div>
 
+      <span id="skelBar" class="sk sk-bar sk-city" aria-hidden="true"></span>
       <!-- Loading, failed first load, expired data: neutral card, no verdict. -->
       <ion-card id="message" class="hero" data-level="0" aria-live="polite" aria-busy="true">
         <span class="mascot" aria-hidden="true"><svg class="mascot-art" viewBox="0 0 72 64"><use class="body" href="#blob"/><ellipse class="shine" cx="31" cy="21" rx="6" ry="3.2" transform="rotate(-18 31 21)"/><ellipse class="eye" cx="29" cy="40" rx="3" ry="3.6"/><ellipse class="eye" cx="43" cy="40" rx="3" ry="3.6"/><ellipse class="cheek" cx="22" cy="46" rx="4" ry="2.4"/><ellipse class="cheek" cx="50" cy="46" rx="4" ry="2.4"/><path class="mouth happy" d="M31 46q5 5 10 0"/></svg></span>
         <h1 id="messageTitle" class="headline"></h1>
         <p id="messageText" class="quip" hidden></p>
-        <div id="skeleton" class="skeleton" aria-hidden="true"><span></span><span></span></div>
+        <div id="skeleton" class="skeleton" aria-hidden="true">
+          <span class="sk-mascot sk"></span>
+          <span class="sk sk-name"></span>
+          <span class="sk sk-level sk-city"></span>
+          <span class="sk-scale sk-city"><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i></span>
+          <span class="sk sk-line sk-city"></span>
+          <span class="sk sk-line sk-city"></span>
+          <span class="sk-guide sk-city"><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i></span>
+          <span class="sk sk-symptoms sk-city"></span>
+          <span class="sk-btns"><i class="sk"></i><i class="sk"></i></span>
+        </div>
         <ion-button id="messageOfficial" class="wide" expand="block" fill="outline" target="_blank" rel="noopener" hidden><span data-copy="official"></span><svg class="ic" slot="end" aria-hidden="true"><use href="#i-arrow"/></svg></ion-button>
       </ion-card>
+
+      <div id="skelRest" class="stack" aria-hidden="true">
+        <div class="sk-card sk-city">
+          <span class="sk sk-title"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk-strip"><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+        </div>
+        <div class="sk-card sk-city">
+          <span class="sk sk-title"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk-days"><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+        </div>
+        <div class="sk-card sk-ov">
+          <span class="sk sk-title"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk-row"><i class="sk"></i><b class="sk"></b><u class="sk"></u></span>
+          <span class="sk-row"><i class="sk"></i><b class="sk"></b><u class="sk"></u></span>
+          <span class="sk-row"><i class="sk"></i><b class="sk"></b><u class="sk"></u></span>
+          <span class="sk-row"><i class="sk"></i><b class="sk"></b><u class="sk"></u></span>
+          <span class="sk-row"><i class="sk"></i><b class="sk"></b><u class="sk"></u></span>
+          <span class="sk-row"><i class="sk"></i><b class="sk"></b><u class="sk"></u></span>
+          <span class="sk-row"><i class="sk"></i><b class="sk"></b><u class="sk"></u></span>
+          <span class="sk-row"><i class="sk"></i><b class="sk"></b><u class="sk"></u></span>
+        </div>
+      </div>
 
       <div id="overview" class="stack" hidden>
         <ion-card class="hero" data-level="0" aria-labelledby="welcomeTitle">
@@ -235,7 +286,7 @@ addEventListener('error', e => {
         <ion-button id="satClose" fill="clear"><span data-copy="close"></span></ion-button>
       </div>
       <div class="sat-frame" hidden><img id="satBig" class="sat-big" width="480" height="480" alt=""><span class="pin" aria-hidden="true"></span></div>
-      <div id="satStage" class="sat-stage"><div id="satMap" class="sat-map" role="application"></div><p id="satHint" class="sat-hint" role="status" hidden data-copy="satHint"></p></div>
+      <div id="satStage" class="sat-stage"><div id="satMap" class="sat-map" role="application"></div><span id="satSkel" class="sk sat-skel" aria-hidden="true"></span><p id="satHint" class="sat-hint" role="status" hidden data-copy="satHint"></p></div>
       <div id="satNearby" class="sat-nearby" role="status" aria-live="polite" hidden><p id="satNearbyText" class="small"></p></div>
       <p id="satMapNote" class="small" role="status" hidden></p>
       <p id="satBigCaption" class="small"></p>

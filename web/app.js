@@ -99,6 +99,7 @@ function show(view) {
   $('message').hidden = view !== 'message';
   $('overview').hidden = view !== 'overview';
   $('city').hidden = view !== 'city';
+  $('skelBar').hidden = $('skelRest').hidden = true; // showMessage brings them back while loading
   renderInstall();
   $('tagline').hidden = view !== 'overview';
   $('headNote').hidden = view === 'overview'; // always there on city and message views, no close button
@@ -122,6 +123,7 @@ function showMessage(headline, text, busy) {
   $('messageText').textContent = text ?? '';
   $('messageText').hidden = !text;
   $('skeleton').hidden = !busy;
+  $('skelBar').hidden = $('skelRest').hidden = !busy;
   $('messageOfficial').hidden = busy;
   $('messageOfficial').href = ISPU_URL;
   $('banner').hidden = true;
@@ -755,6 +757,7 @@ function showMap() {
   document.querySelector('#satSheet .sat-frame').hidden = true;
   $('satMapNote').hidden = true;
   $('satBigCaption').textContent = UI.satMapCaption;
+  $('satSkel').hidden = false; // shimmer until the first tile paints
 }
 function showPhoto(note) {
   satMap?.destroy();
@@ -785,7 +788,7 @@ async function mountSatMap() {
   try {
     const [{ createSatMap }, hotspots] = await Promise.all([import('./satmap.js'), getHotspots()]);
     if (!satOpen) return;
-    satMap = createSatMap($('satMap'), { lat: loc.lat, lon: loc.lon, name: cityName(loc), date, credit: UI.satMapCredit, onFail: () => showPhoto(UI.satMapFail), onInteract: hideHint, hotspots, windDir: loc.wind_dir, onResult: showNearby });
+    satMap = createSatMap($('satMap'), { lat: loc.lat, lon: loc.lon, name: cityName(loc), date, credit: UI.satMapCredit, onFail: () => showPhoto(UI.satMapFail), onTile: () => { $('satSkel').hidden = true; }, onInteract: hideHint, hotspots, windDir: loc.wind_dir, onResult: showNearby });
     if (satMap.areaNote) $('satBigCaption').textContent += ` ${satMap.areaNote}`;
     if (store.read(MAP_HINT_KEY) !== '1') {
       store.write(MAP_HINT_KEY, '1');
