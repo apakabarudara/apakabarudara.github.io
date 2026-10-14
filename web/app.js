@@ -634,6 +634,7 @@ $('refresher').addEventListener('ionRefresh', async e => {
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') load(); });
 setInterval(load, REFRESH_MS);
 
+try { sessionStorage.removeItem('bng-reloaded'); } catch { /* storage blocked: the guard in index.html then cannot loop either */ }
 showMessage(UI.loadingHeadline, null, true);
 renderPoll();
 nextFact();
