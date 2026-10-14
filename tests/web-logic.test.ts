@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { LEVELS, STORY } from '../web/copy.js';
 import {
-  activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
+  activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
   icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom
 } from '../web/logic.js';
 
@@ -414,5 +414,18 @@ describe('worldviewUrl', () => {
   });
   it('is null without a box', () => {
     assert.equal(worldviewUrl(undefined, '2026-10-14'), null);
+  });
+});
+
+describe('satellite map helpers', () => {
+  it('builds the GIBS tile template for a layer and day', () => {
+    assert.equal(
+      gibsTileUrl('VIIRS_NOAA20_CorrectedReflectance_TrueColor', '2026-10-13'),
+      'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_NOAA20_CorrectedReflectance_TrueColor/default/2026-10-13/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg'
+    );
+  });
+  it('boxes a point by 6 degrees, or by the given size', () => {
+    assert.deepEqual(mapBounds(-2, 113), [[-8, 107], [4, 119]]);
+    assert.deepEqual(mapBounds(1, 2, 1), [[0, 1], [2, 3]]);
   });
 });

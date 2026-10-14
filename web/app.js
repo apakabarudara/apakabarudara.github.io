@@ -227,6 +227,7 @@ async function renderSatThumb(loc) {
   btn.dataset.caption = satLines(loc, entry);
   btn.dataset.link = worldviewUrl(entry.bbox, entry.date) ?? '';
   btn.dataset.alt = UI.satAlt(cityName(loc));
+  btn.dataset.date = entry.date;
   btn.hidden = false;
 }
 
@@ -759,10 +760,44 @@ $('satThumb').addEventListener('click', () => {
   $('satLink').href = d.link || '#';
   $('satLink').hidden = !d.link;
   count('foto-satelit');
+  showPhoto();
   $('satSheet').present();
 });
 $('satLink').addEventListener('click', () => count('peta-nasa'));
 $('satClose').addEventListener('click', () => $('satSheet').dismiss());
+
+// Interactive map: Leaflet and its CSS are a separate chunk, fetched only on this tap. Any failure puts the photo back with a note.
+let satMap = null;
+function showPhoto(note = '') {
+  satMap?.destroy();
+  satMap = null;
+  $('satMap').hidden = true;
+  $('satBack').hidden = true;
+  document.querySelector('#satSheet .sat-frame').hidden = false;
+  $('satExplore').hidden = false;
+  $('satMapNote').hidden = !note;
+  $('satMapNote').textContent = note;
+}
+$('satExplore').addEventListener('click', async () => {
+  const loc = selected();
+  const date = $('satThumb').dataset.date;
+  if (!loc || !date) return;
+  count('peta-interaktif');
+  $('satMapNote').hidden = true;
+  $('satExplore').hidden = true;
+  $('satBack').hidden = false;
+  document.querySelector('#satSheet .sat-frame').hidden = true;
+  $('satMap').hidden = false;
+  $('satMap').setAttribute('aria-label', UI.satMapLabel(cityName(loc)));
+  try {
+    const { createSatMap } = await import('./satmap.js');
+    satMap = createSatMap($('satMap'), { lat: loc.lat, lon: loc.lon, date, credit: UI.satMapCredit, onFail: () => showPhoto(UI.satMapFail) });
+  } catch {
+    showPhoto(UI.satMapFail);
+  }
+});
+$('satBack').addEventListener('click', () => showPhoto());
+$('satSheet').addEventListener('didDismiss', () => showPhoto());
 
 // A daily calendar reminder at 07:00 for 30 days, made on the device: no account and no server.
 $('remind').addEventListener('click', () => {

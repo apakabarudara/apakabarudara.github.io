@@ -156,7 +156,7 @@ export const UI = {
   methodSources: [
     'Asap (PM2.5) per jam: model CAMS global dari Copernicus, lewat Open-Meteo. Kotak petanya sekitar 45 km.',
     'Titik panas: satelit NASA FIRMS (VIIRS, NOAA-20) dalam 100 km, 24 jam terakhir. Hanya yang tingkat yakinnya sedang atau tinggi.',
-    'Foto satelit: citra warna asli NASA GIBS / Worldview (VIIRS NOAA-20), diambil saat satelit lewat.',
+    'Foto satelit: NASA GIBS / Worldview (VIIRS NOAA-20). Membuka peta memuat gambar dari gibs.earthdata.nasa.gov; tidak ada data lain dikirim.',
     'Angin dan hujan: prakiraan cuaca Open-Meteo. Datanya diperbarui setiap jam.'
   ],
   methodLevelTitle: 'Cara menghitung level',
@@ -243,6 +243,11 @@ export const UI = {
   satPin: 'Pin: pusat kota.',
   satWind: arah => `Angin dari ${arah}.`,
   satLink: 'Buka di NASA Worldview ↗',
+  satExplore: 'Jelajahi peta',
+  satBack: 'Kembali ke foto',
+  satMapLabel: kota => `Peta satelit NASA yang bisa digeser dan diperbesar, berpusat di ${kota}`,
+  satMapCredit: 'NASA GIBS / Worldview (VIIRS NOAA-20)',
+  satMapFail: 'Petanya belum bisa dimuat. Ini fotonya saja.',
   satNote: 'Foto diambil saat satelit lewat, bukan saat ini.',
   factsTitle: 'Fakta singkat',
   factsNext: 'Fakta lain',
@@ -258,7 +263,7 @@ export const UI = {
   creditGibs: 'NASA GIBS / Worldview (VIIRS)',
   creditIspu: 'batas level: ISPU (Permen LHK P.14/2020).',
   privacyTitle: 'Privasi',
-  privacy: 'Tanpa akun dan tanpa cookie. Kunjungan dan ketukan tombol dihitung secara anonim dan agregat lewat GoatCounter, tanpa profil per orang, dan tidak dihitung kalau browsermu mengaktifkan Do Not Track. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Masukan lewat Tally tersimpan di Tally.',
+  privacy: 'Tanpa akun dan tanpa cookie. Kunjungan dan ketukan tombol dihitung secara anonim dan agregat lewat GoatCounter, tanpa profil per orang, dan tidak dihitung kalau browsermu mengaktifkan Do Not Track. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Masukan lewat Tally tersimpan di Tally. Kalau kamu membuka peta satelit, gambar petanya dimuat dari server NASA (gibs.earthdata.nasa.gov); selain itu tidak ada yang dikirim ke sana.',
   creditLine: ['Proyek sukarela oleh ', 'Khi Hady', ' · kodenya terbuka di ', 'GitHub']
 };
 

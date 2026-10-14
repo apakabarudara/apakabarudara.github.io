@@ -89,6 +89,13 @@ export function worldviewUrl(bbox, date) {
   return bbox && date ? `${WORLDVIEW}?v=${bbox}&l=${WORLDVIEW_LAYERS}&t=${date}` : null;
 }
 
+const GIBS = 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best';
+/** Leaflet tile template for a NASA GIBS true-colour layer (EPSG:3857, GoogleMapsCompatible_Level9) on one day. */
+export const gibsTileUrl = (layer, date) => `${GIBS}/${layer}/default/${date}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`;
+
+/** [[south, west], [north, east]] box of `deg` degrees around a point, for the map's maxBounds. */
+export const mapBounds = (lat, lon, deg = 6) => [[lat - deg, lon - deg], [lat + deg, lon + deg]];
+
 /** Greeting for the viewer's local hour. */
 export function greeting(hour) {
   if (hour >= 4 && hour < 11) return 'Pagi!';

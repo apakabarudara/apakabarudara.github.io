@@ -293,6 +293,7 @@ describe('UI', () => {
     assert.equal(UI.stripRange('Berbahaya', 'Berbahaya'), 'semuanya Berbahaya');
     assert.match(UI.privacy, /GoatCounter, tanpa profil per orang/);
     assert.match(UI.privacy, /Masukan lewat Tally tersimpan di Tally\./);
+    assert.match(UI.privacy, /peta satelit.*server NASA \(gibs\.earthdata\.nasa\.gov\).*tidak ada yang dikirim/);
     assert.ok(!('feedbackSend' in UI) && !('feedbackThanks' in UI) && !('sensitiveIntro' in UI) && !('sensitivePrefix' in UI) && !('windowsShut' in UI));
   });
 
@@ -321,6 +322,9 @@ describe('UI', () => {
     assert.equal(UI.satAlt('Palangkaraya'), 'Foto satelit NASA untuk Palangkaraya');
     assert.equal(UI.creditGibs, 'NASA GIBS / Worldview (VIIRS)');
     assert.ok(UI.methodSources.some(l => /^Foto satelit: .*NASA GIBS/.test(l)));
+    assert.ok(UI.methodSources.some(l => /^Foto satelit: .*gibs\.earthdata\.nasa\.gov.*tidak ada data lain/.test(l)));
+    assert.deepEqual([UI.satExplore, UI.satBack], ['Jelajahi peta', 'Kembali ke foto']);
+    for (const line of [UI.satExplore, UI.satBack, UI.satMapFail, UI.satMapLabel('x'), UI.privacy, ...UI.methodSources]) assert.doesNotMatch(line, /\b(aman|akurat|pasti|gratis|boleh|harus)\b/i);
     for (const line of [UI.satCaption('x'), UI.satPin, UI.satWind('Timur'), UI.satNote, UI.satAlt('x'), UI.satTitle]) assert.doesNotMatch(line, /aman|akurat|pasti/i);
   });
 

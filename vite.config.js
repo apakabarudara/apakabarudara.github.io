@@ -11,6 +11,8 @@ const SW_TEMPLATE = fileURLToPath(new URL('./web/sw.js', import.meta.url));
 // robots.txt is for crawlers and og-image.png for link previews; the page needs neither offline.
 // sat/ holds the hourly satellite photos: generated at build time, changing every run, so never cached with the shell.
 const NOT_PRECACHED = new Set(['robots.txt', 'og-image.png']);
+// The lazy map chunk (Leaflet and its CSS) is fetched on demand: precaching it would add it to every first visit's transfer.
+const LAZY_CHUNK = /^assets\/satmap-/;
 const NOT_PRECACHED_DIRS = new Set(['sat']);
 function publicFiles(dir = PUBLIC_DIR, prefix = '') {
   return readdirSync(dir, { withFileTypes: true }).flatMap(entry =>
@@ -33,7 +35,7 @@ function siteFiles() {
     },
     // After Vite's own HTML and CSS steps, so the precache list holds every built file.
     generateBundle: { order: 'post', handler(_options, bundle) {
-      const precache = [...Object.keys(bundle), ...publicFiles()].sort();
+      const precache = [...Object.keys(bundle).filter(f => !LAZY_CHUNK.test(f)), ...publicFiles()].sort();
       // Public files keep their names, so their content goes into the version: a new icon must replace the cached one.
       const hash = createHash('sha256').update(precache.join('\n'));
       for (const file of publicFiles()) hash.update(readFileSync(PUBLIC_DIR + file));
@@ -49,6 +51,6 @@ export default defineConfig({
   root: 'web',
   base: './',
   plugins: [siteFiles()],
-  build: { outDir: '../dist', emptyOutDir: true, target: 'es2020', cssCodeSplit: false, chunkSizeWarningLimit: 700, rollupOptions: { output: { inlineDynamicImports: true } }, assetsInlineLimit: 0, reportCompressedSize: true },
+  build: { outDir: '../dist', emptyOutDir: true, target: 'es2020', cssCodeSplit: true, chunkSizeWarningLimit: 700, rollupOptions: { output: { codeSplitting: { groups: [{ name: 'satmap', test: /node_modules[\\/]leaflet|web[\\/]satmap/, priority: 2 }, { name: 'index', test: /./, priority: 1 }] } } }, assetsInlineLimit: 0, reportCompressedSize: true },
   server: { host: '127.0.0.1' }
 });
