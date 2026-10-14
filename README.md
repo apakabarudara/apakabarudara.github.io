@@ -103,3 +103,12 @@ Not used:
 3. Settings → Pages → Source: GitHub Actions. On the free plan Pages needs a public repository.
 
 A failed run emails the repo owner, which is the only alert so far.
+
+## Berkontribusi
+
+Apa Kabar Udara adalah proyek sukarela dan kodenya terbuka (MIT, lihat `LICENSE`). Masukan dan kode sama-sama diterima.
+
+- **Masukan dan permintaan kota:** tombol "Kirim masukan" di app.
+- **Kode:** fork, jalankan `npm ci && npm test`, lalu buka pull request. Perubahan teks harus mengikuti aturan di kepala `web/copy.js`: rendah hati, tidak memberi saran kesehatan buatan sendiri, dan tidak memakai klaim seperti "aman" atau "akurat".
+- **Bagian kesehatan:** kutipan panduan di app diambil apa adanya dari ISPU (Kementerian Lingkungan Hidup) dan kalimat rujukan medisnya masih menunggu tinjauan tenaga kesehatan.
+- **Sumber data:** CAMS (Copernicus) lewat Open-Meteo, NASA FIRMS dan GIBS, serta batas level ISPU (Permen LHK P.14/2020).
