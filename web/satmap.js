@@ -48,7 +48,7 @@ export function createSatMap(el, { lat, lon, name, date, credit, onFail, onTile 
     if (you) you.setLatLng([la, lo]);
     else you = L.marker([la, lo], { interactive: false, keyboard: false, icon: L.divIcon({ className: 'map-you', iconSize: [18, 18] }) }).bindTooltip(NB.you, { permanent: true, direction: 'left', offset: [-8, 0], className: 'map-name' }).addTo(map);
     drawRings(la, lo);
-    onResult(nearbyLines(hotspots, la, lo, windDir));
+    onResult(nearbyLines(hotspots, la, lo, windDir), { lat: la, lon: lo });
   };
   map.on('click', e => place(e.latlng.lat, e.latlng.lng));
   // On-device only: the position goes nowhere.
