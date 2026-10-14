@@ -768,7 +768,7 @@ async function mountSatMap() {
   try {
     const { createSatMap } = await import('./satmap.js');
     if (!satOpen) return;
-    satMap = createSatMap($('satMap'), { lat: loc.lat, lon: loc.lon, date, credit: UI.satMapCredit, onFail: () => showPhoto(UI.satMapFail), onInteract: hideHint });
+    satMap = createSatMap($('satMap'), { lat: loc.lat, lon: loc.lon, name: cityName(loc), date, credit: UI.satMapCredit, onFail: () => showPhoto(UI.satMapFail), onInteract: hideHint });
     if (store.read(MAP_HINT_KEY) !== '1') {
       store.write(MAP_HINT_KEY, '1');
       $('satHint').hidden = false;

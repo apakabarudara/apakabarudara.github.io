@@ -94,7 +94,7 @@ const GIBS = 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best';
 export const gibsTileUrl = (layer, date) => `${GIBS}/${layer}/default/${date}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`;
 
 /** [[south, west], [north, east]] box of `deg` degrees around a point, for the map's maxBounds. */
-export const mapBounds = (lat, lon, deg = 6) => [[lat - deg, lon - deg], [lat + deg, lon + deg]];
+export const mapBounds = (lat, lon, deg = 15) => [[lat - deg, lon - deg], [lat + deg, lon + deg]];
 
 /** Greeting for the viewer's local hour. */
 export function greeting(hour) {

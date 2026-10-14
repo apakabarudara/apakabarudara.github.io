@@ -424,8 +424,8 @@ describe('satellite map helpers', () => {
       'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_NOAA20_CorrectedReflectance_TrueColor/default/2026-10-13/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg'
     );
   });
-  it('boxes a point by 6 degrees, or by the given size', () => {
-    assert.deepEqual(mapBounds(-2, 113), [[-8, 107], [4, 119]]);
+  it('boxes a point by 15 degrees, or by the given size', () => {
+    assert.deepEqual(mapBounds(-2, 113), [[-17, 98], [13, 128]]);
     assert.deepEqual(mapBounds(1, 2, 1), [[0, 1], [2, 3]]);
   });
 });

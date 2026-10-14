@@ -358,4 +358,7 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .sat-map { width: 100%; aspect-ratio: 1; border-radius: var(--r-md, 12px); overflow: hidden; background: var(--ink-2); touch-action: none; overscroll-behavior: contain; }
 .sat-frame[hidden] { display: none; }
 .sat-map .map-pin { box-sizing: border-box; width: 22px; height: 22px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1.5px rgba(0, 0, 0, .55), inset 0 0 0 1.5px rgba(0, 0, 0, .55); }
+.sat-map .map-coast { filter: invert(1) drop-shadow(0 0 1px rgba(0, 0, 0, .9)); }
+.sat-map .map-name { padding: 2px 8px; border: 0; border-radius: 10px; background: rgba(20, 12, 28, .72); color: #fff; font-size: var(--fs-xs); font-weight: var(--fw-strong); box-shadow: none; pointer-events: none; }
+.sat-map .map-name::before { display: none; }
 .sat-map .map-pin::after { content: ""; position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; transform: translate(-50%, -50%); border-radius: 50%; background: #fff; box-shadow: 0 0 0 1.5px rgba(0, 0, 0, .55); }
