@@ -8,7 +8,13 @@
   },
   "scripts": {
     "ingest": "node ingest/main.ts",
-    "build": "rm -rf dist && mkdir -p dist/data dist/coba && cp web/* dist/ && cp data/latest.json dist/data/ && cp -r spike/native spike/ionic dist/coba/",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "node --test \"tests/*.test.ts\""
+  },
+  "devDependencies": {
+    "@ionic/core": "9.0.5",
+    "vite": "8.3.1"
   }
 }

@@ -26,6 +26,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
       - run: npm test
       # Exits non-zero without touching data/latest.json when any source fails or validation rejects the report,
       # so nothing below runs and the site keeps serving the last good deployment.
@@ -38,6 +40,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/latest.json
           git diff --cached --quiet || { git commit -m "data: refresh latest.json" && git push; }
+      # Vite bundle + service worker into dist/. A failed build stops here, so nothing is deployed.
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
