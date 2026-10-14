@@ -322,9 +322,12 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 @media (max-width: 359px) { .share-row { flex-direction: column; } }
 #watchSolo ion-button.wide { margin-top: 0; }
 
-/* Pinned cities: chips in level colours, then "Pantau kota lain" */
+/* Pinned cities: one neutral chip each, level shown by the dot, then "Pantau kota lain" */
 .watch { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
-.chip { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-height: 48px; min-width: 0; padding: 6px var(--sp-3); border: 0; border-radius: var(--r-btn); font: inherit; line-height: 1.2; cursor: pointer; background: var(--lv-soft); color: var(--lv-soft-ink); text-align: left; }
+.chip { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-height: 48px; min-width: 0; padding: 6px var(--sp-3); border: 0; border-radius: var(--r-btn); font: inherit; line-height: 1.2; cursor: pointer; background: var(--brand-soft); color: var(--brand-soft-ink); text-align: left; }
+.chip::before { content: ""; width: 10px; height: 10px; margin-bottom: 2px; border-radius: 50%; background: var(--lv-bar); }
+.chip.add::before { content: none; }
+.chip:focus-visible { outline-color: var(--focus); }
 .chip .c { font-size: var(--fs-sm); font-weight: var(--fw-display); }
 .chip .n { font-size: var(--fs-xs); font-weight: var(--fw-label); }
 .chip.add { flex-direction: row; align-items: center; background: transparent; color: var(--brand); border: 1.5px dashed currentColor; font-size: var(--fs-sm); font-weight: var(--fw-strong); }
