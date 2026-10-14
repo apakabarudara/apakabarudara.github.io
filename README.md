@@ -26,7 +26,7 @@ The shape lives in `ingest/types.ts`.
 | `pm25_model.band` | 1 Baik, 2 Sedang, 3 Tidak Sehat, 4 Sangat Tidak Sehat, 5 Berbahaya. Upper bounds 15.5 / 55.4 / 150.4 / 250.4 µg/m³ from [Permen LHK P.14/2020, Lampiran I](https://peraturan.go.id/files/bn774-2020.pdf). |
 | `hotspots_24h.count` | VIIRS NOAA-20 detections of nominal or high confidence within 100 km, acquired in the last 24 hours. |
 | `wind_dir` | Where the wind blows from, 8-point Indonesian compass. |
-| `outlook` | Highest hourly PM2.5 per complete local day, from today. CAMS global forecasts 5 days, so expect about 4 entries, not 7. |
+| `outlook` | Mean PM2.5 per complete local day from today, banded like `pm25_model`. CAMS global forecasts 5 days, so expect about 4 entries, not 7. |
 
 Cities are in `ingest/locations.ts`.
 

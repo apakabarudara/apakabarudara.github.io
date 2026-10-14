@@ -35,7 +35,7 @@ export interface Hotspots24h {
 
 export interface OutlookDay {
   date: string;
-  pm25_max: number;
+  pm25_mean: number;
   band: Band;
 }
 

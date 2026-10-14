@@ -37,7 +37,7 @@ export function validateReport(report: LatestReport, expectedIds: readonly strin
     loc.outlook.forEach((day, i) => {
       if (!isDate(day.date)) at(`outlook[${i}].date invalid: ${day.date}`);
       if (i > 0 && day.date <= loc.outlook[i - 1].date) at(`outlook[${i}].date not ascending`);
-      if (!isConcentration(day.pm25_max)) at(`outlook[${i}].pm25_max invalid: ${day.pm25_max}`);
+      if (!isConcentration(day.pm25_mean)) at(`outlook[${i}].pm25_mean invalid: ${day.pm25_mean}`);
       if (!BANDS.has(day.band)) at(`outlook[${i}].band invalid: ${day.band}`);
     });
   }

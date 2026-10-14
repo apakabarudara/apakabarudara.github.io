@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { afterEach, describe, it, mock } from 'node:test';
-import { currentHourIndex, dailyMaxFrom, fetchAirQuality, localHourKey, type AirQualityResponse } from '../ingest/open-meteo.ts';
+import { currentHourIndex, dailyMeanFrom, fetchAirQuality, localHourKey, type AirQualityResponse } from '../ingest/open-meteo.ts';
 import type { Location } from '../ingest/types.ts';
 
 // Real response for Palangkaraya then Pontianak, fetched 2026-10-14 ~00:15 UTC (past_days=1, forecast_days=7, timezone=auto).
@@ -38,17 +38,21 @@ describe('currentHourIndex', () => {
   });
 });
 
-describe('dailyMaxFrom', () => {
+describe('dailyMeanFrom', () => {
+  const rounded = (response: AirQualityResponse, now: Date): [string, number][] =>
+    dailyMeanFrom(response, now).map(d => [d.date, Math.round(d.pm25_mean * 10) / 10]);
+
+  // Means computed independently from the fixture.
   it('keeps only complete local days from today', () => {
-    assert.deepEqual(dailyMaxFrom(palangkaraya, NOW), [
-      { date: '2026-10-14', pm25_max: 3233.6 },
-      { date: '2026-10-15', pm25_max: 3241 },
-      { date: '2026-10-16', pm25_max: 2950.4 },
-      { date: '2026-10-17', pm25_max: 2875.9 }
+    assert.deepEqual(rounded(palangkaraya, NOW), [
+      ['2026-10-14', 1163.8],
+      ['2026-10-15', 1046.7],
+      ['2026-10-16', 1099.5],
+      ['2026-10-17', 1194.7]
     ]);
     assert.deepEqual(
-      dailyMaxFrom(pontianak, NOW).map(d => d.pm25_max),
-      [125.3, 135.5, 43.7, 66.1]
+      rounded(pontianak, NOW).map(([, mean]) => mean),
+      [98.4, 99.5, 23.5, 51.7]
     );
   });
 
@@ -59,13 +63,13 @@ describe('dailyMaxFrom', () => {
       hourly: { time: palangkaraya.hourly.time.slice(0, cut), pm2_5: palangkaraya.hourly.pm2_5.slice(0, cut) }
     };
     assert.deepEqual(
-      dailyMaxFrom(truncated, NOW).map(d => d.date),
+      dailyMeanFrom(truncated, NOW).map(d => d.date),
       ['2026-10-14']
     );
   });
 
   it('counts yesterday as today until local midnight', () => {
-    assert.equal(dailyMaxFrom(palangkaraya, new Date('2026-10-13T16:59:00Z'))[0].date, '2026-10-13');
+    assert.equal(dailyMeanFrom(palangkaraya, new Date('2026-10-13T16:59:00Z'))[0].date, '2026-10-13');
   });
 });
 

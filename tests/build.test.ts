@@ -56,12 +56,12 @@ describe('buildReport', () => {
     assert.equal(pontianak.wind_dir, 'Utara'); // 11°
   });
 
-  it('bands each complete outlook day by its max', () => {
+  it('bands each complete outlook day by its 24-hour mean', () => {
     assert.deepEqual(pontianak.outlook, [
-      { date: '2026-10-14', pm25_max: 125.3, band: 3 },
-      { date: '2026-10-15', pm25_max: 135.5, band: 3 },
-      { date: '2026-10-16', pm25_max: 43.7, band: 2 },
-      { date: '2026-10-17', pm25_max: 66.1, band: 3 }
+      { date: '2026-10-14', pm25_mean: 98.4, band: 3 },
+      { date: '2026-10-15', pm25_mean: 99.5, band: 3 },
+      { date: '2026-10-16', pm25_mean: 23.5, band: 2 },
+      { date: '2026-10-17', pm25_mean: 51.7, band: 2 }
     ]);
   });
 

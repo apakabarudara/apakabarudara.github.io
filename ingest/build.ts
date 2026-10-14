@@ -1,6 +1,6 @@
 import { bandForPm25 } from './bands.ts';
 import { countNearby, SOURCE_LABEL as FIRMS_LABEL, type Hotspot } from './firms.ts';
-import { dailyMaxFrom, trailingDayMean, type AirQualityResponse, type ForecastResponse } from './open-meteo.ts';
+import { dailyMeanFrom, trailingDayMean, type AirQualityResponse, type ForecastResponse } from './open-meteo.ts';
 import type { LatestReport, Location } from './types.ts';
 import { compassLabel } from './wind.ts';
 
@@ -34,7 +34,10 @@ export function buildReport(locations: readonly Location[], sources: Sources, no
         pm25_model: { value: pm25, unit: 'ug/m3', band: bandForPm25(pm25), source: MODEL_LABEL, updated_at: current.hourUtc },
         hotspots_24h: { count: countNearby(sources.hotspots, loc, RADIUS_KM, now), radius_km: RADIUS_KM, source: FIRMS_LABEL, updated_at: generatedAt },
         wind_dir: compassLabel(windDeg),
-        outlook: dailyMaxFrom(sources.airQuality[i], now).map(day => ({ ...day, band: bandForPm25(day.pm25_max) }))
+        outlook: dailyMeanFrom(sources.airQuality[i], now).map(day => {
+          const mean = round1(day.pm25_mean);
+          return { date: day.date, pm25_mean: mean, band: bandForPm25(mean) };
+        })
       };
     })
   };

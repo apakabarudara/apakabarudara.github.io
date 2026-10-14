@@ -13,9 +13,9 @@ export interface ForecastResponse {
   current: { time: string; wind_direction_10m: number | null };
 }
 
-export interface DailyMax {
+export interface DailyMean {
   date: string;
-  pm25_max: number;
+  pm25_mean: number;
 }
 
 interface OpenMeteoError {
@@ -72,8 +72,8 @@ export function trailingDayMean(response: AirQualityResponse, now: Date): { valu
   return { value, hourUtc };
 }
 
-/** Daily max of hourly PM2.5 per local date, from today on. Days missing any hour are dropped rather than guessed. */
-export function dailyMaxFrom(response: AirQualityResponse, now: Date): DailyMax[] {
+/** Mean PM2.5 per local date, from today on, matching the 24-hour averaging of the current band. Days missing any hour are dropped rather than guessed. */
+export function dailyMeanFrom(response: AirQualityResponse, now: Date): DailyMean[] {
   const today = localHourKey(now, response.utc_offset_seconds).slice(0, 10);
   const byDate = new Map<string, (number | null)[]>();
   response.hourly.time.forEach((time, i) => {
@@ -83,5 +83,5 @@ export function dailyMaxFrom(response: AirQualityResponse, now: Date): DailyMax[
   });
   return [...byDate]
     .filter(([, values]) => values.length === HOURS_PER_DAY && values.every(v => v !== null))
-    .map(([date, values]) => ({ date, pm25_max: Math.max(...(values as number[])) }));
+    .map(([date, values]) => ({ date, pm25_mean: (values as number[]).reduce((sum, v) => sum + v, 0) / HOURS_PER_DAY }));
 }
