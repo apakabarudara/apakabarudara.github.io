@@ -66,3 +66,11 @@ export interface LatestReport {
   generated_at: string;
   locations: LocationReport[];
 }
+
+/** data/hotspots.json: where the fires counted in latest.json are, for the page's nearest-fire lookup. */
+export interface HotspotsFile {
+  generated_at: string;
+  source: string;
+  /** [lat, lon] at 3 decimals (about 110 m), unique, sorted. */
+  points: [number, number][];
+}

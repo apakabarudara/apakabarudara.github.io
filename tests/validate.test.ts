@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import type { LatestReport, LocationReport } from '../ingest/types.ts';
-import { validateReport } from '../ingest/validate.ts';
+import type { HotspotsFile, LatestReport, LocationReport } from '../ingest/types.ts';
+import { validateHotspots, validateReport } from '../ingest/validate.ts';
 
 const location = (overrides: Partial<LocationReport> = {}): LocationReport => ({
   id: 'pontianak',
@@ -63,5 +63,25 @@ describe('validateReport', () => {
   it('rejects outlook days out of order', () => {
     const outlook = [...location().outlook].reverse();
     assert.deepEqual(validateReport(report(location({ outlook })), ['pontianak']), ['pontianak: outlook[1].date not ascending']);
+  });
+});
+
+describe('validateHotspots', () => {
+  const file = (overrides: Partial<HotspotsFile> = {}): HotspotsFile => ({ generated_at: '2026-10-14T00:30:00.000Z', source: 'NASA FIRMS VIIRS NOAA-20 NRT', points: [[-2.802, 114.033]], ...overrides });
+
+  it('accepts a good file, and an empty one', () => {
+    assert.deepEqual(validateHotspots(file()), []);
+    assert.deepEqual(validateHotspots(file({ points: [] })), []);
+  });
+
+  it('rejects a bad timestamp, a missing source and a non-array', () => {
+    assert.deepEqual(validateHotspots(file({ generated_at: 'yesterday', source: ' ' })), ['generated_at is not a UTC timestamp: yesterday', 'source missing']);
+    assert.deepEqual(validateHotspots(file({ points: null as unknown as HotspotsFile['points'] })), ['points is not an array']);
+  });
+
+  it('rejects out-of-range, non-finite and malformed points', () => {
+    assert.match(validateHotspots(file({ points: [[0, 0], [91, 100]] }))[0], /^points\[1\]/);
+    assert.match(validateHotspots(file({ points: [[Number.NaN, 100]] }))[0], /^points\[0\]/);
+    assert.match(validateHotspots(file({ points: [[1, 2, 3] as unknown as [number, number]] }))[0], /^points\[0\]/);
   });
 });

@@ -75,14 +75,13 @@ export function parseFirmsCsv(csv: string): Hotspot[] {
   });
 }
 
-/** Nominal- and high-confidence detections within radiusKm, acquired in the 24 hours up to now. */
-export function countNearby(hotspots: readonly Hotspot[], location: Location, radiusKm: number, now: Date): number {
+/** Nominal- and high-confidence detections acquired in the 24 hours up to now: the ones that count as a fire. */
+export function recentFires(hotspots: readonly Hotspot[], now: Date): Hotspot[] {
   const since = now.getTime() - DAY_MS;
-  return hotspots.filter(
-    h =>
-      h.confidence !== 'low' &&
-      h.acquiredAt.getTime() >= since &&
-      h.acquiredAt.getTime() <= now.getTime() &&
-      distanceKm(location.lat, location.lon, h.lat, h.lon) <= radiusKm
-  ).length;
+  return hotspots.filter(h => h.confidence !== 'low' && h.acquiredAt.getTime() >= since && h.acquiredAt.getTime() <= now.getTime());
+}
+
+/** Fires (see recentFires) within radiusKm of the location. */
+export function countNearby(hotspots: readonly Hotspot[], location: Location, radiusKm: number, now: Date): number {
+  return recentFires(hotspots, now).filter(h => distanceKm(location.lat, location.lon, h.lat, h.lon) <= radiusKm).length;
 }

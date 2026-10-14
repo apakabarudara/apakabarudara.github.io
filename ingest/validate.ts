@@ -1,5 +1,5 @@
 import { NEXT_HOURS } from './build.ts';
-import type { LatestReport } from './types.ts';
+import type { HotspotsFile, LatestReport } from './types.ts';
 
 const BANDS: ReadonlySet<number> = new Set([1, 2, 3, 4, 5]);
 const HOUR_MS = 3600e3;
@@ -52,5 +52,16 @@ export function validateReport(report: LatestReport, expectedIds: readonly strin
       if (!isConcentration(hour.pm25)) at(`next_hours[${i}].pm25 invalid: ${hour.pm25}`);
     });
   }
+  return problems;
+}
+
+/** Everything that makes hotspots.json unsafe to publish. An empty list means it may be written. */
+export function validateHotspots(file: HotspotsFile): string[] {
+  const problems: string[] = [];
+  if (!isUtcTimestamp(file.generated_at)) problems.push(`generated_at is not a UTC timestamp: ${file.generated_at}`);
+  if (typeof file.source !== 'string' || file.source.trim() === '') problems.push('source missing');
+  if (!Array.isArray(file.points)) return [...problems, 'points is not an array'];
+  const bad = file.points.findIndex(p => !Array.isArray(p) || p.length !== 2 || !(Math.abs(p[0]) <= 90 && Math.abs(p[1]) <= 180));
+  if (bad >= 0) problems.push(`points[${bad}] is not a finite [lat, lon]: ${JSON.stringify(file.points[bad])}`);
   return problems;
 }

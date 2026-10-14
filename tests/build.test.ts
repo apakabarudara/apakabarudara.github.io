@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { buildReport, type Sources } from '../ingest/build.ts';
-import { parseFirmsCsv } from '../ingest/firms.ts';
+import { buildHotspotsFile, buildReport, type Sources } from '../ingest/build.ts';
+import { parseFirmsCsv, recentFires, type Hotspot } from '../ingest/firms.ts';
 import type { AirQualityResponse, ForecastResponse } from '../ingest/open-meteo.ts';
 import type { LatestReport, Location } from '../ingest/types.ts';
-import { validateReport } from '../ingest/validate.ts';
+import { validateHotspots, validateReport } from '../ingest/validate.ts';
 
 const fixture = <T>(name: string): T => JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8')) as T;
 
@@ -84,5 +84,36 @@ describe('buildReport', () => {
   it('throws when wind is missing', () => {
     const forecast = SOURCES.forecast.map(f => ({ ...f, current: { ...f.current, wind_direction_10m: null } }));
     assert.throws(() => buildReport(LOCATIONS, { ...SOURCES, forecast }, NOW), /no current wind direction/);
+  });
+});
+
+describe('buildHotspotsFile', () => {
+  const hot = (lat: number, lon: number, at: string, confidence: Hotspot['confidence'] = 'nominal'): Hotspot => ({ lat, lon, acquiredAt: new Date(at), confidence });
+
+  it('keeps the fires the report counts and nothing else', () => {
+    const file = buildHotspotsFile(SOURCES.hotspots, NOW);
+    assert.equal(file.generated_at, '2026-10-14T00:30:00.000Z');
+    assert.equal(file.source, 'NASA FIRMS VIIRS NOAA-20 NRT');
+    assert.deepEqual(validateHotspots(file), []);
+    assert.equal(file.points.length, recentFires(SOURCES.hotspots, NOW).length);
+    assert.ok(file.points.length >= buildReport(LOCATIONS, SOURCES, NOW).locations[0].hotspots_24h.count);
+  });
+
+  it('rounds to 3 decimals, drops duplicates and sorts', () => {
+    const at = '2026-10-13T17:37:00Z';
+    const file = buildHotspotsFile([hot(-2.8018, 114.03319, at), hot(-2.8021, 114.0334, at), hot(-3.1, 113.5, at), hot(-2.8018, 113.9, at)], NOW);
+    assert.deepEqual(file.points, [[-3.1, 113.5], [-2.802, 113.9], [-2.802, 114.033]]);
+  });
+
+  it('applies the 24 hour window and the confidence filter', () => {
+    const file = buildHotspotsFile(
+      [hot(1, 100, '2026-10-13T00:29:59Z'), hot(2, 100, '2026-10-13T00:30:00Z'), hot(3, 100, '2026-10-14T00:30:01Z'), hot(4, 100, '2026-10-13T20:00:00Z', 'low'), hot(5, 100, '2026-10-13T20:00:00Z', 'high')],
+      NOW
+    );
+    assert.deepEqual(file.points, [[2, 100], [5, 100]]);
+  });
+
+  it('has no points when there are no detections', () => {
+    assert.deepEqual(buildHotspotsFile([], NOW).points, []);
   });
 });

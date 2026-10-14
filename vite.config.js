@@ -1,9 +1,10 @@
 import { createHash } from 'node:crypto';
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 
 const DATA_FILE = fileURLToPath(new URL('./data/latest.json', import.meta.url));
+const HOTSPOTS_FILE = fileURLToPath(new URL('./data/hotspots.json', import.meta.url));
 const PUBLIC_DIR = fileURLToPath(new URL('./web/public/', import.meta.url));
 const SW_TEMPLATE = fileURLToPath(new URL('./web/sw.js', import.meta.url));
 
@@ -20,7 +21,7 @@ function publicFiles(dir = PUBLIC_DIR, prefix = '') {
 }
 
 /**
- * Adds what the bundle does not contain: data/latest.json (written by the hourly ingest) and the service worker,
+ * Adds what the bundle does not contain: data/latest.json and data/hotspots.json (written by the hourly ingest) and the service worker,
  * whose precache list is the built files plus the app's public files and whose cache version is a hash of that list. The version only changes
  * when a hashed file changes, so the hourly data refresh does not make every phone re-download the shell.
  */
@@ -28,10 +29,12 @@ function siteFiles() {
   return {
     name: 'site-files',
     configureServer(server) {
-      server.middlewares.use('/data/latest.json', (_req, res) => {
-        res.setHeader('content-type', 'application/json');
-        res.end(readFileSync(DATA_FILE));
-      });
+      for (const [route, file] of [['/data/latest.json', DATA_FILE], ['/data/hotspots.json', HOTSPOTS_FILE]]) {
+        server.middlewares.use(route, (_req, res) => {
+          res.setHeader('content-type', 'application/json');
+          res.end(readFileSync(file));
+        });
+      }
     },
     // After Vite's own HTML and CSS steps, so the precache list holds every built file.
     generateBundle: { order: 'post', handler(_options, bundle) {
@@ -43,6 +46,8 @@ function siteFiles() {
       const source = readFileSync(SW_TEMPLATE, 'utf8').replace('__VERSION__', version).replace('__PRECACHE__', JSON.stringify(precache));
       this.emitFile({ type: 'asset', fileName: 'sw.js', source });
       this.emitFile({ type: 'asset', fileName: 'data/latest.json', source: readFileSync(DATA_FILE) });
+      // Absent until the first ingest run after this file was introduced; the smoke check flags it if it stays missing.
+      if (existsSync(HOTSPOTS_FILE)) this.emitFile({ type: 'asset', fileName: 'data/hotspots.json', source: readFileSync(HOTSPOTS_FILE) });
     } }
   };
 }

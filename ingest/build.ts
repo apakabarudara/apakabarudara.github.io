@@ -1,7 +1,7 @@
 import { bandForPm25 } from './bands.ts';
-import { countNearby, SOURCE_LABEL as FIRMS_LABEL, type Hotspot } from './firms.ts';
+import { countNearby, recentFires, SOURCE_LABEL as FIRMS_LABEL, type Hotspot } from './firms.ts';
 import { dailyMeanFrom, nextHours, trailingDayMean, type AirQualityResponse, type ForecastResponse } from './open-meteo.ts';
-import type { LatestReport, Location } from './types.ts';
+import type { HotspotsFile, LatestReport, Location } from './types.ts';
 import { compassLabel } from './wind.ts';
 
 export const RADIUS_KM = 100;
@@ -51,4 +51,16 @@ export function buildReport(locations: readonly Location[], sources: Sources, no
       };
     })
   };
+}
+
+const round3 = (n: number): number => Math.round(n * 1000) / 1000;
+
+/** Assembles hotspots.json from the same fires latest.json counts, rounded, de-duplicated and sorted so a re-run with no new fires gives the same file. */
+export function buildHotspotsFile(hotspots: readonly Hotspot[], now: Date): HotspotsFile {
+  const unique = new Map<string, [number, number]>();
+  for (const h of recentFires(hotspots, now)) {
+    const point: [number, number] = [round3(h.lat), round3(h.lon)];
+    unique.set(point.join(','), point);
+  }
+  return { generated_at: now.toISOString(), source: FIRMS_LABEL, points: [...unique.values()].sort((a, b) => a[0] - b[0] || a[1] - b[1]) };
 }

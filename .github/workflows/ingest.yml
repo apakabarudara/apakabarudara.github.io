@@ -29,8 +29,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      # Exits non-zero without touching data/latest.json when any source fails or validation rejects the report.
-      # That must not hold back new code: the build below then ships with the previous data/latest.json.
+      # Exits non-zero without touching data/latest.json or data/hotspots.json when any source fails or validation rejects the report.
+      # That must not hold back new code: the build below then ships with the previous data files.
       - id: ingest
         run: npm run ingest
         continue-on-error: true
@@ -39,13 +39,13 @@ jobs:
       - name: Warn that the ingest failed
         if: steps.ingest.outcome == 'failure'
         run: echo "::warning::ingest failed; deployed with the previous data"
-      - name: Commit latest.json
+      - name: Commit data
         if: steps.ingest.outcome == 'success'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/latest.json
-          git diff --cached --quiet || { git commit -m "data: refresh latest.json" && git push; }
+          git add data/latest.json data/hotspots.json
+          git diff --cached --quiet || { git commit -m "data: refresh latest.json and hotspots.json" && git push; }
       # Per-city true-colour photos (web/public/sat, gitignored, regenerated every run). Never blocks the deploy.
       - id: satellite
         run: npm run satellite
