@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bisa napas gak?</title>
-<meta name="description" content="Cek udara sebelum keluar rumah di musim asap: level hari ini, apa yang harus dilakukan, dan ramalan beberapa hari ke depan.">
+<meta name="description" content="Cek udara sebelum keluar rumah di musim asap: level hari ini, apa yang perlu dilakukan, dan perkiraan beberapa hari ke depan.">
+<meta name="author" content="Khi Hady">
 <meta name="theme-color" content="#F7F4F0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15121A" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M33 5c15 1 26 12 25 27S46 59 31 58 5 47 6 31 18 4 33 5z' fill='%234B3FB5'/%3E%3Cellipse cx='24' cy='28' rx='4' ry='5' fill='white'/%3E%3Cellipse cx='40' cy='28' rx='4' ry='5' fill='white'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 64'%3E%3Cg fill='%234B3FB5'%3E%3Cellipse cx='36' cy='42' rx='26' ry='17'/%3E%3Ccircle cx='24' cy='31' r='12'/%3E%3Ccircle cx='38' cy='24' r='14'/%3E%3Ccircle cx='52' cy='31' r='11'/%3E%3C/g%3E%3Cellipse cx='29' cy='40' rx='3' ry='3.6' fill='white'/%3E%3Cellipse cx='43' cy='40' rx='3' ry='3.6' fill='white'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
@@ -16,10 +17,28 @@
 <script type="module" src="app.js"></script>
 </head>
 <body>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="blob" viewBox="0 0 72 64"><ellipse cx="36" cy="42" rx="26" ry="17"/><circle cx="24" cy="31" r="12"/><circle cx="38" cy="24" r="14"/><circle cx="52" cy="31" r="11"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M8.7 10.7l6.6 -3.4"/><path d="M8.7 13.3l6.6 3.4"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/></symbol>
+  <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M8.5 4l-5 2.8 1.9 3.6 2.1-1V20h9V9.4l2.1 1 1.9-3.6-5-2.8c-.6 1.3-2 2.2-3.5 2.2s-2.9-.9-3.5-2.2z"/></symbol>
+  <symbol id="i-run" viewBox="0 0 24 24"><path d="M11 5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M4 17l5 1l.75 -1.5"/><path d="M15 21v-4l-4 -3l1 -6"/><path d="M7 12v-3l5 -1l3 3l3 1"/></symbol>
+  <symbol id="i-window" viewBox="0 0 24 24"><rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M12 3.5v17M4.5 12h15"/></symbol>
+  <symbol id="i-child" viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="2.5"/><path d="M12 9v6M8 12.5l4-2 4 2M9 20.5l3-5.5 3 5.5"/></symbol>
+  <symbol id="i-ok" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-caution" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
+  <symbol id="i-no" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><path d="M12 8v8M8 12h8"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+</svg>
+
 <main class="page">
   <header class="topbar">
     <p class="brand">
-      <span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.081 20c1.612 0 2.919 -1.335 2.919 -2.98v-9.763c0 -.694 -.552 -1.257 -1.232 -1.257c-.205 0 -.405 .052 -.584 .15l-.13 .083c-1.46 1.059 -2.432 2.647 -3.404 5.824c-.42 1.37 -.636 2.962 -.648 4.775c-.012 1.675 1.261 3.054 2.877 3.161l.203 .007"/><path d="M17.92 20c-1.613 0 -2.92 -1.335 -2.92 -2.98v-9.763c0 -.694 .552 -1.257 1.233 -1.257c.204 0 .405 .052 .584 .15l.13 .083c1.46 1.059 2.432 2.647 3.405 5.824c.42 1.37 .636 2.962 .648 4.775c.012 1.675 -1.261 3.054 -2.878 3.161l-.202 .007"/><path d="M9 12a3 3 0 0 0 3 -3a3 3 0 0 0 3 3"/><path d="M12 4v5"/></svg></span>
+      <svg class="brand-mark" viewBox="0 0 72 64" aria-hidden="true"><use href="#blob"/><ellipse cx="29" cy="40" rx="3.4" ry="4"/><ellipse cx="43" cy="40" rx="3.4" ry="4"/></svg>
       Bisa napas gak?
     </p>
     <span class="beta">BETA</span>
@@ -29,28 +48,19 @@
     <div class="city">
       <label class="sr-only" for="city">Pilih kota</label>
       <div class="select-wrap"><select id="city" class="select" disabled><option>Memuat kota…</option></select></div>
-      <button type="button" id="locate" class="icon-btn" aria-label="Kota terdekat">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
-        <span class="label">Terdekat</span>
-      </button>
+      <button type="button" id="locate" class="icon-btn" aria-label="Kota terdekat"><svg class="ic" width="20" height="20"><use href="#i-pin"/></svg><span class="label">Terdekat</span></button>
     </div>
-    <div class="city-meta">
-      <p id="hint" class="hint" aria-live="polite"></p>
-      <button type="button" id="allCities" class="linkbtn" hidden>Lihat semua kota</button>
-    </div>
+    <p id="hint" class="hint" aria-live="polite"></p>
   </div>
 
   <div id="banner" class="banner" role="status" hidden></div>
 
   <div id="overview" class="overview" hidden>
     <section class="answer welcome" data-level="0" aria-labelledby="welcomeTitle">
-      <span class="mascot" aria-hidden="true"><span class="eye l"></span><span class="eye r"></span><span class="cheek l"></span><span class="cheek r"></span><span class="mouth"></span></span>
+      <span class="mascot" aria-hidden="true"><svg class="mascot-art" viewBox="0 0 72 64"><use class="body" href="#blob"/><ellipse class="shine" cx="31" cy="21" rx="6" ry="3.2" transform="rotate(-18 31 21)"/><ellipse class="eye" cx="29" cy="40" rx="3" ry="3.6"/><ellipse class="eye" cx="43" cy="40" rx="3" ry="3.6"/><ellipse class="cheek" cx="22" cy="46" rx="4" ry="2.4"/><ellipse class="cheek" cx="50" cy="46" rx="4" ry="2.4"/><path class="mouth happy" d="M31 46q5 5 10 0"/></svg></span>
       <h1 id="welcomeTitle" class="headline">Kamu di kota mana?</h1>
       <p id="welcomeSub" class="quip"></p>
-      <button type="button" id="locateOverview" class="btn btn--brand btn--wide">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
-        Pakai lokasiku
-      </button>
+      <button type="button" id="locateOverview" class="btn btn--brand btn--wide"><svg class="ic" width="20" height="20"><use href="#i-pin"/></svg><span id="locateOverviewLabel">Pakai lokasiku</span></button>
       <p id="overviewHint" class="note" aria-live="polite"></p>
     </section>
     <section class="panel" aria-labelledby="overviewTitle">
@@ -62,83 +72,96 @@
 
   <section id="answer" class="answer" data-level="0" aria-live="polite" aria-busy="true">
     <div id="confetti" class="confetti" aria-hidden="true"></div>
-    <button type="button" id="mascot" class="mascot" aria-label="Maskot, tap untuk ngobrol" tabindex="-1"><span class="eye l"></span><span class="eye r"></span><span class="cheek l"></span><span class="cheek r"></span><span class="mouth"></span></button>
+    <button type="button" id="mascot" class="mascot" aria-label="Maskot, tap untuk ngobrol" tabindex="-1">
+      <svg class="mascot-art" viewBox="0 0 72 64" aria-hidden="true"><use class="body" href="#blob"/><ellipse class="shine" cx="31" cy="21" rx="6" ry="3.2" transform="rotate(-18 31 21)"/><path class="brow" d="M24 35l6-2.5M48 35l-6-2.5"/><ellipse class="eye" cx="29" cy="40" rx="3" ry="3.6"/><ellipse class="eye" cx="43" cy="40" rx="3" ry="3.6"/><ellipse class="cheek" cx="22" cy="46" rx="4" ry="2.4"/><ellipse class="cheek" cx="50" cy="46" rx="4" ry="2.4"/><path class="mouth happy" d="M31 46q5 5 10 0"/><path class="mouth flat" d="M32 47.5h8"/><path class="mouth sad" d="M31 49q5-5 10 0"/><g class="mask"><path class="strap" d="M25 46l-11-4M47 46l11-4"/><rect x="25" y="43" width="22" height="12" rx="5"/><path class="pleat" d="M29 47.5h14M29 51h14"/></g></svg>
+    </button>
     <p id="bubble" class="bubble" hidden></p>
-    <div id="dots" class="dots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+    <div id="scale" class="scale" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
     <p id="levelLabel" class="lvl-label">&nbsp;</p>
-    <h1 id="headline" class="headline">Lagi ngecek udara…</h1>
+    <h1 id="headline" class="headline">Lagi mengecek udara…</h1>
     <p id="quip" class="quip" hidden></p>
-    <ul id="actions" class="actions"><li><span class="skeleton" style="width:85%"></span></li><li><span class="skeleton" style="width:60%"></span></li></ul>
-    <div id="buttons" class="btns" hidden>
-      <button type="button" id="shareGood" class="btn btn--level" hidden>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/></svg>
-        <span id="shareGoodLabel">Kabari grup: udara lagi bagus</span>
-      </button>
-      <a id="faskes" class="btn btn--level" target="_blank" rel="noopener">Cari faskes terdekat</a>
-      <a id="call" class="btn btn--level-ghost" href="tel:119">Telepon 119</a>
+    <div id="advice" class="advice">
+      <p id="everyoneLabel" class="group" hidden></p>
+      <ul id="everyone" class="actions"><li><span class="skeleton"></span></li><li><span class="skeleton short"></span></li></ul>
+      <p id="sensitiveLabel" class="group" hidden></p>
+      <ul id="sensitive" class="actions" hidden></ul>
     </div>
-    <p id="stamp" class="stamp"></p>
-    <a id="official" class="official" href="https://ispu.kemenlh.go.id/app/#/" target="_blank" rel="noopener">Cek ISPU resmi KLH ↗</a>
+    <p id="symptoms" class="symptoms" hidden></p>
+    <div id="buttons" class="btns" hidden>
+      <button type="button" id="shareGood" class="btn btn--level" hidden><svg class="ic" width="20" height="20"><use href="#i-sun"/></svg><span id="shareGoodLabel"></span></button>
+      <a id="faskes" class="btn btn--level" target="_blank" rel="noopener" hidden><svg class="ic" width="20" height="20"><use href="#i-plus"/></svg><span id="faskesLabel"></span></a>
+      <a id="call" class="btn btn--level-ghost" hidden><svg class="ic" width="20" height="20"><use href="#i-phone"/></svg><span id="callLabel"></span></a>
+    </div>
+    <div class="card-foot">
+      <p id="stamp" class="stamp"></p>
+      <details id="explain" class="explain" hidden><summary id="explainTitle"></summary><div id="explainBody"></div></details>
+      <a id="official" class="official" href="https://ispu.kemenlh.go.id/app/#/" target="_blank" rel="noopener"><span id="officialLabel">Cek angka resmi pemerintah (ISPU)</span><svg class="ic" width="16" height="16"><use href="#i-arrow"/></svg></a>
+    </div>
   </section>
 
   <section id="today" class="panel" aria-labelledby="todayTitle" hidden>
-    <h2 id="todayTitle">Hari ini cocok untuk…</h2>
+    <h2 id="todayTitle"></h2>
     <ul id="activities" class="activities"></ul>
-    <p id="bestWindow" class="best"></p>
-    <div id="strip" class="strip" role="img"></div>
-    <div id="stripAxis" class="strip-axis"><span id="stripNow">Sekarang</span><span id="stripEnd">24 jam ke depan · perkiraan model</span></div>
+    <div class="hours">
+      <p id="bestWindow" class="best"></p>
+      <div id="strip" class="strip" role="img"></div>
+      <div id="stripTicks" class="strip-ticks" aria-hidden="true"></div>
+      <p id="stripLegend" class="legend"></p>
+    </div>
   </section>
 
   <section id="outlook" class="panel" aria-labelledby="outlookTitle" hidden>
-    <h2 id="outlookTitle">Besok gimana?</h2>
-    <p class="sub">Perkiraan model, tap tiap hari</p>
-    <div id="days" class="days" role="group" aria-label="Ramalan harian"></div>
+    <h2 id="outlookTitle"></h2>
+    <p id="outlookSub" class="sub"></p>
+    <div id="days" class="days" role="group"></div>
     <p id="dayDetail" class="day-detail" aria-live="polite"></p>
   </section>
 
   <section id="reasons" class="panel" aria-labelledby="reasonsTitle" hidden>
-    <h2 id="reasonsTitle">Kenapa begini?</h2>
+    <h2 id="reasonsTitle"></h2>
     <dl class="rows">
       <div class="row"><dt id="hotLabel"></dt><dd id="hot"></dd></div>
-      <div class="row"><dt>Angin datang dari</dt><dd id="wind"></dd></div>
+      <div class="row"><dt id="windLabel"></dt><dd id="wind"></dd></div>
       <div class="row"><dt id="rainLabel"></dt><dd id="rain"></dd></div>
     </dl>
     <p id="source" class="source"></p>
   </section>
 
-  <div>
-    <button type="button" id="share" class="btn btn--neutral btn--wide">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M8.7 10.7l6.6 -3.4"/><path d="M8.7 13.3l6.6 3.4"/></svg>
-      Lempar ke grup
-    </button>
-    <p id="shareNote" class="note" aria-live="polite" hidden></p>
+  <div id="shareBlock" hidden>
+    <button type="button" id="share" class="btn btn--soft btn--wide"><svg class="ic" width="20" height="20"><use href="#i-share"/></svg><span id="shareLabel"></span></button>
+    <p id="shareNote" class="note" aria-live="polite"></p>
   </div>
 
   <details class="more">
-    <summary>Lainnya</summary>
+    <summary><span id="moreTitle"></span><svg class="ic chev" width="20" height="20"><use href="#i-chevron"/></svg></summary>
     <div class="inner">
-      <div>
-        <div class="twist-head"><h3>Plot twist</h3><button type="button" id="twistBtn" class="btn btn--neutral">Lagi</button></div>
-        <p id="twist"></p>
+      <div id="factsBlock">
+        <div class="facts-head"><h3 id="factsTitle"></h3><button type="button" id="factsNext" class="btn btn--tonal btn--small"></button></div>
+        <p id="fact"></p>
       </div>
       <div>
-        <h3>Napas kamu hari ini gimana?</h3>
+        <h3 id="pollTitle"></h3>
         <div id="poll" class="choices"></div>
         <p id="pollNote" class="note" aria-live="polite"></p>
       </div>
       <div>
-        <h3><label for="feedback">Lapor bug atau saran</label></h3>
-        <textarea id="feedback" class="textarea" placeholder="Contoh: maskotnya kok serem ya"></textarea>
-        <div class="end"><button type="button" id="sendFb" class="btn btn--neutral">Kirim masukan</button></div>
+        <h3><label id="feedbackTitle" for="feedback"></label></h3>
+        <p id="feedbackNote" class="note"></p>
+        <textarea id="feedback" class="textarea"></textarea>
+        <div class="end"><button type="button" id="sendFb" class="btn btn--tonal">Kirim</button></div>
         <p id="fbNote" class="note" aria-live="polite"></p>
       </div>
     </div>
   </details>
 
   <footer class="footer">
-    <p>Angka PM2.5 di sini perkiraan model, bukan pengukuran, dan bisa lebih rendah dari aslinya di dekat kebakaran gambut. Untuk keputusan kesehatan, cek panduan resmi, jangan cuma percaya maskot. Darurat kesehatan: 119.</p>
-    <p>Privasi: tanpa akun, cookie, atau pelacak. Kota pilihanmu disimpan di HP ini saja. Posisimu, kalau kamu izinkan, cuma dipakai di browser buat cari kota terdekat dan tidak disimpan. Jawaban polling dan masukan belum dikirim ke mana pun.</p>
-    <p>Data: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Weather data by Open-Meteo.com</a> (CC BY 4.0) · <span id="camsCredit">Contains modified Copernicus Atmosphere Monitoring Service information</span> · <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener">NASA FIRMS</a></p>
+    <p>Angka di sini perkiraan, bukan hasil alat ukur. Untuk keputusan kesehatan, ikuti panduan resmi. Darurat kesehatan: 119.</p>
+    <p>Sumber data: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Weather data by Open-Meteo.com</a> (CC BY 4.0) · <span id="camsCredit">Contains modified Copernicus Atmosphere Monitoring Service information</span> · <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener">NASA FIRMS</a> · batas level: ISPU (Permen LHK P.14/2020).</p>
+    <details class="fine">
+      <summary>Privasi</summary>
+      <p>Tanpa akun, cookie, atau pelacak. Kota pilihanmu disimpan di HP ini saja. Lokasimu, kalau kamu izinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban polling dan masukan belum dikirim ke mana pun.</p>
+    </details>
+    <p class="credit">Proyek sukarela oleh <a href="https://github.com/khihadysucahyo" target="_blank" rel="noopener">Khi Hady</a> · kodenya terbuka di <a href="https://github.com/bisanapasgak/bisanapasgak.github.io" target="_blank" rel="noopener">GitHub</a></p>
   </footer>
 </main>
 </body>

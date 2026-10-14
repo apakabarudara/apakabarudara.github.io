@@ -70,6 +70,16 @@ export function activityStatuses(levelActivities, rainMm, wetDayMm) {
   return { ...levelActivities, laundry };
 }
 
+// 1 mm: the usual wet-day threshold. 50 mm: BMKG's "hujan lebat" daily band starts here.
+export const WET_DAY_MM = 1;
+export const HEAVY_RAIN_MM = 50;
+
+/** Daily rain as a word key instead of millimetres. */
+export function rainKind(mm) {
+  if (mm < WET_DAY_MM) return 'none';
+  return mm >= HEAVY_RAIN_MM ? 'heavy' : 'some';
+}
+
 /** Greeting for the viewer's local hour. */
 export function greeting(hour) {
   if (hour >= 4 && hour < 11) return 'Pagi!';

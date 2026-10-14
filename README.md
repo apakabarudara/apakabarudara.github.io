@@ -46,6 +46,10 @@ The shape lives in `ingest/types.ts`.
 
 Cities are in `ingest/locations.ts`.
 
+## Made by
+
+A volunteer project by [Khi Hady](https://github.com/khihadysucahyo). Suggestions and issues are welcome in this repo.
+
 ## Sources and required credit
 
 | Source | Used for | Terms |

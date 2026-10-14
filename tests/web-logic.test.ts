@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { activityStatuses, ago, bestWindow, freshness, greeting, mapsSearchUrl, nearest, rankByLevel, resolveCity, upcomingDays } from '../web/logic.js';
+import { activityStatuses, ago, bestWindow, freshness, greeting, mapsSearchUrl, nearest, rainKind, rankByLevel, resolveCity, upcomingDays } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
 const hoursAgo = (h: number): string => new Date(NOW.getTime() - h * 3600e3).toISOString();
@@ -89,6 +89,12 @@ describe('activityStatuses', () => {
   });
   it('never relaxes a smoky no', () => {
     assert.equal(activityStatuses({ ...clear, laundry: 'no' }, 12, 1).laundry, 'no');
+  });
+});
+
+describe('rainKind', () => {
+  it('turns millimetres into words: none below 1 mm, heavy from 50 mm', () => {
+    assert.deepEqual([0, 0.9, 1, 49.9, 50].map(rainKind), ['none', 'none', 'some', 'some', 'heavy']);
   });
 });
 

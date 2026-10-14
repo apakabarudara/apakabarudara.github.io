@@ -26,8 +26,10 @@ Residents living in the smoke, opening the page in the morning before going out.
 - Neutrals: background, surface, ink, secondary ink, line, brand indigo, light and dark.
 - Level 1–5, each: `solid`, `surface`, `ink`, `label`, `soft`, `soft-ink`, `btn`, `btn-ink`, `mascot`, `eye`. A `[data-level]` scope maps them onto `--lv-*` roles, so one attribute recolours a component.
 - Level colours mean air quality only. Neutral components never use them.
-- Type: Plus Jakarta Sans 500/700/800, scale 12 · 14 · 16 · 19 · 23 · 30. Inputs 16px.
-- Spacing 4 · 8 · 12 · 16 · 24 · 32. Radius: chip 10, button 14, card 24, pill.
+- Type: Plus Jakarta Sans; weights body 500, label 600, strong 700, display 800 (headlines only). Scale 13 · 15 · 17 · 20 · 24 · 30: a 13px floor for older readers, 17px body, inputs 16px.
+- Spacing 4 · 8 · 12 · 16 · 20 (panel padding) · 24 · 32. Radius 8 · 14 · 24 · pill.
+- Containers are white with a shadow; controls inside them are tonal fills without one. Dark surfaces get a 1px hairline.
+- One icon set: an inline SVG sprite, 1.75 stroke. The mascot is one SVG cloud whose face follows the level and wears a mask at levels 4–5.
 - Motion: levels 1–2 bob and enter, level 3 enters, levels 4–5 none. `prefers-reduced-motion` turns all of it off.
 
 ## Components
@@ -36,7 +38,15 @@ TopBar · CityPicker · AnswerCard (dots, level label, headline, quip, actions, 
 
 ## Copy (`web/copy.js`)
 
-Every user-facing line per level lives in one file. Level 3–5 headlines and actions follow the plan's "safety action that must stay" table and are drafts until the health reviewer signs off.
+Every user-facing line per level lives in one file. Level 3–5 headlines and actions follow the plan's "safety action that must stay" table, ISPU Lampiran II and Kemenkes haze guidance, and are drafts until the health reviewer signs off.
+
+Voice, after a UX-writer review and a plain-language research pass on 2026-10-14:
+- Lead with the official level word, its colour and one action; numbers go behind "Apa ini?".
+- Everyday Indonesian, no Jakarta slang or English where Indonesian works. "kamu" only in the light parts; levels 3–5, safety lines and errors use plain imperatives and "tidak".
+- Never joke about the reader's body or breathing; no jokes at levels 4–5, including under "Lainnya".
+- Advice splits into "Semua orang" and the sensitive group (anak, lansia, ibu hamil, sakit paru/jantung), as ISPU does.
+- From level 3 a symptom line says when to go to a puskesmas/RS (Kemenkes); from level 4 it adds 119.
+- The level reads "Tidak Sehat · level 3 dari 5"; shared messages carry the day and time.
 
 ## States
 
@@ -52,4 +62,4 @@ Loading skeleton; "Data lama" banner past 3 hours; past 12 hours or on a failed 
 - `tests/tokens.test.ts`: WCAG AA (4.5:1) for every text and background token pair, light and dark.
 - `tests/copy.test.ts`: every level has a name, headline and 1–3 actions; levels 4–5 have no quip; level 3+ shows faskes, level 4+ shows 119.
 - Browser, local: iPhone 15, SE and 320px; light and dark; reduced motion; all five levels and the stale, expired and error states from mocked data; no console errors, no sideways scroll.
-- Budget: HTML + CSS + JS under 60 KB, fonts excluded.
+- Budget: HTML + CSS + JS under 25 KB as downloaded (gzip), fonts excluded. Raw size was the first measure (60 KB); it moved to transfer size once the icon sprite and SVG mascot landed, at 21 KB gzipped / 67 KB raw.
