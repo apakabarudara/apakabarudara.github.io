@@ -20,6 +20,7 @@ export function validateReport(report: LatestReport, expectedIds: readonly strin
     const at = (msg: string): void => {
       problems.push(`${loc.id}: ${msg}`);
     };
+    if (!(Math.abs(loc.lat) <= 90 && Math.abs(loc.lon) <= 180)) at(`coordinates invalid: ${loc.lat},${loc.lon}`);
     if (loc.ispu.value !== null || loc.ispu.status !== 'link_only') at('ispu must stay link_only until access is permitted');
     if (!loc.ispu.source_url.startsWith('https://')) at('ispu.source_url must be https');
 

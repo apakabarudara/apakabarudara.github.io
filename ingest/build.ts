@@ -36,6 +36,8 @@ export function buildReport(locations: readonly Location[], sources: Sources, no
       return {
         id: loc.id,
         name: loc.name,
+        lat: loc.lat,
+        lon: loc.lon,
         ispu: { value: null, status: 'link_only', source_url: ISPU_URL },
         pm25_model: { value: pm25, unit: 'ug/m3', band: bandForPm25(pm25), source: MODEL_LABEL, updated_at: current.hourUtc },
         hotspots_24h: { count: countNearby(sources.hotspots, loc, RADIUS_KM, now), radius_km: RADIUS_KM, source: FIRMS_LABEL, updated_at: generatedAt },

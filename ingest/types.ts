@@ -44,6 +44,9 @@ export interface OutlookDay {
 export interface LocationReport {
   id: string;
   name: string;
+  /** City centre, for the page's nearest-city picker. */
+  lat: number;
+  lon: number;
   ispu: IspuStatus;
   pm25_model: Pm25Model;
   hotspots_24h: Hotspots24h;

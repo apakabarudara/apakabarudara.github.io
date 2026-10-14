@@ -1,9 +1,11 @@
 {
-  "generated_at": "2026-10-14T00:37:59.559Z",
+  "generated_at": "2026-10-14T00:39:07.940Z",
   "locations": [
     {
       "id": "pekanbaru",
       "name": "Pekanbaru, Riau",
+      "lat": 0.51667,
+      "lon": 101.44167,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -20,7 +22,7 @@
         "count": 2,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Barat daya",
       "outlook": [
@@ -53,6 +55,8 @@
     {
       "id": "dumai",
       "name": "Dumai, Riau",
+      "lat": 1.66711,
+      "lon": 101.44316,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -69,7 +73,7 @@
         "count": 1,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -102,6 +106,8 @@
     {
       "id": "jambi",
       "name": "Jambi, Jambi",
+      "lat": -1.6,
+      "lon": 103.61667,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -118,7 +124,7 @@
         "count": 248,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -151,6 +157,8 @@
     {
       "id": "palembang",
       "name": "Palembang, Sumatera Selatan",
+      "lat": -2.91673,
+      "lon": 104.7458,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -167,7 +175,7 @@
         "count": 914,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -200,6 +208,8 @@
     {
       "id": "pontianak",
       "name": "Pontianak, Kalimantan Barat",
+      "lat": -0.03194,
+      "lon": 109.325,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -216,7 +226,7 @@
         "count": 6,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Utara",
       "outlook": [
@@ -249,6 +259,8 @@
     {
       "id": "ketapang",
       "name": "Ketapang, Kalimantan Barat",
+      "lat": -1.83862,
+      "lon": 109.97728,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -265,7 +277,7 @@
         "count": 145,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -298,6 +310,8 @@
     {
       "id": "palangkaraya",
       "name": "Palangkaraya, Kalimantan Tengah",
+      "lat": -2.20833,
+      "lon": 113.91667,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -314,7 +328,7 @@
         "count": 3321,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -347,6 +361,8 @@
     {
       "id": "sampit",
       "name": "Sampit, Kalimantan Tengah",
+      "lat": -2.5315,
+      "lon": 112.9496,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -363,7 +379,7 @@
         "count": 2447,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -396,6 +412,8 @@
     {
       "id": "banjarmasin",
       "name": "Banjarmasin, Kalimantan Selatan",
+      "lat": -3.31987,
+      "lon": 114.59075,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -412,7 +430,7 @@
         "count": 1858,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -445,6 +463,8 @@
     {
       "id": "banjarbaru",
       "name": "Banjarbaru, Kalimantan Selatan",
+      "lat": -3.4406,
+      "lon": 114.8365,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -461,7 +481,7 @@
         "count": 727,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -494,6 +514,8 @@
     {
       "id": "samarinda",
       "name": "Samarinda, Kalimantan Timur",
+      "lat": -0.49167,
+      "lon": 117.14583,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -510,7 +532,7 @@
         "count": 89,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -543,6 +565,8 @@
     {
       "id": "balikpapan",
       "name": "Balikpapan, Kalimantan Timur",
+      "lat": -1.26753,
+      "lon": 116.82887,
       "ispu": {
         "value": null,
         "status": "link_only",
@@ -559,7 +583,7 @@
         "count": 96,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T00:37:59.559Z"
+        "updated_at": "2026-10-14T00:39:07.940Z"
       },
       "wind_dir": "Barat",
       "outlook": [

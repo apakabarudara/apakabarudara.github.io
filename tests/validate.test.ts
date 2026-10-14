@@ -6,6 +6,8 @@ import { validateReport } from '../ingest/validate.ts';
 const location = (overrides: Partial<LocationReport> = {}): LocationReport => ({
   id: 'pontianak',
   name: 'Pontianak, Kalimantan Barat',
+  lat: -0.03194,
+  lon: 109.325,
   ispu: { value: null, status: 'link_only', source_url: 'https://ispu.kemenlh.go.id/app/#/' },
   pm25_model: { value: 88.1, unit: 'ug/m3', band: 3, source: 'CAMS global via Open-Meteo', updated_at: '2026-10-14T00:00:00.000Z' },
   hotspots_24h: { count: 0, radius_km: 100, source: 'NASA FIRMS VIIRS NOAA-20 NRT', updated_at: '2026-10-14T00:30:00.000Z' },
@@ -34,12 +36,14 @@ describe('validateReport', () => {
 
   it('rejects impossible values', () => {
     const bad = location({
+      lat: Number.NaN,
       pm25_model: { value: Number.NaN, unit: 'ug/m3', band: 3, source: 'x', updated_at: '' },
       hotspots_24h: { count: -1, radius_km: 100, source: 'x', updated_at: '2026-10-14T00:30:00.000Z' },
       wind_dir: ' ',
       outlook: []
     });
     assert.deepEqual(validateReport(report(bad), ['pontianak']), [
+      'pontianak: coordinates invalid: NaN,109.325',
       'pontianak: pm25_model.value invalid: NaN',
       'pontianak: pm25_model.updated_at missing',
       'pontianak: hotspots_24h.count invalid: -1',
