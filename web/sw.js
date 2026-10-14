@@ -1,6 +1,6 @@
 // Service worker template. vite.config.js fills in VERSION and PRECACHE at build time.
 // Page load: network first (short wait), so an online visitor always gets the current index.html and its current assets; the cached copy is the
-// offline fallback. Hashed assets: cache first. data/latest.json: network first, last copy as fallback, so the page still opens offline and its
+// offline fallback. Hashed assets: cache first. data/latest.json and data/hotspots.json: network first, last copy as fallback, so the page still opens offline and its
 // own stale/expired logic decides what to show.
 const VERSION = '__VERSION__';
 const PRECACHE = __PRECACHE__;
@@ -8,6 +8,7 @@ const SHELL_CACHE = `bng-shell-${VERSION}`;
 const DATA_CACHE = 'bng-data';
 const META_CACHE = 'bng-meta';
 const DATA_URL = new URL('data/latest.json', self.registration.scope).href;
+const HOTSPOTS_URL = new URL('data/hotspots.json', self.registration.scope).href;
 const INDEX_URL = new URL('index.html', self.registration.scope).href;
 const META_URL = new URL('bng-meta.json', self.registration.scope).href;
 const NETWORK_WAIT_MS = 4000;
@@ -66,11 +67,11 @@ async function assetFirst(request) {
   return res;
 }
 
-async function networkFirst(request, event) {
+async function networkFirst(request, event, key) {
   const cache = await caches.open(DATA_CACHE);
-  const cached = await cache.match(DATA_URL, { ignoreVary: true });
+  const cached = await cache.match(key, { ignoreVary: true });
   const fromNetwork = fetch(request).then(async res => {
-    if (res.ok) await cache.put(DATA_URL, res.clone());
+    if (res.ok) await cache.put(key, res.clone());
     return res;
   });
   if (!cached) return fromNetwork;
@@ -87,8 +88,9 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin) return;
   // Satellite photos change every hour and are meaningless without their date: always the network, never a cached copy.
   if (url.pathname.includes('/sat/')) return;
-  if (url.href === DATA_URL) {
-    event.respondWith(networkFirst(request, event));
+  // hotspots.json is not seeded on install (~110 KB): the first online fetch from the satellite sheet caches it.
+  if (url.href === DATA_URL || url.href === HOTSPOTS_URL) {
+    event.respondWith(networkFirst(request, event, url.href));
     return;
   }
   event.respondWith(request.mode === 'navigate' ? pageLoad(request) : assetFirst(request));
