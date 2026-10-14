@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T12:04:26.490Z",
+  "generated_at": "2026-10-14T12:54:11.842Z",
   "locations": [
     {
       "id": "pekanbaru",
@@ -22,39 +22,39 @@
         "count": 2,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
-      "wind_dir": "Barat",
+      "wind_dir": "Selatan",
       "outlook": [
         {
           "date": "2026-10-14",
           "pm25_mean": 70.9,
           "band": 3,
-          "rain_mm": 2.8
+          "rain_mm": 2.5
         },
         {
           "date": "2026-10-15",
           "pm25_mean": 66.7,
           "band": 3,
-          "rain_mm": 3.6
+          "rain_mm": 2.9
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 42.9,
           "band": 2,
-          "rain_mm": 2.4
+          "rain_mm": 5.7
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 52.1,
           "band": 2,
-          "rain_mm": 5.7
+          "rain_mm": 7.9
         },
         {
           "date": "2026-10-18",
           "pm25_mean": 43.6,
           "band": 2,
-          "rain_mm": 8.1
+          "rain_mm": 12.9
         }
       ],
       "next_hours": [
@@ -177,39 +177,39 @@
         "count": 1,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
-      "wind_dir": "Barat",
+      "wind_dir": "Timur",
       "outlook": [
         {
           "date": "2026-10-14",
           "pm25_mean": 66.8,
           "band": 3,
-          "rain_mm": 2.6
+          "rain_mm": 0.9
         },
         {
           "date": "2026-10-15",
           "pm25_mean": 33.7,
           "band": 2,
-          "rain_mm": 7.9
+          "rain_mm": 3.8
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 25.7,
           "band": 2,
-          "rain_mm": 6.5
+          "rain_mm": 3.1
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 27.2,
           "band": 2,
-          "rain_mm": 6.8
+          "rain_mm": 14.7
         },
         {
           "date": "2026-10-18",
           "pm25_mean": 27.4,
           "band": 2,
-          "rain_mm": 9
+          "rain_mm": 10.4
         }
       ],
       "next_hours": [
@@ -329,12 +329,12 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 66,
+        "count": 74,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
-      "wind_dir": "Timur",
+      "wind_dir": "Timur laut",
       "outlook": [
         {
           "date": "2026-10-14",
@@ -346,13 +346,13 @@
           "date": "2026-10-15",
           "pm25_mean": 84.7,
           "band": 3,
-          "rain_mm": 0
+          "rain_mm": 0.1
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 107.8,
           "band": 3,
-          "rain_mm": 0.3
+          "rain_mm": 0.5
         },
         {
           "date": "2026-10-17",
@@ -484,10 +484,10 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 376,
+        "count": 415,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -507,7 +507,7 @@
           "date": "2026-10-16",
           "pm25_mean": 105.4,
           "band": 3,
-          "rain_mm": 2.7
+          "rain_mm": 4.2
         },
         {
           "date": "2026-10-17",
@@ -639,42 +639,42 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 0,
+        "count": 4,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
-      "wind_dir": "Selatan",
+      "wind_dir": "Timur",
       "outlook": [
         {
           "date": "2026-10-14",
           "pm25_mean": 74.9,
           "band": 3,
-          "rain_mm": 12.7
+          "rain_mm": 8.6
         },
         {
           "date": "2026-10-15",
           "pm25_mean": 86.8,
           "band": 3,
-          "rain_mm": 10.7
+          "rain_mm": 7.1
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 35.3,
           "band": 2,
-          "rain_mm": 16.2
+          "rain_mm": 10
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 44.7,
           "band": 2,
-          "rain_mm": 11.3
+          "rain_mm": 13.9
         },
         {
           "date": "2026-10-18",
           "pm25_mean": 41.4,
           "band": 2,
-          "rain_mm": 5.4
+          "rain_mm": 10.9
         }
       ],
       "next_hours": [
@@ -794,42 +794,42 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 75,
+        "count": 201,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
-      "wind_dir": "Utara",
+      "wind_dir": "Tenggara",
       "outlook": [
         {
           "date": "2026-10-14",
           "pm25_mean": 159.8,
           "band": 4,
-          "rain_mm": 4.5
+          "rain_mm": 1.5
         },
         {
           "date": "2026-10-15",
           "pm25_mean": 264.6,
           "band": 5,
-          "rain_mm": 14.5
+          "rain_mm": 9.5
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 190.6,
           "band": 4,
-          "rain_mm": 5.6
+          "rain_mm": 18.4
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 210.5,
           "band": 4,
-          "rain_mm": 10.8
+          "rain_mm": 12.7
         },
         {
           "date": "2026-10-18",
           "pm25_mean": 130.8,
           "band": 3,
-          "rain_mm": 0.7
+          "rain_mm": 0.3
         }
       ],
       "next_hours": [
@@ -949,10 +949,10 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 2778,
+        "count": 3075,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
       "wind_dir": "Selatan",
       "outlook": [
@@ -960,19 +960,19 @@
           "date": "2026-10-14",
           "pm25_mean": 1086.4,
           "band": 5,
-          "rain_mm": 0.3
+          "rain_mm": 0.2
         },
         {
           "date": "2026-10-15",
           "pm25_mean": 953.1,
           "band": 5,
-          "rain_mm": 3
+          "rain_mm": 1.7
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 1055.3,
           "band": 5,
-          "rain_mm": 9.9
+          "rain_mm": 2.3
         },
         {
           "date": "2026-10-17",
@@ -984,7 +984,7 @@
           "date": "2026-10-18",
           "pm25_mean": 866.9,
           "band": 5,
-          "rain_mm": 4.5
+          "rain_mm": 3.4
         }
       ],
       "next_hours": [
@@ -1104,10 +1104,10 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 1513,
+        "count": 2189,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
       "wind_dir": "Selatan",
       "outlook": [
@@ -1115,31 +1115,31 @@
           "date": "2026-10-14",
           "pm25_mean": 392.7,
           "band": 5,
-          "rain_mm": 0.1
+          "rain_mm": 0.7
         },
         {
           "date": "2026-10-15",
           "pm25_mean": 368.3,
           "band": 5,
-          "rain_mm": 3.4
+          "rain_mm": 3.3
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 377.8,
           "band": 5,
-          "rain_mm": 3.5
+          "rain_mm": 2.7
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 433.2,
           "band": 5,
-          "rain_mm": 0.6
+          "rain_mm": 0.3
         },
         {
           "date": "2026-10-18",
           "pm25_mean": 477.6,
           "band": 5,
-          "rain_mm": 0
+          "rain_mm": 0.3
         }
       ],
       "next_hours": [
@@ -1259,10 +1259,10 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 1253,
+        "count": 1695,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -1276,25 +1276,25 @@
           "date": "2026-10-15",
           "pm25_mean": 60.5,
           "band": 3,
-          "rain_mm": 1.5
+          "rain_mm": 1.2
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 48.2,
           "band": 2,
-          "rain_mm": 0.5
+          "rain_mm": 0.3
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 46.3,
           "band": 2,
-          "rain_mm": 0.1
+          "rain_mm": 0
         },
         {
           "date": "2026-10-18",
           "pm25_mean": 52,
           "band": 2,
-          "rain_mm": 0
+          "rain_mm": 0.3
         }
       ],
       "next_hours": [
@@ -1414,12 +1414,12 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 449,
+        "count": 699,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
-      "wind_dir": "Timur",
+      "wind_dir": "Tenggara",
       "outlook": [
         {
           "date": "2026-10-14",
@@ -1431,19 +1431,19 @@
           "date": "2026-10-15",
           "pm25_mean": 47.1,
           "band": 2,
-          "rain_mm": 1.8
+          "rain_mm": 2.4
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 38.6,
           "band": 2,
-          "rain_mm": 0.1
+          "rain_mm": 0
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 40.4,
           "band": 2,
-          "rain_mm": 0.5
+          "rain_mm": 0
         },
         {
           "date": "2026-10-18",
@@ -1569,10 +1569,10 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 69,
+        "count": 181,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -1586,25 +1586,25 @@
           "date": "2026-10-15",
           "pm25_mean": 37.8,
           "band": 2,
-          "rain_mm": 3.9
+          "rain_mm": 3
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 34.5,
           "band": 2,
-          "rain_mm": 3.6
+          "rain_mm": 2.9
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 23.7,
           "band": 2,
-          "rain_mm": 4.4
+          "rain_mm": 7
         },
         {
           "date": "2026-10-18",
           "pm25_mean": 21.7,
           "band": 2,
-          "rain_mm": 3.6
+          "rain_mm": 2.1
         }
       ],
       "next_hours": [
@@ -1724,10 +1724,10 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 96,
+        "count": 123,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -1741,25 +1741,25 @@
           "date": "2026-10-15",
           "pm25_mean": 42.2,
           "band": 2,
-          "rain_mm": 0.9
+          "rain_mm": 0.4
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 21,
           "band": 2,
-          "rain_mm": 0.5
+          "rain_mm": 0.4
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 16.6,
           "band": 2,
-          "rain_mm": 3.2
+          "rain_mm": 3.1
         },
         {
           "date": "2026-10-18",
           "pm25_mean": 19.1,
           "band": 2,
-          "rain_mm": 1.8
+          "rain_mm": 4.6
         }
       ],
       "next_hours": [
@@ -1879,10 +1879,10 @@
         "updated_at": "2026-10-14T12:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 3,
+        "count": 13,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-14T12:04:26.490Z"
+        "updated_at": "2026-10-14T12:54:11.842Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -1896,25 +1896,25 @@
           "date": "2026-10-15",
           "pm25_mean": 40,
           "band": 2,
-          "rain_mm": 2.2
+          "rain_mm": 1.6
         },
         {
           "date": "2026-10-16",
           "pm25_mean": 22.2,
           "band": 2,
-          "rain_mm": 2.5
+          "rain_mm": 1.3
         },
         {
           "date": "2026-10-17",
           "pm25_mean": 10.7,
           "band": 1,
-          "rain_mm": 3.5
+          "rain_mm": 4.7
         },
         {
           "date": "2026-10-18",
           "pm25_mean": 7,
           "band": 1,
-          "rain_mm": 4.4
+          "rain_mm": 4.6
         }
       ],
       "next_hours": [
