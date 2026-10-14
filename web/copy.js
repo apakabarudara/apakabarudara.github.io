@@ -234,8 +234,8 @@ export const UI = {
   expiredHeadline: 'Datanya sudah terlalu lama.',
   expiredText: 'Data terakhir lebih dari 12 jam lalu, jadi kondisi udara sekarang tidak bisa dinilai. Cek angka resmi pemerintah (ISPU).',
 
-  moreTitle: 'Cek napas & fakta asap',
-  moreTitleNoFacts: 'Cek napas hari ini',
+  moreTitle: 'Cek langit & fakta asap',
+  moreTitleNoFacts: 'Cek langit hari ini',
   satTitle: 'Foto satelit',
   satAlt: kota => `Foto satelit NASA untuk ${kota}`,
   satCaption: tanggal => `Foto satelit NASA, ${tanggal}. Titik merah: titik panas. Kalau berawan, asap bisa tertutup awan.`,
@@ -259,7 +259,7 @@ export const UI = {
   creditLine: ['Proyek sukarela oleh ', 'Khi Hady', ' · kodenya terbuka di ', 'GitHub']
 };
 
-/** Facts in the "Cek napas & fakta asap" fold. Plain statements; hidden at levels 4–5. */
+/** Facts in the "Cek langit & fakta asap" fold. Plain statements; hidden at levels 4–5. */
 export const FACTS = [
   'Asap tidak mengenal batas negara. Bisa menyeberang sampai Sarawak dan membuat udara di sana ikut tidak sehat.',
   'Lahan gambut bisa terbakar diam-diam di bawah tanah. Api yang kelihatan padam belum tentu benar-benar selesai.',

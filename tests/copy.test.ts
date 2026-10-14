@@ -295,8 +295,8 @@ describe('UI', () => {
 
   it('words the batch 3 P1 lines as agreed', () => {
     assert.equal(UI.stamp('11.00 WIB'), 'Diperbarui 11.00 WIB · bisa meleset ·');
-    assert.equal(UI.moreTitle, 'Cek napas & fakta asap');
-    assert.equal(UI.moreTitleNoFacts, 'Cek napas hari ini');
+    assert.equal(UI.moreTitle, 'Cek langit & fakta asap');
+    assert.equal(UI.moreTitleNoFacts, 'Cek langit hari ini');
     assert.ok(FACTS.includes('El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.'));
     assert.ok(!FACTS.some(f => /berhari-hari di bawah permukaan/.test(f)));
     assert.equal(UI.storyLinkCopied, 'Link kota ini sudah disalin. Di Instagram, tambahkan stiker Link lalu tempel.');
