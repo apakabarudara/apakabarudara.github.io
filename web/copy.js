@@ -187,7 +187,7 @@ export const UI = {
   factsNext: 'Fakta lain',
   pollTitle: 'Bagaimana napas hari ini?',
   feedbackButton: 'Kirim masukan',
-  feedbackNote: 'Terbuka di Google Form. Bisa lapor masalah, kasih saran, atau minta kota baru.',
+  feedbackNote: 'Terbuka di Tally. Bisa lapor masalah, kasih saran, atau minta kota baru.',
 
   footerDisclaimer: `Level dan angka di sini perkiraan, bukan hasil alat ukur. Untuk keputusan kesehatan, ikuti panduan resmi. Darurat kesehatan: ${EMERGENCY_NUMBER}.`,
   creditsIntro: 'Sumber data:',
@@ -197,7 +197,7 @@ export const UI = {
   creditFirms: 'NASA FIRMS',
   creditIspu: 'batas level: ISPU (Permen LHK P.14/2020).',
   privacyTitle: 'Privasi',
-  privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban "Bagaimana napas hari ini?" tidak dikirim ke mana pun. Masukan lewat Google Form tersimpan di Google.',
+  privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban "Bagaimana napas hari ini?" tidak dikirim ke mana pun. Masukan lewat Tally tersimpan di Tally.',
   creditLine: ['Proyek sukarela oleh ', 'Khi Hady', ' · kodenya terbuka di ', 'GitHub']
 };
 

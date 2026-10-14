@@ -212,8 +212,8 @@ export const levelRange = bands => ({ min: Math.min(...bands), max: Math.max(...
 /** 'today' or 'tomorrow' for an hour inside the 24-hour strip, by the viewer's local dates. */
 export const relativeDay = (iso, now) => (localDate(new Date(iso)) === localDate(now) ? 'today' : 'tomorrow');
 
-/** Link to the feedback form. With an entry id the city is prefilled (Google Forms "pp_url"); without one the base link is used as is. */
-export function feedbackUrl(base, entryId, cityName) {
-  if (!entryId || !cityName) return base;
-  return `${base}${base.includes('?') ? '&' : '?'}usp=pp_url&entry.${entryId}=${encodeURIComponent(cityName)}`;
+/** Link to the feedback form. With a query parameter name and a city, the city is passed as that parameter (a Tally hidden field); otherwise the base link is used as is. */
+export function feedbackUrl(base, param, cityName) {
+  if (!param || !cityName) return base;
+  return `${base}${base.includes('?') ? '&' : '?'}${param}=${encodeURIComponent(cityName)}`;
 }

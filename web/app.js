@@ -7,8 +7,8 @@ import {
 
 const DATA_URL = './data/latest.json';
 const ISPU_URL = 'https://ispu.kemenlh.go.id/app/#/';
-const FEEDBACK_URL = ''; // Google Form link; empty hides the feedback row
-const FEEDBACK_CITY_ENTRY = ''; // the form's "entry.<id>" for its city question; empty skips the prefill
+const FEEDBACK_URL = 'https://tally.so/r/vG7RPD'; // Tally form link; empty hides the feedback row
+const FEEDBACK_CITY_PARAM = 'kota'; // the form's hidden field that records the city
 const CITY_KEY = 'bisanapasgak.city';
 const WATCH_KEY = 'bisanapasgak.watch';
 const INSTALL_KEY = 'bisanapasgak.installHidden';
@@ -253,7 +253,7 @@ function render() {
   $('banner').hidden = state !== 'stale';
   $('banner').textContent = UI.stale(when(report.generated_at));
   const loc = selected();
-  $('feedbackBtn').href = feedbackUrl(FEEDBACK_URL, FEEDBACK_CITY_ENTRY, loc ? cityName(loc) : '');
+  $('feedbackBtn').href = feedbackUrl(FEEDBACK_URL, FEEDBACK_CITY_PARAM, loc ? cityName(loc) : '');
   if (!loc) {
     renderOverview();
     return;
@@ -568,6 +568,7 @@ $('iosStep1').textContent = UI.iosSteps[0];
 $('iosStep2').textContent = UI.iosSteps[1];
 $('health').href = mapsSearchUrl(UI.healthQuery);
 $('feedbackRow').hidden = !FEEDBACK_URL;
+$('feedbackBtn').href = FEEDBACK_URL; // render() adds the city; this covers the loading, error and expired views
 $('call').setAttribute('aria-label', UI.call(EMERGENCY_NUMBER));
 $('locate').setAttribute('aria-label', UI.nearestLabel);
 $('select').setAttribute('aria-label', UI.pickCity);

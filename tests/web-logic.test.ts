@@ -270,15 +270,25 @@ describe('relativeDay', () => {
 });
 
 describe('feedbackUrl', () => {
-  const base = 'https://docs.google.com/forms/d/e/abc/viewform';
-  it('prefills the city when the entry id is set, and handles a base with a query', () => {
-    assert.equal(feedbackUrl(base, '123', 'Pangkal Pinang'), `${base}?usp=pp_url&entry.123=Pangkal%20Pinang`);
-    assert.equal(feedbackUrl(`${base}?hl=id`, '123', 'Jambi'), `${base}?hl=id&usp=pp_url&entry.123=Jambi`);
+  const base = 'https://tally.so/r/abc';
+  it('appends the city as a query parameter', () => {
+    assert.equal(feedbackUrl(base, 'kota', 'Jambi'), `${base}?kota=Jambi`);
   });
 
-  it('returns the base without an entry id or a city', () => {
+  it('joins with & when the base already has a query', () => {
+    assert.equal(feedbackUrl(`${base}?hl=id`, 'kota', 'Jambi'), `${base}?hl=id&kota=Jambi`);
+  });
+
+  it('encodes a city with a space', () => {
+    assert.equal(feedbackUrl(base, 'kota', 'Palangka Raya'), `${base}?kota=Palangka%20Raya`);
+  });
+
+  it('returns the base without a city', () => {
+    assert.equal(feedbackUrl(base, 'kota', ''), base);
+  });
+
+  it('returns the base without a param', () => {
     assert.equal(feedbackUrl(base, '', 'Jambi'), base);
-    assert.equal(feedbackUrl(base, '123', ''), base);
   });
 });
 

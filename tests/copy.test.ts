@@ -171,7 +171,7 @@ describe('UI', () => {
     assert.equal(UI.stripLegend, 'Warna batang = level per jam. Makin tinggi, makin tebal asap.');
     assert.equal(UI.stripRange('Sangat Tidak Sehat', 'Berbahaya'), 'dari Sangat Tidak Sehat sampai Berbahaya');
     assert.equal(UI.stripRange('Berbahaya', 'Berbahaya'), 'semuanya Berbahaya');
-    assert.match(UI.privacy, /tidak dikirim ke mana pun\. Masukan lewat Google Form tersimpan di Google\./);
+    assert.match(UI.privacy, /tidak dikirim ke mana pun\. Masukan lewat Tally tersimpan di Tally\./);
     assert.ok(!('feedbackSend' in UI) && !('feedbackThanks' in UI) && !('sensitiveIntro' in UI));
   });
 
