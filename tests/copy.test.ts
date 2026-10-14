@@ -343,7 +343,7 @@ describe('UI', () => {
     assert.equal(UI.creditGibs, 'NASA GIBS / Worldview (VIIRS)');
     assert.ok(UI.methodSources.some(l => /^Foto satelit: .*NASA GIBS/.test(l)));
     assert.ok(UI.methodSources.some(l => /^Foto satelit: .*gibs\.earthdata\.nasa\.gov.*tidak ada data lain/.test(l)));
-    assert.equal(UI.satHint, 'Geser & cubit untuk perbesar');
+    assert.equal(UI.satHint, 'Geser & cubit untuk perbesar. Ketuk peta untuk cek sekitarmu.');
     assert.ok(!('satExplore' in UI) && !('satBack' in UI));
     for (const line of [UI.satThumbLabel, UI.satHint, UI.moreTitle, UI.satMapCaption, UI.satMapFail, UI.satMapLabel('x'), UI.privacy, ...UI.methodSources]) assert.doesNotMatch(line, /\b(aman|akurat|pasti|gratis|boleh|harus)\b/i);
     for (const line of [UI.satCaption('x'), UI.satPin, UI.satWind('Timur'), UI.satNote, UI.satAlt('x'), UI.satTitle]) assert.doesNotMatch(line, /aman|akurat|pasti/i);

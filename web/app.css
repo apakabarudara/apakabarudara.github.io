@@ -360,11 +360,16 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .sat-big { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: var(--r-md, 12px); background: var(--ink-2); margin-bottom: var(--sp-3); }
 .sat-stage { position: relative; margin-bottom: var(--sp-3); }
 .sat-stage[hidden] { display: none; }
-.sat-hint { position: absolute; left: 50%; bottom: var(--sp-6, 24px); z-index: 1000; transform: translateX(-50%); margin: 0; padding: 6px 14px; border-radius: 999px; background: rgba(0, 0, 0, .75); color: #fff; font-size: var(--fs-sm); white-space: nowrap; pointer-events: none; }
+.sat-hint { position: absolute; left: 50%; bottom: var(--sp-6, 24px); z-index: 1000; transform: translateX(-50%); margin: 0; padding: 6px 14px; border-radius: 999px; background: rgba(0, 0, 0, .75); color: #fff; font-size: var(--fs-sm); width: max-content; max-width: calc(100% - 24px); text-align: center; pointer-events: none; }
 .sat-hint[hidden] { display: none; }
 .sat-map { width: 100%; aspect-ratio: 1; border-radius: var(--r-md, 12px); overflow: hidden; background: var(--ink-2); touch-action: none; overscroll-behavior: contain; }
 .sat-frame[hidden] { display: none; }
 .sat-map .map-pin { box-sizing: border-box; width: 22px; height: 22px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1.5px rgba(0, 0, 0, .55), inset 0 0 0 1.5px rgba(0, 0, 0, .55); }
+.sat-map .map-you { box-sizing: border-box; width: 18px; height: 18px; border: 3px solid #fff; border-radius: 50%; background: #1a73e8; box-shadow: 0 0 0 1.5px rgba(0, 0, 0, .55); }
+.sat-map .map-wind { display: flex; flex-direction: column; align-items: center; color: #fff; font-size: var(--fs-xs); font-weight: var(--fw-strong); text-shadow: 0 0 3px rgba(0, 0, 0, .9); pointer-events: none; }
+.sat-nearby { margin: 0 0 var(--sp-2); }
+.sat-nearby[hidden] { display: none; }
+.sat-nearby p { margin: 0 0 var(--sp-1); }
 .sat-map .map-coast { filter: invert(1) drop-shadow(0 0 1px rgba(0, 0, 0, .9)); }
 .sat-map .map-name { padding: 2px 8px; border: 0; border-radius: 10px; background: rgba(20, 12, 28, .72); color: #fff; font-size: var(--fs-xs); font-weight: var(--fw-strong); box-shadow: none; pointer-events: none; }
 .sat-map .map-name::before { display: none; }

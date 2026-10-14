@@ -760,11 +760,22 @@ function showPhoto(note) {
   satMap?.destroy();
   satMap = null;
   hideHint();
+  resetNearby();
   $('satStage').hidden = true;
   document.querySelector('#satSheet .sat-frame').hidden = false;
   $('satMapNote').hidden = false;
   $('satMapNote').textContent = note;
   $('satBigCaption').textContent = $('satThumb').dataset.caption;
+}
+// Optional extra: where the last 24 h of fires are. Anything but a good file means no "Di sekitarmu" card, quietly.
+const getHotspots = () => fetch('./data/hotspots.json', { cache: 'no-cache' }).then(res => (res.ok ? res.json() : null)).catch(() => null);
+function showNearby(lines) {
+  if (!satMap) return; // a late GPS answer after the sheet closed
+  $('satNearbyText').textContent = lines.join(' ');
+  $('satNearby').hidden = false;
+}
+function resetNearby() {
+  $('satNearby').hidden = true;
 }
 async function mountSatMap() {
   const loc = selected();
@@ -772,9 +783,10 @@ async function mountSatMap() {
   if (!loc || !date) return;
   $('satMap').setAttribute('aria-label', UI.satMapLabel(cityName(loc)));
   try {
-    const { createSatMap } = await import('./satmap.js');
+    const [{ createSatMap }, hotspots] = await Promise.all([import('./satmap.js'), getHotspots()]);
     if (!satOpen) return;
-    satMap = createSatMap($('satMap'), { lat: loc.lat, lon: loc.lon, name: cityName(loc), date, credit: UI.satMapCredit, onFail: () => showPhoto(UI.satMapFail), onInteract: hideHint });
+    satMap = createSatMap($('satMap'), { lat: loc.lat, lon: loc.lon, name: cityName(loc), date, credit: UI.satMapCredit, onFail: () => showPhoto(UI.satMapFail), onInteract: hideHint, hotspots, windDir: loc.wind_dir, onResult: showNearby });
+    if (satMap.areaNote) $('satBigCaption').textContent += ` ${satMap.areaNote}`;
     if (store.read(MAP_HINT_KEY) !== '1') {
       store.write(MAP_HINT_KEY, '1');
       $('satHint').hidden = false;
@@ -790,6 +802,7 @@ $('satSheet').addEventListener('didDismiss', () => {
   satMap?.destroy();
   satMap = null;
   hideHint();
+  resetNearby();
 });
 
 // A daily calendar reminder at 07:00 for 30 days, made on the device: no account and no server.
