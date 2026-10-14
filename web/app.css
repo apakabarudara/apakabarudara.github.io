@@ -1,4 +1,4 @@
-/* Variant B: Ionic components themed to our tokens. Level colours come only from tokens.css via --lv-*. */
+/* Ionic components themed to our tokens. Level colours come only from tokens.css via --lv-*. */
 
 /* Ionic theme. Steps are the greys Ionic's components ask for, mixed from our page and ink colours so dark mode follows. */
 :root {
@@ -83,7 +83,8 @@ ion-card {
   box-shadow: 0 12px 28px -14px var(--lv-shadow), 0 2px 6px -2px var(--lv-shadow), inset 0 0 0 1px var(--hairline);
 }
 #overview .hero { padding-bottom: var(--sp-panel); }
-#overview .headline { padding-right: 76px; }
+#overview .headline, #message .headline { padding-right: 76px; }
+#message { padding-bottom: var(--sp-panel); }
 .lvl { margin: 0; padding-right: 84px; font-size: var(--fs-sm); font-weight: var(--fw-display); color: var(--lv-label); }
 .headline { margin: var(--sp-1) 0 0; font-size: clamp(var(--fs-xl), 7.6vw, var(--fs-2xl)); font-weight: var(--fw-display); line-height: 1.12; letter-spacing: -.015em; }
 .quip { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); }
@@ -157,7 +158,6 @@ ion-badge.lv { --background: var(--lv-soft); --color: var(--lv-soft-ink); --padd
   .activity { flex-direction: column; align-items: flex-start; gap: var(--sp-1); }
   .lv-btn .ic { display: none; }
 }
-.credit { margin: 0; font-size: var(--fs-xs); color: var(--ink-2); text-align: center; }
 
 /* "Apa ini?": auto-height Ionic sheet modal */
 ion-modal.sheet { --height: auto; --background: var(--surface); --border-radius: var(--r-card); --backdrop-opacity: .45; }
@@ -190,3 +190,68 @@ ion-modal.sheet { --height: auto; --background: var(--surface); --border-radius:
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Banners: stale data and preview */
+.banner { border-radius: var(--r-btn); padding: var(--sp-3) var(--sp-4); background: var(--notice); color: var(--notice-ink); font-size: var(--fs-sm); font-weight: var(--fw-label); }
+
+/* Loading card */
+.skeleton { display: flex; flex-direction: column; gap: var(--sp-2); margin-top: var(--sp-4); }
+.skeleton span { display: block; height: 14px; width: 85%; border-radius: var(--r-sm); background: currentColor; opacity: .12; }
+.skeleton span + span { width: 60%; }
+#message ion-button.wide { --color: var(--lv-ink); --border-color: currentColor; --border-width: 1.5px; }
+#message[aria-busy="true"] ion-button { display: none; }
+
+/* Symptom lines (level 3+): two short paragraphs on a tonal strip */
+.symptoms { display: flex; flex-direction: column; gap: var(--sp-2); padding: 10px var(--sp-3); border-radius: var(--r-btn); background: var(--lv-soft); color: var(--lv-soft-ink); }
+.symptoms p { margin: 0; }
+ion-button.soft { --background: var(--brand-soft); --background-activated: var(--brand-soft); --background-hover: var(--brand-soft); --color: var(--brand-soft-ink); }
+.small { margin: var(--sp-3) 0 0; font-size: var(--fs-xs); color: var(--ink-2); }
+
+/* Outlook */
+.days { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: var(--sp-2); margin-top: var(--sp-3); }
+.day {
+  position: relative; min-width: 0; min-height: 56px; border: 0; border-radius: var(--r-btn); padding: var(--sp-3) var(--sp-2); cursor: pointer; overflow: hidden;
+  font: inherit; background: var(--lv-soft); color: var(--lv-soft-ink); display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center;
+}
+.day .d { font-size: var(--fs-md); font-weight: var(--fw-display); }
+.day .n { font-size: var(--fs-xs); font-weight: var(--fw-label); line-height: 1.25; }
+.day[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--line); }
+.day[aria-pressed="true"]::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: var(--lv-dot); }
+.day-detail { margin: var(--sp-3) 0 0; font-size: var(--fs-sm); }
+.day-detail strong { display: block; font-weight: var(--fw-strong); }
+.legend { margin: var(--sp-1) 0 0; font-size: var(--fs-xs); color: var(--ink-2); }
+
+/* Folded cards: Ionic accordions */
+ion-card.fold { padding: 0; }
+.fold ion-accordion-group, .fold ion-accordion { background: transparent; }
+.fold ion-item[slot="header"] { --background: transparent; --min-height: 60px; --padding-start: var(--sp-panel); --inner-padding-end: var(--sp-panel); --color: var(--ink); }
+.fold h2 { margin: 0; font-size: var(--fs-lg); font-weight: var(--fw-strong); letter-spacing: -.01em; }
+.fold ion-accordion::part(icon) { color: var(--ink-2); }
+.fold-body { padding: 0 var(--sp-panel) var(--sp-panel); }
+.rows { margin: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); padding: 12px 0; border-top: 1px solid var(--line); }
+.row:first-child { border-top: 0; }
+.row dt { color: var(--ink-2); font-size: var(--fs-sm); }
+.row dd { margin: 0; font-weight: var(--fw-strong); text-align: right; font-variant-numeric: tabular-nums; }
+.more-body { display: flex; flex-direction: column; gap: var(--sp-5); font-size: var(--fs-md); }
+.more-body p { margin: 0; }
+.more-body .note { margin-top: 0; }
+.more-body h3 { margin: 0 0 var(--sp-2); font-size: var(--fs-md); font-weight: var(--fw-strong); }
+.facts-head { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-2); }
+.facts-head h3 { margin: 0; }
+ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color: var(--brand); --padding-start: var(--sp-2); --padding-end: var(--sp-2); }
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); }
+.choice { min-height: 50px; padding: var(--sp-2); border: 0; border-radius: var(--r-btn); background: var(--bg); color: var(--ink); font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-label); cursor: pointer; }
+.choice[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
+.textarea { display: block; width: 100%; min-height: 96px; margin-top: var(--sp-2); padding: var(--sp-3); border: 0; border-radius: var(--r-btn); background: var(--bg); color: var(--ink); font: inherit; font-size: 16px; resize: none; }
+.end { display: flex; justify-content: flex-end; margin-top: var(--sp-2); }
+.end ion-button { min-height: 44px; margin: 0; --border-radius: var(--r-btn); }
+.note.warn { color: var(--ink); font-weight: var(--fw-strong); }
+#shareBlock .note { text-align: center; }
+
+/* Footer: credits stay visible; privacy is folded */
+.footer { display: flex; flex-direction: column; gap: var(--sp-3); margin-top: var(--sp-2); padding-top: var(--sp-5); border-top: 1px solid var(--line); font-size: var(--fs-xs); color: var(--ink-2); line-height: 1.5; }
+.footer p { margin: 0; }
+.footer a { color: var(--ink); padding: 14px 2px; margin: -14px -2px; } /* inline links: a 44px tap area without moving the text */
+.fine summary { cursor: pointer; display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; font-weight: var(--fw-label); color: var(--ink); }
+.fine p { margin-top: 0; }

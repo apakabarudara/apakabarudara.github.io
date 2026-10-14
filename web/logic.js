@@ -98,3 +98,16 @@ export function ago(fromIso, now) {
   const minutes = Math.max(0, Math.round((now.getTime() - Date.parse(fromIso)) / 60000));
   return minutes < 60 ? `${minutes} menit lalu` : `${Math.round(minutes / 60)} jam lalu`;
 }
+
+/**
+ * `?city=&level=` shows a level for screenshots and design review. It only counts together with `preview=1`, so a link
+ * shared without it can never show a made-up level for real readers. Null means: ignore the query.
+ */
+export function previewOverride(search, ids) {
+  const query = new URLSearchParams(search);
+  if (query.get('preview') !== '1') return null;
+  const city = query.get('city');
+  const level = Number(query.get('level'));
+  if (!ids.includes(city) || !Number.isInteger(level) || level < 1 || level > 5) return null;
+  return { city, level };
+}

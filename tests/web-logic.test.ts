@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { activityStatuses, ago, bestWindow, freshness, greeting, mapsSearchUrl, nearest, rainKind, rankByLevel, resolveCity, upcomingDays } from '../web/logic.js';
+import { activityStatuses, ago, bestWindow, freshness, greeting, mapsSearchUrl, nearest, previewOverride, rainKind, rankByLevel, resolveCity, upcomingDays } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
 const hoursAgo = (h: number): string => new Date(NOW.getTime() - h * 3600e3).toISOString();
@@ -107,8 +107,8 @@ describe('greeting', () => {
 describe('mapsSearchUrl', () => {
   it('builds a Google Maps search without any position', () => {
     assert.equal(
-      mapsSearchUrl('rumah sakit dan puskesmas terdekat'),
-      'https://www.google.com/maps/search/?api=1&query=rumah%20sakit%20dan%20puskesmas%20terdekat'
+      mapsSearchUrl('fasilitas kesehatan terdekat'),
+      'https://www.google.com/maps/search/?api=1&query=fasilitas%20kesehatan%20terdekat'
     );
   });
 });
@@ -117,5 +117,21 @@ describe('ago', () => {
   it('speaks in minutes under an hour, then hours', () => {
     assert.equal(ago(hoursAgo(40 / 60), NOW), '40 menit lalu');
     assert.equal(ago(hoursAgo(3), NOW), '3 jam lalu');
+  });
+});
+
+describe('previewOverride', () => {
+  const ids = ['palangkaraya', 'pontianak'];
+
+  it('lets ?level= through only together with preview=1', () => {
+    assert.deepEqual(previewOverride('?city=palangkaraya&level=5&preview=1', ids), { city: 'palangkaraya', level: 5 });
+    assert.equal(previewOverride('?city=palangkaraya&level=5', ids), null);
+    assert.equal(previewOverride('?level=5', ids), null);
+    assert.equal(previewOverride('?city=palangkaraya&level=5&preview=0', ids), null);
+  });
+
+  it('rejects unknown cities and levels outside 1 to 5', () => {
+    assert.equal(previewOverride('?city=jakarta&level=3&preview=1', ids), null);
+    for (const level of ['0', '6', '2.5', 'x', '']) assert.equal(previewOverride(`?city=pontianak&level=${level}&preview=1`, ids), null, level);
   });
 });

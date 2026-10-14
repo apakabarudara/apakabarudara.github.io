@@ -1,51 +1,50 @@
 // Every user-facing line, in one place for review.
+// Principle: the app suggests, official sources prescribe, the user decides. Suggest ("sebaiknya", "ada baiknya"); never order.
 // Voice: everyday Indonesian. "kamu" only in the light parts (welcome, levels 1–2); levels 3–5, safety lines and errors
-// use plain imperatives and "tidak". Never joke about the reader's body or breathing.
-// DRAFT: level 3–5 headlines, actions, activity statuses and the symptom line follow the plan's safety table, ISPU
+// use plain imperatives and "tidak". No slang older readers do not know. Never joke about the reader's body or breathing,
+// and no jokes at levels 4–5, "Lainnya" facts included. Numbers are estimates: say so once, in the label or headline.
+// DRAFT: level 3–5 safety copy, the activity statuses and the symptom lines follow the plan's safety table, ISPU
 // (Permen LHK P.14/2020, Lampiran II) and Kemenkes haze guidance. They still need sign-off from the health reviewer.
 
 /** Who counts as sensitive, after Kemenkes: children, older people, pregnant women, people with lung or heart disease. */
 export const SENSITIVE = 'Anak, lansia, ibu hamil, sakit paru/jantung';
 
-/** Per ISPU level. quip and bubble only where the tone allows a joke. */
+/** Per ISPU level. quip only where the tone allows a light line (levels 1–2). */
 export const LEVELS = {
   1: {
     name: 'Baik',
-    headline: 'Udaranya lagi bagus banget.',
-    quip: 'Paru-parumu lagi joget. Yuk, keluar!',
-    everyone: ['Bebas beraktivitas di luar'],
+    headline: 'Udara diperkirakan bagus hari ini.',
+    quip: 'Waktu yang enak untuk keluar.',
+    everyone: ['Aktivitas di luar oke'],
     sensitive: [],
-    bubble: ['Yuk, keluar!', 'Hirup yang dalam~', 'Udaranya lagi cakep.'],
-    dayLine: 'Udara bagus, bebas beraktivitas.',
+    dayLine: 'Udara diperkirakan bagus.',
     activities: { laundry: 'ok', exercise: 'ok', windows: 'ok', kids: 'ok' },
     goodNews: true,
-    faskes: false,
+    health: false,
     emergency: false
   },
   2: {
     name: 'Sedang',
-    headline: 'Aman buat hampir semua.',
-    quip: 'Nggak sempurna, tapi masih oke.',
+    headline: 'Masih oke untuk kebanyakan orang.',
+    quip: 'Belum sempurna, tapi masih nyaman untuk keluar.',
     everyone: ['Aktivitas di luar masih oke'],
     sensitive: ['Kurangi olahraga berat yang lama di luar'],
-    bubble: ['Lumayan, sih.', 'Jangan memaksakan diri di lapangan.', 'Santai saja, nggak dramatis kok.'],
-    dayLine: 'Aman, tapi jangan olahraga terlalu berat.',
+    dayLine: 'Masih oke, hindari olahraga yang terlalu berat.',
     activities: { laundry: 'ok', exercise: 'caution', windows: 'ok', kids: 'ok' },
     goodNews: true,
-    faskes: false,
+    health: false,
     emergency: false
   },
   3: {
     name: 'Tidak Sehat',
     headline: 'Kurangi aktivitas di luar.',
-    quip: 'Paru-paru ikut demo.',
-    everyone: ['Kurangi olahraga dan kerja berat di luar'],
+    quip: null,
+    everyone: ['Kurangi olahraga di luar', 'Kalau bisa, kurangi kerja berat di luar. Kalau harus, istirahat lebih sering.'],
     sensitive: ['Lebih banyak di dalam ruangan'],
-    bubble: ['Minum air putih dulu, ya.', 'Paru-paru minta istirahat.'],
     dayLine: 'Kurangi aktivitas berat di luar.',
     activities: { laundry: 'no', exercise: 'no', windows: 'caution', kids: 'caution' },
     goodNews: false,
-    faskes: true,
+    health: true,
     emergency: false
   },
   4: {
@@ -54,11 +53,10 @@ export const LEVELS = {
     quip: null,
     everyone: ['Tutup jendela dan pintu', 'Kalau harus keluar, pakai masker N95'],
     sensitive: ['Tetap di dalam ruangan'],
-    bubble: null,
     dayLine: 'Rencanakan kegiatan di dalam ruangan.',
     activities: { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' },
     goodNews: false,
-    faskes: true,
+    health: true,
     emergency: true
   },
   5: {
@@ -67,55 +65,60 @@ export const LEVELS = {
     quip: null,
     everyone: ['Tutup jendela dan pintu', 'Keluar hanya kalau terpaksa, dan pakai masker N95'],
     sensitive: ['Tetap di dalam ruangan sepanjang hari'],
-    bubble: null,
     dayLine: 'Tetap di dalam ruangan sepanjang hari.',
     activities: { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' },
     goodNews: false,
-    faskes: true,
+    health: true,
     emergency: true
   }
 };
 
 /** "Hari ini cocok untuk…" tiles. Statuses come from LEVELS[n].activities. */
 export const ACTIVITIES = [
-  { id: 'laundry', icon: 'shirt', label: 'Jemur baju', notes: { ok: 'Aman', caution: 'Bisa hujan', no: 'Bau asap' } },
-  { id: 'exercise', icon: 'run', label: 'Olahraga di luar', notes: { ok: 'Boleh', caution: 'Yang sensitif: ringan saja', no: 'Tunda dulu' } },
-  { id: 'windows', icon: 'window', label: 'Buka jendela', notes: { ok: 'Boleh', caution: 'Saat asap tipis', no: 'Tutup' } },
-  { id: 'kids', icon: 'child', label: 'Anak main di luar', notes: { ok: 'Boleh', caution: 'Sebentar saja', no: 'Di dalam saja' } }
+  { id: 'laundry', icon: 'shirt', label: 'Jemur baju', notes: { ok: 'Oke', caution: 'Bisa hujan', no: 'Bisa bau asap' } },
+  { id: 'exercise', icon: 'run', label: 'Olahraga di luar', notes: { ok: 'Oke', caution: 'Yang sensitif: ringan saja', no: 'Tunda dulu' } },
+  { id: 'windows', icon: 'window', label: 'Buka jendela', notes: { ok: 'Oke', caution: 'Saat asap tipis', no: 'Tutup' } },
+  { id: 'kids', icon: 'child', label: 'Anak main di luar', notes: { ok: 'Oke', caution: 'Sebentar saja', no: 'Di dalam saja' } }
 ];
-
-export const STATUS_ICON = { ok: 'ok', caution: 'caution', no: 'no' };
 
 export const RAIN = { none: 'Tidak hujan', some: 'Ada hujan', heavy: 'Hujan lebat' };
 
 export const EMERGENCY_NUMBER = '119';
 
 export const UI = {
-  loadingHeadline: 'Lagi mengecek udara…',
+  loadingHeadline: 'Mengecek udara…',
+  brand: 'Bisa napas gak?',
+  beta: 'BETA',
   welcome: hello => `${hello} Kamu di kota mana?`,
-  welcomeSub: 'Pilih sekali, besok langsung muncul.',
   overviewTitle: 'Asap hari ini',
-  overviewSub: count => `${count} kota di Sumatera dan Kalimantan, mulai dari yang paling parah. Pilih kotamu.`,
+  overviewSub: count => `${count} kota di Sumatera dan Kalimantan, mulai dari yang paling parah. Pilih kota.`,
+  pickCity: 'Pilih kota',
+  cancel: 'Batal',
+  close: 'Tutup',
   allCitiesOption: 'Lihat semua kota…',
   useLocation: 'Pakai lokasiku',
-  locating: 'Lagi mencari lokasimu…',
-  locateFailed: 'Lokasimu tidak terbaca. Pilih kota dari daftar, ya.',
-  nearest: (city, km) => `Kota terdekat: ${city}, sekitar ${km} km. Lokasimu tidak disimpan atau dikirim.`,
+  nearestButton: 'Terdekat',
+  nearestLabel: 'Kota terdekat',
+  locating: 'Mencari lokasi…',
+  locateFailed: 'Lokasi tidak terbaca. Pilih kota dari daftar.',
+  nearest: (city, km) => `Kota terdekat: ${city}, sekitar ${km} km. Lokasi tidak disimpan atau dikirim.`,
 
   levelLabel: (name, level) => `${name} · level ${level} dari 5`,
-  everyone: 'Semua orang',
+  sensitivePrefix: 'Anak & lansia:',
   sensitive: SENSITIVE,
-  symptoms: emergency => `Sesak, batuk terus, atau nyeri dada? Segera ke puskesmas/RS${emergency ? ' atau telepon 119' : ''}.`,
+  sensitiveIntro: '“Anak & lansia” berarti',
+  symptomsMild: 'Batuk terus atau mata perih? Ada baiknya periksa ke fasilitas kesehatan.',
+  symptomsEmergency: `Sesak napas atau nyeri dada? Sebaiknya segera cari pertolongan medis, atau hubungi ${EMERGENCY_NUMBER}.`,
+  medicalNote: 'Saran kesehatan di sini mengikuti panduan Kemenkes, bukan pengganti pemeriksaan dokter.',
   goodNews: 'Kabari grup: udara lagi bagus',
-  faskes: 'Cari puskesmas/RS',
-  faskesQuery: 'puskesmas dan rumah sakit terdekat',
+  healthButton: 'Cari fasilitas kesehatan',
+  healthQuery: 'fasilitas kesehatan terdekat',
   call: number => `Telepon ${number}`,
-  callShort: number => number,
-  stamp: when => `Perkiraan · diperbarui ${when}`,
+  stamp: time => `Perkiraan · ${time} ·`,
   explainTitle: 'Apa ini?',
   explain: pm => [
-    'Angka ini perkiraan komputer dari data satelit dan cuaca, bukan hasil alat ukur di kotamu.',
-    'Di dekat kebakaran gambut, asap bisa lebih tebal dari perkiraan. Kalau asap di sekitarmu terlihat tebal, ikuti yang kamu lihat.',
+    'Angka ini perkiraan komputer dari data satelit dan cuaca, bukan hasil alat ukur di kota ini.',
+    'Di dekat kebakaran gambut, asap bisa lebih tebal dari perkiraan. Kalau asap di sekitar terlihat tebal, ikuti yang terlihat.',
     `PM2.5 adalah partikel asap yang sangat halus dan bisa masuk sampai ke paru-paru. Rata-rata 24 jam terakhir: ${pm} µg/m³ (mikrogram per meter kubik udara).`,
     'Level 1 sampai 5 memakai batas resmi pemerintah (ISPU).'
   ],
@@ -123,54 +126,66 @@ export const UI = {
 
   todayTitle: 'Hari ini cocok untuk…',
   bestWindow: (level, from, to) => `${level === 1 ? 'Udara paling segar' : 'Asap paling tipis'}: ${from}–${to}`,
-  windowsShut: 'Jendela tetap tutup seharian.',
-  stripLabel: (from, to) => `Perkiraan asap per jam, 24 jam ke depan. Paling tipis ${from}–${to}.`,
-  stripLegend: 'Makin tinggi batang, makin tebal asap · perkiraan',
+  windowsShut: 'Sebaiknya jendela ditutup hari ini.',
+  stripLabel: (from, to) => `Asap per jam, 24 jam ke depan. Paling tipis ${from}–${to}.`,
+  stripLegend: 'Makin tinggi batang, makin tebal asap',
   stripNow: 'Sekarang',
 
   outlookTitle: 'Besok gimana?',
-  outlookSub: 'Perkiraan. Pilih hari untuk lihat detail.',
+  outlookSub: 'Pilih hari untuk lihat detail.',
   reasonsTitle: 'Kenapa begini?',
   hotspots: km => `Titik panas dalam ${km} km (24 jam terakhir)`,
   wind: 'Angin datang dari',
   rainDays: days => `Hari hujan, ${days} hari ke depan`,
   rainDaysValue: (wet, days) => `${wet} dari ${days}`,
-  source: when => `Titik panas dari satelit NASA, ${when}. Angin dan hujan: perkiraan cuaca.`,
+  source: when => `Titik panas dari satelit NASA, ${when}. Angin dan hujan dari prakiraan cuaca.`,
 
   share: 'Bagikan ke grup',
   shared: 'Link disalin. Tinggal tempel di grup.',
   shareText: (city, day, level, headline) => `${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${headline}`,
-  shareGood: (city, day, level) => `${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). Udaranya lagi bagus, cek kotamu juga.`,
-  shareOverview: 'Kondisi asap hari ini di Sumatera dan Kalimantan. Cek kotamu sebelum keluar.',
+  shareGood: (city, day, level) => `${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${LEVELS[level].headline} Cek kotamu juga.`,
+  shareOverview: 'Kondisi asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.',
 
+  preview: 'Pratinjau: level contoh untuk melihat tampilan, bukan data nyata.',
   stale: when => `Data lama: terakhir diperbarui ${when}. Cek juga angka resmi (ISPU).`,
   errorHeadline: 'Datanya belum bisa diambil.',
   errorText: 'Coba buka lagi beberapa menit lagi. Sementara itu, cek angka resmi pemerintah (ISPU).',
   expiredHeadline: 'Datanya sudah terlalu lama.',
-  expiredText: 'Data terakhir lebih dari 12 jam lalu, jadi kami belum bisa bilang aman atau tidak. Cek angka resmi pemerintah (ISPU).',
+  expiredText: 'Data terakhir lebih dari 12 jam lalu, jadi kondisi udara sekarang tidak bisa dinilai. Cek angka resmi pemerintah (ISPU).',
 
   moreTitle: 'Lainnya',
-  factsTitle: 'Tahukah kamu?',
+  factsTitle: 'Fakta singkat',
   factsNext: 'Fakta lain',
-  pollTitle: 'Napasmu hari ini gimana?',
+  pollTitle: 'Bagaimana napas hari ini?',
   feedbackTitle: 'Lapor masalah atau saran',
   feedbackNote: 'Versi uji coba: masukan belum terkirim ke mana pun.',
+  feedbackSend: 'Kirim',
   feedbackEmpty: 'Tulis dulu, ya.',
-  feedbackThanks: 'Terima kasih. Versi uji coba: masukan ini belum terkirim.'
+  feedbackThanks: 'Terima kasih. Versi uji coba: masukan ini belum terkirim.',
+
+  footerDisclaimer: `Angka di sini perkiraan, bukan hasil alat ukur. Untuk keputusan kesehatan, ikuti panduan resmi. Darurat kesehatan: ${EMERGENCY_NUMBER}.`,
+  creditsIntro: 'Sumber data:',
+  creditOpenMeteo: 'Weather data by Open-Meteo.com',
+  creditOpenMeteoLicence: '(CC BY 4.0)',
+  creditCams: year => `Contains modified Copernicus Atmosphere Monitoring Service information ${year}`,
+  creditFirms: 'NASA FIRMS',
+  creditIspu: 'batas level: ISPU (Permen LHK P.14/2020).',
+  privacyTitle: 'Privasi',
+  privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban polling dan masukan belum dikirim ke mana pun.',
+  creditLine: ['Proyek sukarela oleh ', 'Khi Hady', ' · kodenya terbuka di ', 'GitHub']
 };
 
+/** "Lainnya" facts. Plain statements; hidden at levels 4–5. */
 export const FACTS = [
-  'Karhutla itu kayak mantan: kebanyakan mulainya dari ulah manusia.',
-  'Asap nggak butuh paspor. Bisa menyeberang sampai Sarawak dan bikin udara di sana ikut tidak sehat.',
+  'Asap tidak mengenal batas negara. Bisa menyeberang sampai Sarawak dan membuat udara di sana ikut tidak sehat.',
   'Lahan gambut bisa terbakar diam-diam di bawah tanah. Api yang kelihatan padam belum tentu benar-benar selesai.',
-  'El Niño itu kayak DJ musim kemarau: volumenya dinaikkan, semuanya jadi lebih panas dan lebih kering.',
-  'Titik panas bukan cuma angka di layar. Itu tanda yang harusnya bikin orang cepat bertindak.',
-  'Api di lahan gambut bisa menyala berhari-hari, mirip sinetron yang nggak selesai-selesai.'
+  'El Niño membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.',
+  'Api di lahan gambut bisa menyala berhari-hari di bawah permukaan.'
 ];
 
 export const POLLS = [
   { label: 'Lega', reply: 'Syukurlah. Tetap minum air putih, ya.' },
   { label: 'Agak sesak', reply: 'Kurangi aktivitas di luar hari ini.' },
-  { label: 'Sesak sekali', reply: 'Tetap di dalam dan tutup jendela. Sesak berat atau nyeri dada? Segera ke puskesmas/RS atau telepon 119.' },
-  { label: 'Nggak yakin', reply: 'Cek level kotamu di atas dan ikuti sarannya.' }
+  { label: 'Sesak sekali', reply: `Tetap di dalam dan tutup jendela. Kalau sesak berat atau nyeri dada, sebaiknya segera cari pertolongan medis, atau hubungi ${EMERGENCY_NUMBER}.` },
+  { label: 'Tidak yakin', reply: 'Cek level kota di atas dan ikuti sarannya.' }
 ];

@@ -1,45 +1,45 @@
-import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, POLLS, RAIN, STATUS_ICON, UI } from './copy.js';
+import './ionic.js';
+import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, POLLS, RAIN, UI } from './copy.js';
 import {
-  activityStatuses, ago, bestWindow, freshness, greeting, localDate, mapsSearchUrl, nearest, rainKind, rankByLevel, resolveCity, upcomingDays, WET_DAY_MM
+  activityStatuses, ago, bestWindow, freshness, greeting, localDate, mapsSearchUrl, nearest, previewOverride, rainKind, rankByLevel, resolveCity,
+  upcomingDays, WET_DAY_MM
 } from './logic.js';
 
-const DATA_URL = 'data/latest.json';
+const DATA_URL = './data/latest.json';
+const ISPU_URL = 'https://ispu.kemenlh.go.id/app/#/';
 const CITY_KEY = 'bisanapasgak.city';
-const ALL_CITIES = '__all';
+const ALL = '__all';
 const REFRESH_MS = 15 * 60e3;
-const BUBBLE_MS = 3000;
-const BEST_WINDOW = { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() };
+const BEST = { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() };
 const TICK_EVERY = 6;
 
 const num = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 });
 const clock = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
-const hourMinute = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit' });
-const weekdayLong = new Intl.DateTimeFormat('id-ID', { weekday: 'long' });
+const hm = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit' });
+const dayTime = new Intl.DateTimeFormat('id-ID', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
 const weekdayShort = new Intl.DateTimeFormat('id-ID', { weekday: 'short', timeZone: 'UTC' });
 const dayLong = new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'short', timeZone: 'UTC' });
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const $ = id => document.getElementById(id);
-const el = (tag, text, className) => {
+function el(tag, className, ...children) {
   const node = document.createElement(tag);
-  if (text != null) node.textContent = text;
   if (className) node.className = className;
+  node.append(...children);
   return node;
-};
-const icon = (name, size) => {
+}
+function icon(name) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('class', 'ic');
-  svg.setAttribute('width', String(size));
-  svg.setAttribute('height', String(size));
   svg.setAttribute('aria-hidden', 'true');
   const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
   use.setAttribute('href', `#i-${name}`);
   svg.append(use);
   return svg;
-};
+}
+const cityName = loc => loc.name.split(',')[0];
+const lowerFirst = text => text[0].toLowerCase() + text.slice(1);
 const when = iso => `${clock.format(new Date(iso))} (${ago(iso, new Date())})`;
 const dateOf = day => new Date(`${day}T00:00:00Z`);
-const cityName = loc => loc.name.split(',')[0];
 const levelText = level => UI.levelLabel(LEVELS[level].name, level);
 
 // Only the chosen city is remembered, on this device. Storage can be blocked; the page works without it.
@@ -49,188 +49,129 @@ const savedCity = {
 };
 
 let report = null;
-let currentId = null;
-// 'overview' lists every city (first visit, or "Lihat semua kota"); 'city' is one city's answer card.
-let view = 'city';
+let current = null; // chosen city id; null shows the overview
+let preview = null; // { city, level } from ?city=&level=&preview=1, otherwise null
+let dayIndex = 0;
 let lastFact = -1;
-let bubbleTimer = 0;
 
-function selected() {
-  return report.locations.find(l => l.id === currentId) ?? report.locations[0];
+const selected = () => report?.locations.find(l => l.id === current) ?? null;
+const bandOf = loc => (preview && preview.city === loc.id ? preview.level : loc.pm25_model.band);
+
+/** Shows one of: 'message' (loading, failed, expired), 'overview', 'city'. */
+function show(view) {
+  $('message').hidden = view !== 'message';
+  $('overview').hidden = view !== 'overview';
+  $('city').hidden = view !== 'city';
+  $('shareBlock').hidden = view === 'message' || (view === 'city' && Boolean(preview));
+  if (view !== 'city') $('factsBlock').hidden = false;
 }
 
-function setScale(level) {
-  [...$('scale').children].forEach((segment, i) => segment.classList.toggle('on', i === level - 1));
-}
-
-function fillList(list, items) {
-  list.replaceChildren(...items.map(text => el('li', text)));
-  list.hidden = items.length === 0;
-}
-
-/** Neutral card for loading problems and data too old to judge by: no verdict, only the official link. */
-function showMessage(headline, text) {
-  const card = $('answer');
-  card.dataset.level = '0';
-  card.removeAttribute('aria-busy');
-  setScale(0);
-  $('levelLabel').textContent = '';
-  $('headline').textContent = headline;
-  $('quip').textContent = text;
-  $('quip').hidden = false;
-  fillList($('everyone'), []);
-  fillList($('sensitive'), []);
-  $('everyoneLabel').hidden = true;
-  $('sensitiveLabel').hidden = true;
-  for (const id of ['symptoms', 'buttons', 'explain', 'bubble', 'banner', 'overview', 'today', 'outlook', 'reasons', 'shareBlock']) $(id).hidden = true;
-  $('stamp').textContent = '';
-  $('mascot').tabIndex = -1;
-  $('answer').hidden = false;
+/** Neutral card for loading and problems: no verdict, only the official link. */
+function showMessage(headline, text, busy) {
+  show('message');
+  $('message').toggleAttribute('aria-busy', busy);
+  $('messageTitle').textContent = headline;
+  $('messageText').textContent = text ?? '';
+  $('messageText').hidden = !text;
+  $('skeleton').hidden = !busy;
+  $('messageOfficial').hidden = busy;
+  $('messageOfficial').href = ISPU_URL;
+  $('banner').hidden = true;
 }
 
 function renderOverview() {
-  for (const id of ['cityBar', 'answer', 'today', 'outlook', 'reasons']) $(id).hidden = true;
-  $('overview').hidden = false;
-  $('shareBlock').hidden = false;
+  show('overview');
   $('welcomeTitle').textContent = UI.welcome(greeting(new Date().getHours()));
   $('overviewSub').textContent = UI.overviewSub(report.locations.length);
   $('cityList').replaceChildren(...rankByLevel(report.locations).map(loc => {
     const level = loc.pm25_model.band;
-    const chip = el('button', null, 'city-chip');
-    chip.type = 'button';
-    chip.dataset.level = String(level);
-    chip.setAttribute('aria-label', `${loc.name}, ${levelText(level)}`);
-    chip.append(el('b', cityName(loc)), el('small', LEVELS[level].name));
-    chip.addEventListener('click', () => choose(loc.id));
-    const item = el('li');
-    item.append(chip);
+    const dot = el('span', 'dot');
+    dot.slot = 'start';
+    const badge = el('ion-badge', 'lv', LEVELS[level].name);
+    badge.slot = 'end';
+    const item = el('ion-item', null, dot, el('ion-label', null, cityName(loc)), badge);
+    item.button = true;
+    item.detail = false;
+    item.dataset.level = String(level);
+    item.setAttribute('aria-label', `${loc.name}, ${levelText(level)}`);
+    item.addEventListener('click', () => choose(loc.id));
     return item;
   }));
 }
 
-function burst() {
-  if (reduceMotion) return;
-  const box = $('confetti');
-  const colors = ['var(--l1-solid)', 'var(--l2-solid)', 'var(--l3-solid)', 'var(--brand)', 'var(--cheek)'];
-  box.replaceChildren(...Array.from({ length: 18 }, (_, i) => {
-    const bit = el('i');
-    bit.style.left = `${Math.random() * 100}%`;
-    bit.style.background = colors[i % colors.length];
-    bit.style.animationDelay = `${Math.random() * 0.4}s`;
-    return bit;
-  }));
-  setTimeout(() => box.replaceChildren(), 2400);
-}
-
-function renderAnswer(loc) {
-  const level = loc.pm25_model.band;
+function renderAnswer(loc, level) {
   const copy = LEVELS[level];
-  const card = $('answer');
-  const changed = card.dataset.level !== String(level) || card.dataset.city !== loc.id;
-  card.dataset.level = String(level);
-  card.dataset.city = loc.id;
-  card.removeAttribute('aria-busy');
-  setScale(level);
-  $('levelLabel').textContent = levelText(level);
+  $('answer').dataset.level = String(level);
+  // Wrap only after the dot, so a narrow card shows "Sangat Tidak Sehat ·" / "level 4 dari 5".
+  $('levelLabel').textContent = levelText(level).replace(/ · (.+)$/, (_, rest) => ` · ${rest.replaceAll(' ', ' ')}`);
   $('headline').textContent = copy.headline;
   $('quip').textContent = copy.quip ?? '';
   $('quip').hidden = !copy.quip;
-
-  const grouped = copy.sensitive.length > 0;
-  $('everyoneLabel').hidden = !grouped;
-  fillList($('everyone'), copy.everyone);
-  $('sensitiveLabel').hidden = !grouped;
-  fillList($('sensitive'), copy.sensitive);
-
-  $('symptoms').hidden = !copy.faskes;
-  $('symptoms').textContent = UI.symptoms(copy.emergency);
-  $('buttons').hidden = !copy.faskes && !copy.goodNews;
+  // One list, max 3: everyone's actions, then the sensitive group as one prefixed line.
+  const sensitive = copy.sensitive.slice(0, 1).map(text => el('li', null, el('b', null, UI.sensitivePrefix), ` ${lowerFirst(text)}`));
+  $('actions').replaceChildren(...[...copy.everyone.map(text => el('li', null, text)), ...sensitive].slice(0, 3));
+  $('symptoms').hidden = !copy.health;
   $('shareGood').hidden = !copy.goodNews;
-  $('faskes').hidden = !copy.faskes;
+  $('health').hidden = !copy.health;
   $('call').hidden = !copy.emergency;
-
-  $('stamp').textContent = UI.stamp(when(loc.pm25_model.updated_at));
-  $('explain').hidden = false;
-  $('explainBody').replaceChildren(...UI.explain(num.format(Math.round(loc.pm25_model.value))).map(text => el('p', text)));
-  $('official').href = loc.ispu.source_url;
-  $('mascot').tabIndex = copy.bubble ? 0 : -1;
-  $('bubble').hidden = true;
-  $('factsBlock').hidden = !copy.quip; // no jokes at levels 4–5, not even under "Lainnya"
-  if (changed) {
-    card.classList.remove('enter');
-    void card.offsetWidth;
-    card.classList.add('enter');
-    if (level === 1) burst();
-  }
+  $('stamp').textContent = UI.stamp(clock.format(new Date(loc.pm25_model.updated_at)));
+  $('explain').replaceChildren(...UI.explain(num.format(Math.round(loc.pm25_model.value))).map(text => el('p', null, text)));
+  $('official').href = loc.ispu?.source_url ?? ISPU_URL;
+  $('factsBlock').hidden = level >= 4; // no jokes or trivia at levels 4–5
 }
 
-function renderToday(loc) {
-  const level = loc.pm25_model.band;
-  const todayRain = loc.outlook.find(d => d.date === localDate(new Date()))?.rain_mm ?? 0;
-  const statuses = activityStatuses(LEVELS[level].activities, todayRain, WET_DAY_MM);
-  $('activities').replaceChildren(...ACTIVITIES.map(activity => {
-    const status = statuses[activity.id];
-    const tile = el('li', null, 'activity');
-    tile.dataset.status = status;
-    const text = el('span', null, 'text');
-    const note = el('span', null, 'status');
-    note.append(icon(STATUS_ICON[status], 16), activity.notes[status]);
-    text.append(el('span', activity.label, 'label'), note);
-    tile.append(icon(activity.icon, 24), text);
-    return tile;
-  }));
+function renderToday(loc, level) {
+  const rain = loc.outlook.find(d => d.date === localDate(new Date()))?.rain_mm ?? 0;
+  const statuses = activityStatuses(LEVELS[level].activities, rain, WET_DAY_MM);
+  $('activities').replaceChildren(...ACTIVITIES.map(a =>
+    el('li', 'activity', icon(a.icon), el('span', 'text', el('span', 'label', a.label), el('strong', 'status', a.notes[statuses[a.id]])))
+  ));
 
   const hours = Array.isArray(loc.next_hours) ? loc.next_hours : [];
-  const win = level <= 3 && hours.length > 0 ? bestWindow(hours, BEST_WINDOW) : null;
-  const from = win ? hourMinute.format(new Date(win.start)) : '';
-  const to = win ? hourMinute.format(new Date(win.end)) : '';
-  $('bestWindow').textContent = level >= 4 ? UI.windowsShut : win ? UI.bestWindow(level, from, to) : '';
-  $('bestWindow').hidden = !$('bestWindow').textContent;
+  const win = level <= 3 && hours.length > 0 ? bestWindow(hours, BEST) : null;
+  const from = win ? hm.format(new Date(win.start)) : '';
+  const to = win ? hm.format(new Date(win.end)) : '';
+  $('best').textContent = level >= 4 ? UI.windowsShut : win ? UI.bestWindow(level, from, to) : '';
+  $('best').hidden = !$('best').textContent;
 
   const peak = Math.max(...hours.map(h => h.pm25), 1);
   const best = new Set(win?.indexes ?? []);
   $('strip').replaceChildren(...hours.map((h, i) => {
-    const bar = el('i', null, best.has(i) ? 'best' : i === 0 ? 'now' : '');
+    const bar = el('i', best.has(i) ? 'best' : i === 0 ? 'now' : '');
     bar.style.height = `${Math.max(10, (h.pm25 / peak) * 100)}%`;
     return bar;
   }));
   $('strip').setAttribute('aria-label', win ? UI.stripLabel(from, to) : UI.stripLegend);
-  $('stripTicks').replaceChildren(...hours.filter((_, i) => i % TICK_EVERY === 0).map((h, i) => el('span', i === 0 ? UI.stripNow : hourMinute.format(new Date(h.time)))));
-  for (const id of ['strip', 'stripTicks', 'stripLegend']) $(id).hidden = hours.length === 0;
-  $('today').hidden = false;
+  $('ticks').replaceChildren(...hours.filter((_, i) => i % TICK_EVERY === 0).map((h, i) => el('span', null, i === 0 ? UI.stripNow : hm.format(new Date(h.time)))));
+  for (const id of ['strip', 'ticks', 'stripLegend']) $(id).hidden = hours.length === 0;
 }
 
 function showDay(days, idx) {
+  dayIndex = idx;
   const day = days[idx];
-  $('dayDetail').replaceChildren(
-    el('strong', `${dayLong.format(dateOf(day.date))} · ${levelText(day.band)}`),
-    `${LEVELS[day.band].dayLine} ${RAIN[rainKind(day.rain_mm)]}.`
-  );
+  $('dayDetail').replaceChildren(el('strong', null, `${dayLong.format(dateOf(day.date))} · ${levelText(day.band)}`), `${LEVELS[day.band].dayLine} ${RAIN[rainKind(day.rain_mm)]}.`);
   [...$('days').children].forEach((chip, i) => chip.setAttribute('aria-pressed', String(i === idx)));
 }
 
 function renderOutlook(loc) {
   const days = upcomingDays(loc.outlook, localDate(new Date()));
   $('outlook').hidden = days.length === 0;
-  const box = $('days');
-  box.style.setProperty('--n', String(days.length));
-  box.replaceChildren(...days.map((day, i) => {
-    const chip = el('button', null, 'day');
+  $('days').style.setProperty('--n', String(days.length));
+  $('days').replaceChildren(...days.map((day, i) => {
+    const chip = el('button', 'day', el('span', 'd', weekdayShort.format(dateOf(day.date))), el('span', 'n', LEVELS[day.band].name));
     chip.type = 'button';
     chip.dataset.level = String(day.band);
     chip.setAttribute('aria-pressed', 'false');
     chip.setAttribute('aria-label', `${dayLong.format(dateOf(day.date))}, ${levelText(day.band)}`);
-    chip.append(el('span', weekdayShort.format(dateOf(day.date)), 'd'), el('span', LEVELS[day.band].name, 'n'));
     chip.addEventListener('click', () => showDay(days, i));
     return chip;
   }));
-  if (days.length > 0) showDay(days, 0);
+  if (days.length > 0) showDay(days, Math.min(dayIndex, days.length - 1));
   return days;
 }
 
 function renderReasons(loc, days) {
   const rainDays = days.slice(0, 3);
-  $('reasons').hidden = false;
   $('hotLabel').textContent = UI.hotspots(loc.hotspots_24h.radius_km);
   $('hot').textContent = num.format(loc.hotspots_24h.count);
   $('wind').textContent = loc.wind_dir;
@@ -241,71 +182,73 @@ function renderReasons(loc, days) {
 
 function render() {
   const state = freshness(report.generated_at, new Date());
-  $('camsCredit').textContent = `Contains modified Copernicus Atmosphere Monitoring Service information ${report.generated_at.slice(0, 4)}`;
+  $('camsCredit').textContent = UI.creditCams(report.generated_at.slice(0, 4));
+  $('previewBanner').hidden = !preview;
+  $('previewBanner').textContent = UI.preview;
   if (state === 'expired') {
-    showMessage(UI.expiredHeadline, UI.expiredText);
+    showMessage(UI.expiredHeadline, UI.expiredText, false);
     return;
   }
   $('banner').hidden = state !== 'stale';
   $('banner').textContent = UI.stale(when(report.generated_at));
-  if (view === 'overview') {
+  const loc = selected();
+  if (!loc) {
     renderOverview();
     return;
   }
-  const loc = selected();
-  currentId = loc.id;
-  $('overview').hidden = true;
-  $('cityBar').hidden = false;
-  $('answer').hidden = false;
-  renderAnswer(loc);
-  renderToday(loc);
+  show('city');
+  const level = bandOf(loc);
+  $('select').value = loc.id;
+  renderAnswer(loc, level);
+  renderToday(loc, level);
   renderReasons(loc, renderOutlook(loc));
-  // Levels 1–2 share good news from inside the card; the bottom share is for everything else.
-  $('shareBlock').hidden = LEVELS[loc.pm25_model.band].goodNews;
 }
 
 function fillPicker() {
-  const select = $('city');
-  const ids = report.locations.map(l => l.id);
-  if (select.dataset.ids !== ids.join()) {
-    const all = el('option', UI.allCitiesOption);
-    all.value = ALL_CITIES;
-    select.replaceChildren(all, ...report.locations.map(l => {
-      const option = el('option', cityName(l));
-      option.value = l.id;
-      return option;
-    }));
-    select.dataset.ids = ids.join();
-    select.disabled = false;
-  }
-  if (!currentId && view === 'city') {
-    const pick = resolveCity(ids, decodeURIComponent(location.hash.slice(1)), savedCity.get());
-    currentId = pick.id;
-    if (!pick.id) view = 'overview';
-  }
-  if (currentId) select.value = selected().id;
+  const all = el('ion-select-option', null, UI.allCitiesOption);
+  all.value = ALL;
+  $('select').replaceChildren(all, ...report.locations.map(loc => {
+    const option = el('ion-select-option', null, cityName(loc));
+    option.value = loc.id;
+    return option;
+  }));
 }
 
-function showHint(text) {
-  $(view === 'overview' ? 'overviewHint' : 'hint').textContent = text;
+function clearHints() {
+  for (const id of ['overviewHint', 'cityHint', 'shareNote']) $(id).textContent = '';
 }
 
 function choose(id) {
-  view = 'city';
-  currentId = id;
-  $('city').value = id;
-  history.replaceState(null, '', `#${id}`);
+  current = id;
+  preview = null;
+  dayIndex = 0;
+  history.replaceState(null, '', `${location.pathname}#${encodeURIComponent(id)}`);
   savedCity.set(id);
+  clearHints();
   render();
-  window.scrollTo(0, 0);
+  $('content').scrollToTop(0);
 }
 
 function showAllCities() {
-  view = 'overview';
-  showHint('');
+  current = null;
+  preview = null;
   history.replaceState(null, '', location.pathname);
+  clearHints();
   render();
-  window.scrollTo(0, 0);
+  $('content').scrollToTop(0);
+}
+
+/** First report: the link beats the saved city, which beats the overview. A preview link beats both. */
+function pickInitialView() {
+  const ids = report.locations.map(l => l.id);
+  preview = previewOverride(location.search, ids);
+  if (preview) {
+    current = preview.city;
+    return;
+  }
+  let hash = '';
+  try { hash = decodeURIComponent(location.hash.slice(1)); } catch { /* malformed link: treat as none */ }
+  current = resolveCity(ids, hash, savedCity.get()).id;
 }
 
 async function load() {
@@ -314,64 +257,47 @@ async function load() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (!Array.isArray(data.locations) || data.locations.length === 0) throw new Error('no locations');
+    const first = !report;
     report = data;
     fillPicker();
+    if (first) pickInitialView();
+    else if (current && !selected()) current = null;
   } catch {
     // A failed refresh keeps the last report; render() still judges how old it is.
     if (!report) {
-      showMessage(UI.errorHeadline, UI.errorText);
+      showMessage(UI.errorHeadline, UI.errorText, false);
       return;
     }
   }
   render();
 }
 
-function nextFact() {
-  let i;
-  do i = Math.floor(Math.random() * FACTS.length); while (i === lastFact && FACTS.length > 1);
-  lastFact = i;
-  $('fact').textContent = FACTS[i];
-}
-
-function renderPoll() {
-  const box = $('poll');
-  box.replaceChildren(...POLLS.map(p => {
-    const choice = el('button', p.label, 'choice');
-    choice.type = 'button';
-    choice.setAttribute('aria-pressed', 'false');
-    choice.addEventListener('click', () => {
-      [...box.children].forEach(c => c.setAttribute('aria-pressed', String(c === choice)));
-      $('pollNote').textContent = p.reply;
-    });
-    return choice;
-  }));
-}
-
 function useLocation() {
   if (!report) return;
-  showHint(UI.locating);
+  const hint = text => { $(current ? 'cityHint' : 'overviewHint').textContent = text; };
+  hint(UI.locating);
   navigator.geolocation.getCurrentPosition(
     pos => {
       const { location: loc, km } = nearest(report.locations, pos.coords.latitude, pos.coords.longitude);
       choose(loc.id);
-      showHint(UI.nearest(cityName(loc), num.format(Math.round(km))));
+      hint(UI.nearest(cityName(loc), num.format(Math.round(km))));
     },
-    () => showHint(UI.locateFailed),
+    () => hint(UI.locateFailed),
     { enableHighAccuracy: false, maximumAge: 600000, timeout: 10000 }
   );
 }
 
 async function share(goodNews) {
   if (!report) return;
-  const fresh = freshness(report.generated_at, new Date()) !== 'expired';
-  const loc = view === 'city' && fresh ? selected() : null;
-  const url = `${location.origin}${location.pathname}${loc ? `#${loc.id}` : ''}`;
-  let text = fresh ? UI.shareOverview : document.title;
-  if (loc) {
-    const level = loc.pm25_model.band;
-    const at = new Date(loc.pm25_model.updated_at);
-    const day = `${weekdayLong.format(at)} ${hourMinute.format(at)}`;
-    text = goodNews ? UI.shareGood(cityName(loc), day, level) : UI.shareText(cityName(loc), day, level, LEVELS[level].headline);
+  const loc = selected();
+  const live = freshness(report.generated_at, new Date()) !== 'expired';
+  const target = loc && live && !preview ? loc : null;
+  const url = `${location.origin}${location.pathname}${target ? `#${encodeURIComponent(target.id)}` : ''}`;
+  let text = live ? UI.shareOverview : document.title;
+  if (target) {
+    const level = target.pm25_model.band;
+    const day = dayTime.format(new Date(target.pm25_model.updated_at));
+    text = goodNews ? UI.shareGood(cityName(target), day, level) : UI.shareText(cityName(target), day, level, LEVELS[level].headline);
   }
   try {
     if (navigator.share) {
@@ -385,40 +311,46 @@ async function share(goodNews) {
   }
 }
 
-// Static labels come from copy.js so every line lives in one file.
-const LABELS = {
-  welcomeSub: UI.welcomeSub, locateOverviewLabel: UI.useLocation, overviewTitle: UI.overviewTitle,
-  everyoneLabel: UI.everyone, sensitiveLabel: UI.sensitive, shareGoodLabel: UI.goodNews, faskesLabel: UI.faskes,
-  callLabel: UI.callShort(EMERGENCY_NUMBER), explainTitle: UI.explainTitle, officialLabel: UI.official,
-  todayTitle: UI.todayTitle, stripLegend: UI.stripLegend, outlookTitle: UI.outlookTitle, outlookSub: UI.outlookSub,
-  reasonsTitle: UI.reasonsTitle, windLabel: UI.wind, shareLabel: UI.share, moreTitle: UI.moreTitle,
-  factsTitle: UI.factsTitle, factsNext: UI.factsNext, pollTitle: UI.pollTitle, feedbackTitle: UI.feedbackTitle, feedbackNote: UI.feedbackNote
-};
-for (const [id, text] of Object.entries(LABELS)) $(id).textContent = text;
-$('faskes').href = mapsSearchUrl(UI.faskesQuery);
-$('call').href = `tel:${EMERGENCY_NUMBER}`;
-$('call').setAttribute('aria-label', UI.call(EMERGENCY_NUMBER));
-
-$('city').addEventListener('change', e => {
-  showHint('');
-  if (e.target.value === ALL_CITIES) showAllCities();
-  else choose(e.target.value);
-});
-if (!('geolocation' in navigator)) {
-  $('locate').hidden = true;
-  $('locateOverview').hidden = true;
+function nextFact() {
+  let i;
+  do i = Math.floor(Math.random() * FACTS.length); while (i === lastFact && FACTS.length > 1);
+  lastFact = i;
+  $('fact').textContent = FACTS[i];
 }
-$('locate').addEventListener('click', useLocation);
-$('locateOverview').addEventListener('click', useLocation);
-$('mascot').addEventListener('click', () => {
-  const lines = report && view === 'city' ? LEVELS[selected().pm25_model.band].bubble : null;
-  if (!lines || $('answer').dataset.level === '0') return;
-  const bubble = $('bubble');
-  bubble.textContent = lines[Math.floor(Math.random() * lines.length)];
-  bubble.hidden = false;
-  clearTimeout(bubbleTimer);
-  bubbleTimer = setTimeout(() => { bubble.hidden = true; }, BUBBLE_MS);
+
+function renderPoll() {
+  const box = $('poll');
+  box.replaceChildren(...POLLS.map(p => {
+    const choice = el('button', 'choice', p.label);
+    choice.type = 'button';
+    choice.setAttribute('aria-pressed', 'false');
+    choice.addEventListener('click', () => {
+      [...box.children].forEach(c => c.setAttribute('aria-pressed', String(c === choice)));
+      $('pollNote').textContent = p.reply;
+    });
+    return choice;
+  }));
+}
+
+// Static labels come from copy.js so every line lives in one file.
+for (const node of document.querySelectorAll('[data-copy]')) node.textContent = UI[node.dataset.copy];
+for (const node of document.querySelectorAll('[data-copy-credit]')) node.textContent = UI.creditLine[Number(node.dataset.copyCredit)];
+$('sensitive').textContent = UI.sensitive;
+$('health').href = mapsSearchUrl(UI.healthQuery);
+$('call').setAttribute('aria-label', UI.call(EMERGENCY_NUMBER));
+$('locate').setAttribute('aria-label', UI.nearestLabel);
+$('select').setAttribute('aria-label', UI.pickCity);
+$('select').interfaceOptions = { header: UI.pickCity, cssClass: 'city-sheet' };
+$('select').cancelText = UI.cancel;
+
+$('select').addEventListener('ionChange', e => {
+  if (e.detail.value === ALL) showAllCities();
+  else if (e.detail.value && e.detail.value !== current) choose(e.detail.value);
 });
+for (const id of ['locate', 'locateOverview']) {
+  if ('geolocation' in navigator) $(id).addEventListener('click', useLocation);
+  else $(id).hidden = true;
+}
 $('share').addEventListener('click', () => share(false));
 $('shareGood').addEventListener('click', () => share(true));
 $('factsNext').addEventListener('click', nextFact);
@@ -431,9 +363,26 @@ $('sendFb').addEventListener('click', () => {
   if (!empty) $('feedback').value = '';
 });
 
+// "Apa ini?": a bottom sheet that fits its content.
+const sheet = $('about');
+sheet.breakpoints = [0, 1];
+sheet.initialBreakpoint = 1;
+$('aboutBtn').addEventListener('click', () => sheet.present());
+$('aboutClose').addEventListener('click', () => sheet.dismiss());
+
+$('refresher').addEventListener('ionRefresh', async e => {
+  await load();
+  e.target.complete();
+});
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') load(); });
 setInterval(load, REFRESH_MS);
 
+showMessage(UI.loadingHeadline, null, true);
 renderPoll();
 nextFact();
 load();
+
+// Offline shell. Production builds only, so the dev server never serves a stale page.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => { /* the page works without it */ }));
+}
