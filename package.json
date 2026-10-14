@@ -1,0 +1,13 @@
+{
+  "name": "bisa-napas-gak",
+  "private": true,
+  "type": "module",
+  "description": "Cek udara sebelum keluar kandang: air-quality page for Indonesia's haze season",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "ingest": "node ingest/main.ts",
+    "test": "node --test \"tests/*.test.ts\""
+  }
+}
