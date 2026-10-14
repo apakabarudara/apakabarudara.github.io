@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { activityStatuses, ago, bestWindow, freshness, greeting, mapsSearchUrl, nearest, previewOverride, rainKind, rankByLevel, resolveCity, upcomingDays } from '../web/logic.js';
+import { LEVELS, STORY } from '../web/copy.js';
+import {
+  activityStatuses, ago, bestWindow, freshness, greeting, improvement, installMode, isIosSafari, mapsSearchUrl, nearest, normalizeWatch, previewOverride,
+  rainKind, rankByLevel, resolveCity, storyLines, toggleWatch, upcomingDays, watchRow
+} from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
 const hoursAgo = (h: number): string => new Date(NOW.getTime() - h * 3600e3).toISOString();
@@ -133,5 +137,100 @@ describe('previewOverride', () => {
   it('rejects unknown cities and levels outside 1 to 5', () => {
     assert.equal(previewOverride('?city=jakarta&level=3&preview=1', ids), null);
     for (const level of ['0', '6', '2.5', 'x', '']) assert.equal(previewOverride(`?city=pontianak&level=${level}&preview=1`, ids), null, level);
+  });
+});
+
+describe('improvement ("Kapan membaik?")', () => {
+  const day = (date: string, band: number) => ({ date, band, pm25_mean: 1, rain_mm: 0 });
+  const outlook = [day('2026-10-14', 4), day('2026-10-15', 4), day('2026-10-16', 3), day('2026-10-17', 3)];
+
+  it('names the first later day with a lower band', () => {
+    assert.deepEqual(improvement(outlook, '2026-10-14', 4), { date: '2026-10-16' });
+  });
+
+  it('counts the days checked when nothing improves', () => {
+    assert.deepEqual(improvement(outlook, '2026-10-14', 3), { days: 3 });
+    assert.deepEqual(improvement([day('2026-10-14', 5), day('2026-10-15', 5)], '2026-10-14', 5), { days: 1 });
+  });
+
+  it('is silent at levels 1–2 and without later days', () => {
+    assert.equal(improvement(outlook, '2026-10-14', 2), null);
+    assert.equal(improvement(outlook, '2026-10-14', 1), null);
+    assert.equal(improvement([day('2026-10-14', 4)], '2026-10-14', 4), null);
+  });
+
+  it('judges against the level on screen, not the forecast for today', () => {
+    assert.deepEqual(improvement(outlook, '2026-10-14', 5), { date: '2026-10-15' });
+  });
+});
+
+describe('family cities', () => {
+  const ids = ['a', 'b', 'c', 'd', 'e'];
+
+  it('keeps known ids once and at most 3 besides the city on screen', () => {
+    assert.deepEqual(normalizeWatch(['a', 'x', 'a', 'b', 'c', 'd', 'e'], ids), ['a', 'b', 'c']);
+    assert.deepEqual(normalizeWatch(['a', 'b', 'c', 'd'], ids, 'a'), ['a', 'b', 'c', 'd']);
+    assert.deepEqual(normalizeWatch('rusak', ids), []);
+    assert.deepEqual(normalizeWatch(null, ids), []);
+  });
+
+  it('refuses a 4th city and unpins on a second toggle', () => {
+    let list: string[] = [];
+    for (const id of ['a', 'b', 'c']) list = toggleWatch(list, id, ids).list;
+    assert.deepEqual(list, ['a', 'b', 'c']);
+    assert.deepEqual(toggleWatch(list, 'd', ids), { list, refused: true });
+    assert.deepEqual(toggleWatch(list, 'b', ids), { list: ['a', 'c'], refused: false });
+  });
+
+  it('ignores unknown ids and counts the city on screen separately', () => {
+    assert.deepEqual(toggleWatch(['a'], 'zzz', ids), { list: ['a'], refused: false });
+    assert.equal(toggleWatch(['a', 'b', 'c', 'd'], 'e', ids, 'a').refused, true);
+  });
+
+  it('leaves the city on screen out of the row', () => {
+    assert.deepEqual(watchRow(['a', 'b', 'c'], 'b'), ['a', 'c']);
+  });
+});
+
+describe('install control', () => {
+  const IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
+  const MAC = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15';
+  it('recognises iOS Safari only', () => {
+    assert.equal(isIosSafari(IPHONE, 'iPhone', 5), true);
+    assert.equal(isIosSafari(IPHONE.replace('Version/18.0', 'CriOS/120'), 'iPhone', 5), false);
+    assert.equal(isIosSafari(MAC, 'MacIntel', 5), true);
+    assert.equal(isIosSafari(MAC, 'MacIntel', 0), false);
+    assert.equal(isIosSafari('Mozilla/5.0 (Linux; Android 14) Chrome/120 Mobile Safari/537.36', 'Linux armv8l', 5), false);
+  });
+
+  it('picks prompt, ios or nothing, and hides when installed or dismissed', () => {
+    assert.equal(installMode({ standalone: false, hasPrompt: true, ios: false, dismissed: false }), 'prompt');
+    assert.equal(installMode({ standalone: false, hasPrompt: false, ios: true, dismissed: false }), 'ios');
+    assert.equal(installMode({ standalone: false, hasPrompt: false, ios: false, dismissed: false }), null);
+    assert.equal(installMode({ standalone: true, hasPrompt: true, ios: true, dismissed: false }), null);
+    assert.equal(installMode({ standalone: false, hasPrompt: true, ios: true, dismissed: true }), null);
+  });
+});
+
+describe('storyLines', () => {
+  const make = (level: number) => storyLines({ city: 'Palembang', level, copy: LEVELS[level], story: STORY, improve: null, day: 'Rabu 10.00' });
+
+  it('carries city, level, headline and the time, and no numbers from the data', () => {
+    const lines = make(3);
+    assert.equal(lines.levelName, 'Tidak Sehat');
+    assert.equal(lines.headline, 'Kurangi aktivitas di luar.');
+    assert.equal(lines.stamp, 'Perkiraan · Rabu 10.00');
+    assert.equal(lines.url, 'bisanapasgak.github.io');
+    assert.doesNotMatch(JSON.stringify(lines), /µg|PM2/);
+  });
+
+  it('is light at levels 1–2 and calm, without "kamu" or a quip, at 3–5', () => {
+    assert.ok(make(1).quip && make(2).quip);
+    assert.match(make(1).footer, /kotamu/);
+    for (const level of [3, 4, 5]) {
+      const lines = make(level);
+      assert.equal(lines.quip, null);
+      assert.doesNotMatch(Object.values(lines).join(' '), /\bkamu|kotamu/i);
+    }
   });
 });

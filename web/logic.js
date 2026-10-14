@@ -111,3 +111,76 @@ export function previewOverride(search, ids) {
   if (!ids.includes(city) || !Number.isInteger(level) || level < 1 || level > 5) return null;
   return { city, level };
 }
+
+/**
+ * "Kapan membaik?" for levels 3–5, from the days after today: the first day whose band is lower than today's level,
+ * else how many days were checked. Null at levels 1–2 and when the forecast has no later day.
+ */
+export function improvement(outlook, today, level) {
+  if (level < 3) return null;
+  const days = upcomingDays(outlook, today);
+  if (days.length === 0) return null;
+  const better = days.find(day => day.band < level);
+  return better ? { date: better.date } : { days: days.length };
+}
+
+export const WATCH_MAX = 3;
+
+/**
+ * Pinned family cities: known ids only, no duplicates, at most WATCH_MAX besides the city on screen. The city on screen
+ * may stay in the list (it was pinned earlier) but is not counted, so switching to a pinned city never drops another.
+ */
+export function normalizeWatch(list, ids, current = null) {
+  const out = [];
+  let others = 0;
+  for (const id of Array.isArray(list) ? list : []) {
+    if (!ids.includes(id) || out.includes(id)) continue;
+    if (id !== current) {
+      if (others >= WATCH_MAX) continue;
+      others++;
+    }
+    out.push(id);
+  }
+  return out;
+}
+
+/** Pins or unpins `id`. `refused` when pinning would pass WATCH_MAX. */
+export function toggleWatch(list, id, ids, current = null) {
+  const now = normalizeWatch(list, ids, current);
+  if (now.includes(id)) return { list: now.filter(x => x !== id), refused: false };
+  if (!ids.includes(id)) return { list: now, refused: false };
+  if (now.filter(x => x !== current).length >= WATCH_MAX) return { list: now, refused: true };
+  return { list: [...now, id], refused: false };
+}
+
+/** The cities shown as chips: pinned, minus the one on screen. */
+export const watchRow = (list, current) => list.filter(id => id !== current);
+
+/** iPhone, iPad (also when it reports as a Mac) in Safari itself; other iOS browsers are left out. */
+export function isIosSafari(ua, platform, touchPoints) {
+  const ios = /iPhone|iPad|iPod/.test(ua) || (platform === 'MacIntel' && touchPoints > 1);
+  return ios && /Safari\//.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA\//.test(ua);
+}
+
+/** Which install control to show: 'prompt' (Chromium event in hand), 'ios' (steps in a sheet) or null. */
+export function installMode({ standalone, hasPrompt, ios, dismissed }) {
+  if (standalone || dismissed) return null;
+  if (hasPrompt) return 'prompt';
+  return ios ? 'ios' : null;
+}
+
+/** What the Story card says, in order. Levels 1–2 are light; 3–5 stay plain and calm (no "kamu", no quip). */
+export function storyLines({ city, level, copy, story, improve, day }) {
+  const light = level <= 2;
+  return {
+    city,
+    level,
+    levelName: copy.name,
+    headline: copy.headline,
+    quip: light ? copy.quip : null,
+    improve,
+    stamp: story.stamp(day),
+    footer: light ? story.footerLight : story.footer,
+    url: story.url
+  };
+}

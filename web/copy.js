@@ -88,6 +88,7 @@ export const EMERGENCY_NUMBER = '119';
 export const UI = {
   loadingHeadline: 'Mengecek udara…',
   brand: 'Bisa napas gak?',
+  tagline: 'Cek asap dan kualitas udara hari ini',
   beta: 'BETA',
   welcome: hello => `${hello} Kamu di kota mana?`,
   overviewTitle: 'Asap hari ini',
@@ -104,6 +105,9 @@ export const UI = {
   nearest: (city, km) => `Kota terdekat: ${city}, sekitar ${km} km. Lokasi tidak disimpan atau dikirim.`,
 
   levelLabel: (name, level) => `${name} · level ${level} dari 5`,
+  scaleLabel: level => `level ${level} dari 5`,
+  improveOn: weekday => `Diperkirakan mulai membaik ${weekday}.`,
+  improveNone: days => `Belum ada tanda membaik dalam ${days} hari ke depan.`,
   sensitivePrefix: 'Anak & lansia:',
   sensitive: SENSITIVE,
   sensitiveIntro: '“Anak & lansia” berarti',
@@ -140,7 +144,23 @@ export const UI = {
   rainDaysValue: (wet, days) => `${wet} dari ${days}`,
   source: when => `Titik panas dari satelit NASA, ${when}. Angin dan hujan dari prakiraan cuaca.`,
 
+  installButton: 'Pasang di layar utama',
+  installHide: 'Sembunyikan',
+  iosTitle: 'Pasang di layar utama',
+  iosIntro: 'Di Safari, ada dua langkah:',
+  iosSteps: ['Ketuk tombol Bagikan di bilah Safari.', 'Pilih “Tambah ke Layar Utama”, lalu ketuk Tambah.'],
+
+  watchAdd: 'Pantau kota lain',
+  watchRowLabel: 'Kota pantauan',
+  watchSub: 'Pilih sampai 3 kota, misalnya tempat keluarga tinggal. Tersimpan di HP ini saja.',
+  watchCount: n => `${n} dari 3 kota dipantau`,
+  watchFull: 'Sudah 3 kota. Lepas satu dulu untuk menambah.',
+  watchChip: (city, level, name) => `${city}, ${name}, level ${level} dari 5`,
+
   share: 'Bagikan ke grup',
+  storyButton: 'Bagikan ke Story',
+  storySaved: 'Gambar tersimpan. Unggah ke Story dari galeri.',
+  storyFailed: 'Gambar belum bisa dibuat. Coba lagi.',
   shared: 'Link disalin. Tinggal tempel di grup.',
   shareText: (city, day, level, headline) => `${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${headline}`,
   shareGood: (city, day, level) => `${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${LEVELS[level].headline} Cek kotamu juga.`,
@@ -171,7 +191,7 @@ export const UI = {
   creditFirms: 'NASA FIRMS',
   creditIspu: 'batas level: ISPU (Permen LHK P.14/2020).',
   privacyTitle: 'Privasi',
-  privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban polling dan masukan belum dikirim ke mana pun.',
+  privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban polling dan masukan belum dikirim ke mana pun.',
   creditLine: ['Proyek sukarela oleh ', 'Khi Hady', ' · kodenya terbuka di ', 'GitHub']
 };
 
@@ -189,3 +209,11 @@ export const POLLS = [
   { label: 'Sesak sekali', reply: `Tetap di dalam dan tutup jendela. Kalau sesak berat atau nyeri dada, sebaiknya segera cari pertolongan medis, atau hubungi ${EMERGENCY_NUMBER}.` },
   { label: 'Tidak yakin', reply: 'Cek level kota di atas dan ikuti sarannya.' }
 ];
+
+/** Instagram Story card (1080×1920). Every line on it comes from here. */
+export const STORY = {
+  stamp: day => `Perkiraan · ${day}`,
+  footer: 'Cek kota sebelum keluar',
+  footerLight: 'Cek kotamu sebelum keluar',
+  url: 'bisanapasgak.github.io'
+};

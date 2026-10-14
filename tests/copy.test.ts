@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { ACTIVITIES, FACTS, LEVELS, POLLS, UI } from '../web/copy.js';
+import { ACTIVITIES, FACTS, LEVELS, POLLS, STORY, UI } from '../web/copy.js';
 
 const ISPU_NAMES = ['Baik', 'Sedang', 'Tidak Sehat', 'Sangat Tidak Sehat', 'Berbahaya'];
 const SLANG = /\b(gas|halu|plis|lebay|ngebut|vonis|faskes|mantan|DJ|sinetron)\b/i;
@@ -19,7 +19,7 @@ function allCopy(): string[] {
     else if (Array.isArray(value)) value.forEach(walk);
     else if (value && typeof value === 'object') Object.values(value).forEach(walk);
   };
-  walk(LEVELS); walk(ACTIVITIES); walk(UI); walk(FACTS); walk(POLLS);
+  walk(LEVELS); walk(ACTIVITIES); walk(UI); walk(FACTS); walk(POLLS); walk(STORY);
   return out;
 }
 
@@ -144,6 +144,14 @@ describe('UI', () => {
       'Palembang, Rabu 10.00: Tidak Sehat (level 3 dari 5). Kurangi aktivitas di luar.'
     );
     assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), /^Palembang, Rabu 10\.00: Baik \(level 1 dari 5\)\./);
+  });
+
+  it('words the new lines as agreed', () => {
+    assert.equal(UI.improveOn('Jumat'), 'Diperkirakan mulai membaik Jumat.');
+    assert.equal(UI.improveNone(4), 'Belum ada tanda membaik dalam 4 hari ke depan.');
+    assert.equal(UI.installButton, 'Pasang di layar utama');
+    assert.equal(UI.storySaved, 'Gambar tersimpan. Unggah ke Story dari galeri.');
+    assert.equal(UI.tagline, 'Cek asap dan kualitas udara hari ini');
   });
 
   it('credits the data sources', () => {
