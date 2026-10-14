@@ -55,6 +55,8 @@ const savedCity = {
 };
 
 // Pinned family cities and the "install" dismissal: also device-only, also optional.
+const SOLIDARITY_KEY = 'akud-solidarity-day'; // the day it was closed; it returns the next day
+const today = () => new Date().toLocaleDateString('en-CA');
 const store = {
   read(key) { try { return localStorage.getItem(key); } catch { return null; } },
   write(key, value) { try { localStorage.setItem(key, value); } catch { /* nothing to remember in private mode */ } }
@@ -283,6 +285,7 @@ function render() {
   const state = freshness(report.generated_at, new Date());
   $('camsCredit').textContent = UI.creditCams(report.generated_at.slice(0, 4));
   $('previewBanner').hidden = !preview;
+  renderSolidarity();
   $('previewBanner').textContent = UI.preview;
   if (state === 'expired') {
     showMessage(UI.expiredHeadline, UI.expiredText, false);
@@ -706,3 +709,12 @@ load();
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => { /* the page works without it */ }));
 }
+
+function renderSolidarity() {
+  $('solidarity').hidden = Boolean(preview) || store.read(SOLIDARITY_KEY) === today();
+}
+$('solidarityClose').addEventListener('click', () => {
+  store.write(SOLIDARITY_KEY, today());
+  renderSolidarity();
+});
+renderSolidarity();

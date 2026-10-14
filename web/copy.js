@@ -100,6 +100,8 @@ export const UI = {
   tagline: 'Perkiraan asap & kualitas udara hari ini',
   eyebrow: 'Perkiraan hari ini',
   beta: 'BETA',
+  solidarity: 'Turut prihatin untuk warga yang terdampak asap.',
+  solidarityClose: 'Tutup untuk hari ini',
   headNote: 'Perkiraan, bisa meleset ·',
   welcome: hello => `${hello} Kamu di kota mana?`,
   overviewTitle: 'Perkiraan asap hari ini',

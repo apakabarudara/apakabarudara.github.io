@@ -114,6 +114,13 @@ describe('OFFICIAL_ISPU', () => {
   });
 });
 
+describe('solidarity strip', () => {
+  it('says it plainly, with no level and no promise', () => {
+    assert.equal(UI.solidarity, 'Turut prihatin untuk warga yang terdampak asap.');
+    assert.doesNotMatch(UI.solidarity, /berduka|aman|donasi|gratis/i);
+  });
+});
+
 describe('head note', () => {
   it('hedges first in the header and keeps the method link', () => {
     assert.equal(UI.headNote, 'Perkiraan, bisa meleset ·');

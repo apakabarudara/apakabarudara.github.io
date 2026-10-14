@@ -217,6 +217,12 @@ ion-modal.sheet { --height: auto; --background: var(--surface); --border-radius:
 
 .head-link { padding: 0; border: 0; background: none; color: inherit; font: inherit; font-weight: var(--fw-strong); text-decoration: underline; cursor: pointer; }
 
+/* Solidarity strip: always on, closable for the day. Neutral notice colours, never a level colour. */
+.solidarity { display: flex; align-items: center; gap: var(--sp-2); border-radius: var(--r-btn); padding: var(--sp-1) var(--sp-1) var(--sp-1) var(--sp-4); background: var(--notice); color: var(--notice-ink); font-size: var(--fs-sm); font-weight: var(--fw-label); }
+.solidarity[hidden] { display: none; }
+.solidarity p { margin: 0; flex: 1; padding: var(--sp-2) 0; }
+.solidarity-x { flex: none; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: inherit; font: inherit; font-size: var(--fs-xl); line-height: 1; cursor: pointer; }
+
 /* Banners: stale data and preview */
 .banner { border-radius: var(--r-btn); padding: var(--sp-3) var(--sp-4); background: var(--notice); color: var(--notice-ink); font-size: var(--fs-sm); font-weight: var(--fw-label); }
 
