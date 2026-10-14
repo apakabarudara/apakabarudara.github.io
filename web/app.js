@@ -57,6 +57,21 @@ const savedCity = {
 // Pinned family cities and the "install" dismissal: also device-only, also optional.
 const SOLIDARITY_KEY = 'akud-solidarity-day'; // the day it was closed; it returns the next day
 const today = () => new Date().toLocaleDateString('en-CA');
+// Anonymous, aggregate counting through GoatCounter: no cookie, no per-person profile. Off with Do Not Track and in preview.
+const GOATCOUNTER = 'https://hady.goatcounter.com/count';
+const doNotTrack = navigator.doNotTrack === '1' || window.doNotTrack === '1';
+if (!doNotTrack && !new URLSearchParams(location.search).has('preview')) {
+  const gc = document.createElement('script');
+  gc.async = true;
+  gc.dataset.goatcounter = GOATCOUNTER;
+  gc.src = 'https://gc.zgo.at/count.js';
+  document.head.append(gc);
+}
+const count = name => {
+  if (doNotTrack || preview) return;
+  try { window.goatcounter?.count({ path: name, title: name, event: true }); } catch { /* counting is optional */ }
+};
+let lastCounted = null;
 const store = {
   read(key) { try { return localStorage.getItem(key); } catch { return null; } },
   write(key, value) { try { localStorage.setItem(key, value); } catch { /* nothing to remember in private mode */ } }
@@ -212,7 +227,10 @@ async function renderSat(loc) {
 document.querySelector('#more ion-accordion-group').addEventListener('ionChange', e => {
   foldOpen = e.detail.value === 'more';
   const loc = selected();
-  if (foldOpen && loc && !$('city').hidden) renderSat(loc);
+  if (foldOpen && loc && !$('city').hidden) {
+    renderSat(loc);
+    count('foto-satelit');
+  }
 });
 
 function renderToday(loc, level) {
@@ -295,6 +313,10 @@ function render() {
   $('banner').textContent = UI.stale(when(report.generated_at));
   const loc = selected();
   $('feedbackBtn').href = feedbackUrl(FEEDBACK_URL, FEEDBACK_CITY_PARAM, loc ? cityName(loc) : '');
+  if (loc && lastCounted !== loc.id) {
+    lastCounted = loc.id;
+    count(`kota/${loc.id}`);
+  }
   if (!loc) {
     renderOverview();
     return;
@@ -398,6 +420,7 @@ function useLocation() {
 
 async function share() {
   if (!report) return;
+  count('bagikan');
   const loc = selected();
   const live = freshness(report.generated_at, new Date()) !== 'expired';
   const target = loc && live && !preview ? loc : null;
@@ -488,6 +511,7 @@ function chooseStory() {
 
 /** A card as a PNG: shared as a file where the browser can (phones offer Instagram Story), otherwise downloaded. */
 async function shareStory(loc, { lines, key }) {
+  count('story');
   $('shareNote').textContent = '';
   // Instagram Stories take no web link from the web: copy it for the Link sticker. Not awaited, and before share, which consumes the tap.
   let linkCopied = false;
@@ -591,6 +615,7 @@ function renderInstall() {
 }
 
 async function install() {
+  count('pasang');
   if (installEvent) {
     const prompt = installEvent;
     installEvent = null;
@@ -718,3 +743,5 @@ $('solidarityClose').addEventListener('click', () => {
   renderSolidarity();
 });
 renderSolidarity();
+
+$('feedbackBtn').addEventListener('click', () => count('masukan'));

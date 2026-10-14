@@ -255,7 +255,7 @@ export const UI = {
   creditGibs: 'NASA GIBS / Worldview (VIIRS)',
   creditIspu: 'batas level: ISPU (Permen LHK P.14/2020).',
   privacyTitle: 'Privasi',
-  privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban "Langit di tempatmu gimana?" tidak dikirim ke mana pun. Masukan lewat Tally tersimpan di Tally.',
+  privacy: 'Tanpa akun dan tanpa cookie. Kunjungan dan ketukan tombol dihitung secara anonim dan agregat lewat GoatCounter, tanpa profil per orang, dan tidak dihitung kalau browsermu mengaktifkan Do Not Track. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban "Langit di tempatmu gimana?" tidak dikirim ke mana pun. Masukan lewat Tally tersimpan di Tally.',
   creditLine: ['Proyek sukarela oleh ', 'Khi Hady', ' · kodenya terbuka di ', 'GitHub']
 };
 

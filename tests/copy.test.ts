@@ -289,6 +289,7 @@ describe('UI', () => {
     assert.equal(UI.stripLegend('Sedang', 'Tidak Sehat'), 'Warna = level per jam, dari Sedang sampai Tidak Sehat. Makin tinggi batang, makin tebal asap.');
     assert.equal(UI.stripRange('Sangat Tidak Sehat', 'Berbahaya'), 'dari Sangat Tidak Sehat sampai Berbahaya');
     assert.equal(UI.stripRange('Berbahaya', 'Berbahaya'), 'semuanya Berbahaya');
+    assert.match(UI.privacy, /GoatCounter, tanpa profil per orang/);
     assert.match(UI.privacy, /Jawaban "Langit di tempatmu gimana\?" tidak dikirim ke mana pun\. Masukan lewat Tally tersimpan di Tally\./);
     assert.ok(!('feedbackSend' in UI) && !('feedbackThanks' in UI) && !('sensitiveIntro' in UI) && !('sensitivePrefix' in UI) && !('windowsShut' in UI));
   });
