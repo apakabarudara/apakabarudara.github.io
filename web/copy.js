@@ -128,7 +128,35 @@ export const UI = {
     `PM2.5 adalah partikel asap yang sangat halus dan bisa masuk sampai ke paru-paru. Rata-rata 24 jam terakhir: ${pm} µg/m³ (mikrogram per meter kubik udara).`,
     'Level 1 sampai 5 memakai batas resmi pemerintah (ISPU).'
   ],
+  explainMethod: 'Lihat metode & sumber',
   official: 'Cek angka resmi pemerintah (ISPU)',
+
+  methodLink: 'Metode & sumber',
+  methodTitle: 'Metode & sumber',
+  methodSourcesTitle: 'Dari mana datanya',
+  methodSources: [
+    'Asap (PM2.5) per jam: model CAMS global dari Copernicus, lewat Open-Meteo. Kotak petanya sekitar 45 km.',
+    'Titik panas: satelit NASA FIRMS (VIIRS, NOAA-20) dalam 100 km, 24 jam terakhir. Hanya yang tingkat yakinnya sedang atau tinggi.',
+    'Angin dan hujan: prakiraan cuaca Open-Meteo.',
+    'Datanya diperbarui setiap jam.'
+  ],
+  methodLevelTitle: 'Cara menghitung level',
+  methodLevel: [
+    'Level dari rata-rata PM2.5 selama 24 jam terakhir, dengan batas ISPU untuk PM2.5 (Permen LHK P.14/2020).',
+    'Batang per jam memakai batas yang sama, sebagai gambaran kasar.'
+  ],
+  methodLimitsTitle: 'Batasannya',
+  methodLimits: [
+    'Ini perkiraan kasar dari model komputer, bukan hasil alat ukur di kota ini, jadi bisa meleset.',
+    'Petanya kasar, jadi asap di dekat kebakaran gambut bisa lebih tebal dari yang tampil.',
+    'Kalau langit di luar bilang lain, percayai langit.',
+    'Angka resmi ada di ISPU.'
+  ],
+  methodHealthTitle: 'Saran kesehatan',
+  methodHealth: 'Saran disusun dari panduan Kemenkes dan masih menunggu tinjauan tenaga kesehatan. Bukan pengganti pemeriksaan dokter.',
+  methodMakerTitle: 'Siapa yang membuat',
+  methodMaker: 'Proyek kecil yang dibuat sukarela, dengan sepenuh hati. Masih terus belajar.',
+  methodFeedback: 'Kalau ada yang menurutmu salah, kabari lewat “Kirim masukan”.',
 
   todayTitle: 'Hari ini cocok untuk…',
   todayTitleNeutral: 'Kegiatan hari ini',

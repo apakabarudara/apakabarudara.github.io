@@ -115,6 +115,33 @@ describe('health lines', () => {
   });
 });
 
+describe('method sheet', () => {
+  const method = [UI.methodTitle, UI.methodLink, UI.explainMethod, UI.methodHealthTitle, UI.methodHealth, UI.methodMakerTitle, UI.methodMaker, UI.methodFeedback, ...UI.methodSources, ...UI.methodLevel, ...UI.methodLimits];
+
+  it('never claims "aman" and never says "kamu" in the limits', () => {
+    for (const line of method) assert.doesNotMatch(line, /\baman\b/i, line);
+    for (const line of UI.methodLimits) assert.doesNotMatch(line, KAMU, line);
+  });
+
+  it('names the sources, the 24-hour average, the ISPU regulation and the limits', () => {
+    const text = [...UI.methodSources, ...UI.methodLevel, ...UI.methodLimits].join(' ');
+    for (const word of [/Copernicus/, /Open-Meteo/, /NASA FIRMS/, /NOAA-20/, /100 km/, /setiap jam/, /24 jam/, /P\.14\/2020/, /model komputer/, /ISPU/]) assert.match(text, word);
+  });
+
+  it('stays humble: no claims of accuracy, validity or endorsement', () => {
+    for (const line of method) assert.doesNotMatch(line, /akurat|terpercaya|\bvalid|ilmiah|\bpasti\b|jaminan|\baman\b|berbasis sains/i, line);
+  });
+
+  it('says the health advice still awaits a health reviewer', () => {
+    assert.equal(UI.methodHealth, 'Saran disusun dari panduan Kemenkes dan masih menunggu tinjauan tenaga kesehatan. Bukan pengganti pemeriksaan dokter.');
+  });
+
+  it('keeps every section short: at most 4 lines, none over 140 characters', () => {
+    for (const lines of [UI.methodSources, UI.methodLevel, UI.methodLimits]) assert.ok(lines.length <= 4);
+    for (const line of method) assert.ok(line.length <= 140, line);
+  });
+});
+
 describe('all copy', () => {
   it('never uses puskesmas, RS, IGD or faskes', () => {
     for (const line of allCopy()) assert.doesNotMatch(line, BANNED_WORDS, line);

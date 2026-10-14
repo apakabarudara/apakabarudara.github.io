@@ -562,6 +562,7 @@ function renderPoll() {
 
 // Static labels come from copy.js so every line lives in one file.
 for (const node of document.querySelectorAll('[data-copy]')) node.textContent = UI[node.dataset.copy];
+for (const node of document.querySelectorAll('[data-method]')) node.textContent = UI[node.dataset.method][Number(node.dataset.i)];
 for (const node of document.querySelectorAll('[data-copy-credit]')) node.textContent = UI.creditLine[Number(node.dataset.copyCredit)];
 for (const node of document.querySelectorAll('[data-copy-label]')) node.setAttribute('aria-label', UI[node.dataset.copyLabel]);
 $('iosStep1').textContent = UI.iosSteps[0];
@@ -588,7 +589,7 @@ $('shareGood').addEventListener('click', () => share(true));
 $('factsNext').addEventListener('click', nextFact);
 
 // Bottom sheets that fit their content: "Apa ini?", the iOS install steps, "Pantau kota lain".
-for (const id of ['about', 'iosSheet', 'watchSheet']) {
+for (const id of ['about', 'method', 'iosSheet', 'watchSheet']) {
   $(id).breakpoints = [0, 1];
   $(id).initialBreakpoint = 1;
 }
@@ -596,6 +597,15 @@ $('watchSoloBtn').addEventListener('click', openWatchSheet);
 const sheet = $('about');
 $('aboutBtn').addEventListener('click', () => sheet.present());
 $('aboutClose').addEventListener('click', () => sheet.dismiss());
+$('methodClose').addEventListener('click', () => $('method').dismiss());
+$('methodLink').addEventListener('click', () => $('method').present());
+$('methodFromAbout').addEventListener('click', async () => {
+  await sheet.dismiss();
+  $('method').present();
+});
+$('methodOfficial').href = ISPU_URL;
+$('methodFeedbackBtn').href = FEEDBACK_URL;
+$('methodFeedbackBtn').hidden = !FEEDBACK_URL;
 $('iosClose').addEventListener('click', () => $('iosSheet').dismiss());
 $('watchClose').addEventListener('click', () => $('watchSheet').dismiss());
 $('story').addEventListener('click', shareStory);

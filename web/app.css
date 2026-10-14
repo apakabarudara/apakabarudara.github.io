@@ -171,6 +171,13 @@ ion-modal.sheet { --height: auto; --background: var(--surface); --border-radius:
 .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); }
 .sheet-head h2 { margin: 0; font-size: var(--fs-lg); font-weight: var(--fw-display); }
 #aboutClose { height: 44px; font-size: var(--fs-sm); --padding-start: var(--sp-2); --padding-end: var(--sp-2); }
+.method h3 { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); font-weight: var(--fw-label); }
+.method ul { margin: var(--sp-1) 0 0; padding-left: 1.2em; }
+.method p { margin: var(--sp-1) 0 0; }
+.method li { margin-top: var(--sp-1); }
+.fine-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--sp-1) var(--sp-4); }
+.fine-link, .sheet-link { background: none; border: 0; padding: 0 2px; font: inherit; font-weight: var(--fw-label); color: var(--ink); text-decoration: underline; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; }
+.sheet-link { margin-top: var(--sp-1); color: var(--brand); }
 .explain p { margin: var(--sp-2) 0 0; }
 #official { --color: var(--brand); --border-color: var(--brand); --border-width: 1.5px; }
 

@@ -58,6 +58,7 @@ Voice, after a UX-writer review and a plain-language research pass on 2026-10-14
 
 - **Level scale**: level name plus a 5-segment scale in the answer card; the segment of the current level is solid and taller, the others sit at 30% opacity; at level 5 the active segment uses the level-5 accent. The visible "· level X dari 5" is gone; it stays in the aria-label and shared text.
 - **Kapan membaik?**: levels 3–5, first later outlook day with a lower band ("Diperkirakan mulai membaik Jumat.") or "Belum ada tanda membaik dalam n hari ke depan."; nothing at levels 1–2.
+- **Metode & sumber**: a bottom sheet (`#method`) opened from the footer link beside Privasi and from "Lihat metode & sumber" at the end of "Apa ini?". Short headings: data sources, how the level is computed, limits, health advice status, who makes it. Copy in `UI.method*`; no claim of "aman".
 - **PWA install**: manifest plus icons, install control only at the bottom of the city view and only from the second visit, dismissible; iOS Safari gets a two-step sheet.
 - **Pantau kota lain**: up to 3 pinned cities as chips at the top of the city view (with none pinned, a soft button under the share row instead), picked in a sheet with checkboxes; works offline.
 - **Bagikan ke Story**: canvas card, Web Share with a file, download fallback; text kept between 250 px and 1580 px of the 1920 px height. Levels 1–2 get a bigger mascot and the day's quip.

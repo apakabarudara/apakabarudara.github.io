@@ -186,10 +186,13 @@
       <footer class="footer">
         <p data-copy="footerDisclaimer"></p>
         <p><span data-copy="creditsIntro"></span> <a href="https://open-meteo.com/" target="_blank" rel="noopener" data-copy="creditOpenMeteo"></a> <span data-copy="creditOpenMeteoLicence"></span> · <span id="camsCredit"></span> · <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener" data-copy="creditFirms"></a> · <span data-copy="creditIspu"></span></p>
-        <details class="fine">
-          <summary data-copy="privacyTitle"></summary>
-          <p data-copy="privacy"></p>
-        </details>
+        <div class="fine-row">
+          <details class="fine">
+            <summary data-copy="privacyTitle"></summary>
+            <p data-copy="privacy"></p>
+          </details>
+          <button id="methodLink" class="fine-link" type="button" data-copy="methodLink"></button>
+        </div>
         <p class="credit"><span data-copy-credit="0"></span><a href="https://github.com/khihadysucahyo" target="_blank" rel="noopener" data-copy-credit="1"></a><span data-copy-credit="2"></span><a href="https://github.com/bisanapasgak/bisanapasgak.github.io" target="_blank" rel="noopener" data-copy-credit="3"></a></p>
       </footer>
     </main>
@@ -203,7 +206,33 @@
       </div>
       <div id="explain" class="explain"></div>
       <p class="small" data-copy="medicalNote"></p>
+      <button id="methodFromAbout" class="sheet-link" type="button" data-copy="explainMethod"></button>
       <ion-button id="official" class="wide" expand="block" fill="outline" target="_blank" rel="noopener"><span data-copy="official"></span><svg class="ic" slot="end" aria-hidden="true"><use href="#i-arrow"/></svg></ion-button>
+    </div>
+  </ion-modal>
+  <ion-modal id="method" class="sheet" aria-labelledby="methodTitle">
+    <div class="sheet-body">
+      <div class="sheet-head">
+        <h2 id="methodTitle" data-copy="methodTitle"></h2>
+        <ion-button id="methodClose" fill="clear"><span data-copy="close"></span></ion-button>
+      </div>
+      <div class="method">
+        <h3 data-copy="methodSourcesTitle"></h3>
+        <ul><li data-method="methodSources" data-i="0"></li><li data-method="methodSources" data-i="1"></li><li data-method="methodSources" data-i="2"></li><li data-method="methodSources" data-i="3"></li></ul>
+        <h3 data-copy="methodLevelTitle"></h3>
+        <p data-method="methodLevel" data-i="0"></p>
+        <p data-method="methodLevel" data-i="1"></p>
+        <h3 data-copy="methodLimitsTitle"></h3>
+        <ul><li data-method="methodLimits" data-i="0"></li><li data-method="methodLimits" data-i="1"></li><li data-method="methodLimits" data-i="2"></li><li data-method="methodLimits" data-i="3"></li></ul>
+        <ion-button id="methodOfficial" class="wide" expand="block" fill="outline" target="_blank" rel="noopener"><span data-copy="official"></span><svg class="ic" slot="end" aria-hidden="true"><use href="#i-arrow"/></svg></ion-button>
+        <h3 data-copy="methodHealthTitle"></h3>
+        <p data-copy="methodHealth"></p>
+        <h3 data-copy="methodMakerTitle"></h3>
+        <p><span data-copy-credit="0"></span><a href="https://github.com/khihadysucahyo" target="_blank" rel="noopener" data-copy-credit="1"></a><span data-copy-credit="2"></span><a href="https://github.com/bisanapasgak/bisanapasgak.github.io" target="_blank" rel="noopener" data-copy-credit="3"></a></p>
+        <p data-copy="methodMaker"></p>
+        <p data-copy="methodFeedback"></p>
+        <ion-button id="methodFeedbackBtn" class="wide soft" expand="block" target="_blank" rel="noopener"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-arrow"/></svg><span data-copy="feedbackButton"></span></ion-button>
+      </div>
     </div>
   </ion-modal>
   <ion-modal id="iosSheet" class="sheet" aria-labelledby="iosTitle">
