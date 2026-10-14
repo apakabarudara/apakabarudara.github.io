@@ -6,83 +6,84 @@
 // DRAFT: level 3–5 safety copy, the activity statuses and the symptom lines follow the plan's safety table, ISPU
 // (Permen LHK P.14/2020, Lampiran II) and Kemenkes haze guidance. They still need sign-off from the health reviewer.
 
-/** Who counts as sensitive, after Kemenkes: children, older people, pregnant women, people with lung or heart disease. */
-export const SENSITIVE = 'Anak, lansia, ibu hamil, sakit paru/jantung';
+/**
+ * The official ISPU guidance, quoted word for word from the ISPU app of the Kementerian Lingkungan Hidup (ispu.kemenlh.go.id:
+ * category descriptions and the per-category "Apa yang harus dilakukan" texts). Never reword; the test freezes it.
+ * Level 1 has one undivided line, so it has no `sensitive`.
+ */
+export const OFFICIAL_ISPU = {
+  1: {
+    description: 'Tingkat kualitas udara yang sangat baik, tidak memberikan efek negatif terhadap manusia, hewan, tumbuhan.',
+    sensitive: null,
+    everyone: 'Sangat baik untuk melakukan kegiatan di luar ruangan.'
+  },
+  2: {
+    description: 'Tingkat kualitas udara masih dapat diterima pada kesehatan manusia, hewan dan tumbuhan.',
+    sensitive: 'Kurangi aktivitas fisik yang terlalu lama atau berat.',
+    everyone: 'Masih dapat beraktivitas di luar ruangan.'
+  },
+  3: {
+    description: 'Tingkat kualitas udara yang bersifat merugikan pada manusia, hewan dan tumbuhan.',
+    sensitive: 'Boleh beraktivitas di luar dengan rehat lebih sering dan aktivitas ringan. Amati gejala seperti batuk atau sesak napas. Penderita asma harus mengikuti petunjuk kesehatan dan membawa obat. Penderita penyakit jantung perlu mewaspadai gejala seperti palpitasi, sesak napas, atau kelelahan tidak biasa.',
+    everyone: 'Kurangi aktivitas fisik yang terlalu lama di luar ruangan.'
+  },
+  4: {
+    description: 'Tingkat kualitas udara yang dapat meningkatkan resiko kesehatan pada sejumlah segmen populasi yang terpapar.',
+    sensitive: 'Hindari semua aktivitas di luar ruangan, perbanyak aktivitas di dalam ruangan atau jadwalkan ulang.',
+    everyone: 'Hindari aktivitas fisik terlalu lama di luar ruangan dan pertimbangkan beraktivitas di dalam ruangan.'
+  },
+  5: {
+    description: 'Tingkat kualitas udara yang dapat merugikan kesehatan serius pada populasi dan perlu penanganan cepat.',
+    sensitive: 'Tetap di dalam ruangan dan hanya melakukan sedikit aktivitas.',
+    everyone: 'Hindari seluruh aktivitas di luar ruangan.'
+  }
+};
 
-/** Per ISPU level. quips (one shown per day, see dailyQuip) only where the tone allows a light line: levels 1–2. */
+/** Per ISPU level. quips (one shown per day, see dailyQuip) only where the tone allows a light line: levels 1–2. Non-health lines only. */
 export const LEVELS = {
   1: {
     name: 'Baik',
-    headline: 'Udara diperkirakan bagus hari ini.',
-    quips: [
-      'Waktu yang enak untuk keluar.',
-      'Langit lagi bersih. Cocok buat jalan pagi.',
-      'Udaranya lagi bersahabat.',
-      'Cocok buat buka jendela lebar-lebar.',
-      'Hari yang pas buat main di luar.',
-      'Ajak keluarga jalan sore, yuk.'
-    ],
-    everyone: [],
-    sensitive: [],
-    dayLine: 'Udara diperkirakan bagus.',
-    activities: { laundry: 'ok', exercise: 'ok', windows: 'ok', kids: 'ok' },
+    quips: ['Langit lagi bersih-bersihnya.', 'Jemuran lagi senang hari ini.', 'Si Kapas lagi senyum lebar.', 'Awan putih, langit biru.'],
+    activities: { laundry: 'ok', windows: 'ok' },
     goodNews: 'Kabari grup: udara lagi bagus',
     health: false,
     emergency: false
   },
   2: {
     name: 'Sedang',
-    headline: 'Masih oke untuk kebanyakan orang.',
-    quips: ['Belum sempurna, tapi masih nyaman untuk keluar.', 'Masih enak buat jalan santai.', 'Cukup baik untuk kegiatan biasa.'],
-    everyone: [],
-    sensitive: ['Kurangi olahraga berat yang lama di luar'],
-    dayLine: 'Masih oke untuk kebanyakan orang.',
-    activities: { laundry: 'ok', exercise: 'caution', windows: 'ok', kids: 'ok' },
+    quips: ['Langit agak berkabut tipis.', 'Si Kapas masih senyum.', 'Langit belum sebersih kemarin, tapi masih cerah.'],
+    activities: { laundry: 'ok', windows: 'ok' },
     goodNews: 'Kabari grup: udara masih oke',
     health: false,
     emergency: false
   },
   3: {
     name: 'Tidak Sehat',
-    headline: 'Kurangi aktivitas di luar.',
-    everyone: ['Kurangi olahraga di luar', 'Kalau bisa, kurangi kerja berat di luar. Kalau harus, istirahat lebih sering.'],
-    sensitive: ['Lebih banyak di dalam ruangan'],
-    dayLine: 'Kurangi aktivitas berat di luar.',
-    activities: { laundry: 'no', exercise: 'no', windows: 'caution', kids: 'caution' },
+    activities: { laundry: 'no', windows: 'caution' },
     goodNews: null,
     health: true,
     emergency: false
   },
   4: {
     name: 'Sangat Tidak Sehat',
-    headline: 'Sebisa mungkin di dalam ruangan.',
-    everyone: ['Tutup jendela dan pintu', 'Kalau harus keluar, sebaiknya pakai masker N95'],
-    sensitive: ['Tetap di dalam ruangan'],
-    dayLine: 'Rencanakan kegiatan di dalam ruangan.',
-    activities: { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' },
+    activities: { laundry: 'no', windows: 'no' },
     goodNews: null,
     health: true,
     emergency: true
   },
   5: {
     name: 'Berbahaya',
-    headline: 'Sebaiknya tetap di dalam ruangan.',
-    everyone: ['Tutup jendela dan pintu', 'Kalau terpaksa keluar, sebaiknya pakai masker N95'],
-    sensitive: ['Tetap di dalam ruangan sepanjang hari'],
-    dayLine: 'Tetap di dalam ruangan sepanjang hari.',
-    activities: { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' },
+    activities: { laundry: 'no', windows: 'no' },
     goodNews: null,
     health: true,
     emergency: true
   }
 };
 
-/** "Hari ini cocok untuk…" tiles. Statuses come from LEVELS[n].activities. */
+/** Household-fact tiles only ("Urusan rumah hari ini"); no health activities. Statuses come from LEVELS[n].activities. */
 export const ACTIVITIES = [
   { id: 'laundry', icon: 'shirt', label: 'Jemur baju', notes: { ok: 'Oke', caution: 'Bisa hujan', no: 'Bisa bau asap' } },
-  { id: 'exercise', icon: 'run', label: 'Olahraga di luar', notes: { ok: 'Oke', caution: 'Ringan saja', no: 'Tunda dulu' } },
-  { id: 'windows', icon: 'window', label: 'Buka jendela', notes: { ok: 'Oke', caution: 'Saat asap tipis', no: 'Tutup' } },
-  { id: 'kids', icon: 'child', label: 'Anak main di luar', notes: { ok: 'Oke', caution: 'Sebentar saja', no: 'Di dalam saja' } }
+  { id: 'windows', icon: 'window', label: 'Jendela', notes: { ok: 'Oke', caution: 'Saat asap tipis', no: 'Tutup' } }
 ];
 
 export const RAIN = { none: 'Tidak hujan', some: 'Ada hujan', heavy: 'Hujan lebat' };
@@ -93,12 +94,16 @@ export const EMERGENCY_NUMBER = '119';
 export const SITE_HOST = 'bisanapasgak.github.io';
 
 /** First line of every shared text: forwarded without context, a claim reads as a hoax unless it says it is an estimate. */
+/** Shared texts and the Story card carry the level and this pointer, never our own advice. */
+const GUIDE_IN_LINK = 'Panduan resmi ISPU ada di link.';
+
 const SHARE_PREFIX = 'Apa Kabar Udara (perkiraan, bukan angka resmi)\n';
 
 export const UI = {
   loadingHeadline: 'Mengecek udara…',
   brand: 'Apa Kabar Udara',
   tagline: 'Perkiraan asap & kualitas udara hari ini',
+  eyebrow: 'Perkiraan hari ini',
   beta: 'BETA',
   welcome: hello => `${hello} Kamu di kota mana?`,
   overviewTitle: 'Perkiraan asap hari ini',
@@ -114,16 +119,19 @@ export const UI = {
   locateFailed: 'Lokasi tidak terbaca. Pilih kota dari daftar.',
   nearest: (city, km) => `Kota terdekat: ${city}, sekitar ${km} km. Lokasi tidak disimpan atau dikirim.`,
 
-  levelHeading: name => `Perkiraan: ${name}`,
+  levelOf: level => `(${level} dari 5)`,
   levelLabel: (name, level) => `${name} · level ${level} dari 5`,
   scaleLabel: level => `level ${level} dari 5`,
   betterSince: previous => `Perkiraannya membaik sejak terakhir kamu cek (sebelumnya ${previous}).`,
   improveOn: weekday => `Diperkirakan mulai membaik ${weekday}.`,
   improveNone: days => `Perkiraan ${days} hari ke depan belum menunjukkan perbaikan.`,
-  sensitivePrefix: `${SENSITIVE}:`,
+  guideTitle: 'Panduan resmi ISPU',
+  guideSensitive: 'Kelompok sensitif:',
+  guideEveryone: 'Setiap orang:',
+  guideSource: 'Sumber: ISPU, Kementerian Lingkungan Hidup',
   symptomsMild: 'Batuk terus atau mata perih? Ada baiknya periksa ke fasilitas kesehatan.',
   symptomsEmergency: `Sesak napas atau nyeri dada? Sebaiknya segera cari pertolongan medis, atau hubungi ${EMERGENCY_NUMBER}.`,
-  medicalNote: 'Saran kesehatan di sini disusun dari panduan Kemenkes, bukan pengganti pemeriksaan dokter.',
+  medicalNote: 'Panduan di sini dikutip dari ISPU (Kementerian Lingkungan Hidup). Untuk kondisi kesehatan, tanyakan ke tenaga kesehatan.',
   healthButton: 'Cari fasilitas kesehatan',
   healthQuery: 'fasilitas kesehatan terdekat',
   call: number => `Telepon ${number}`,
@@ -159,14 +167,13 @@ export const UI = {
     'Kalau langit di luar bilang lain, percayai langit.',
     'Angka resmi ada di ISPU.'
   ],
-  methodHealthTitle: 'Saran kesehatan',
-  methodHealth: 'Saran disusun dari panduan Kemenkes dan masih menunggu tinjauan tenaga kesehatan. Bukan pengganti pemeriksaan dokter.',
+  methodHealthTitle: 'Panduan kesehatan',
+  methodHealth: 'Panduan di sini dikutip dari ISPU (Kementerian Lingkungan Hidup). Untuk kondisi kesehatan, tanyakan ke tenaga kesehatan.',
   methodMakerTitle: 'Siapa yang membuat',
   methodMaker: 'Proyek kecil yang dibuat sukarela, dengan sepenuh hati. Masih terus belajar.',
   methodFeedback: 'Kalau ada yang menurutmu salah, kabari lewat “Kirim masukan”.',
 
-  todayTitle: 'Hari ini cocok untuk…',
-  todayTitleNeutral: 'Kegiatan hari ini',
+  todayTitle: 'Urusan rumah hari ini',
   // From level 3 the window can still be smoky: say its own estimated band so it never reads as a nudge outdoors.
   bestWindow: (level, dayWord, from, to, windowBand) => {
     const line = `${level === 1 ? 'Udara paling segar' : 'Asap paling tipis'} di siang hari: ${dayWord}, ${from}–${to}`;
@@ -174,7 +181,6 @@ export const UI = {
   },
   shareFallback: title => `${SHARE_PREFIX}${title}`,
   dayWord: { today: 'hari ini', tomorrow: 'besok' },
-  windowsShut: 'Sebaiknya jendela ditutup hari ini.',
   stripLabel: (range, window) => `Asap per jam, 24 jam ke depan, ${range}.${window}`,
   stripRange: (low, high) => (low === high ? `semuanya ${low}` : `dari ${low} sampai ${high}`),
   stripBest: (from, to) => ` Paling tipis ${from}–${to}.`,
@@ -211,8 +217,8 @@ export const UI = {
   storyTapAgain: 'Gambarnya sudah siap. Ketuk sekali lagi untuk membagikan.',
   storyFailed: 'Gambar belum bisa dibuat. Coba lagi.',
   shared: 'Link disalin. Tinggal tempel di grup.',
-  shareText: (city, day, level, headline) => `${SHARE_PREFIX}${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${headline}`,
-  shareGood: (city, day, level) => `${SHARE_PREFIX}${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5). ${LEVELS[level].headline} Cek kotamu juga.`,
+  shareText: (city, day, level, quip) => `${SHARE_PREFIX}${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5).${quip ? ` ${quip}` : ''} ${GUIDE_IN_LINK}`,
+  shareGood: (city, day, level, quip) => `${SHARE_PREFIX}${city}, ${day}: ${LEVELS[level].name} (level ${level} dari 5).${quip ? ` ${quip}` : ''} ${GUIDE_IN_LINK} Cek kotamu juga.`,
   shareOverview: `${SHARE_PREFIX}Kondisi asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.`,
 
   preview: 'Pratinjau: level contoh untuk melihat tampilan, bukan data nyata.',
@@ -226,7 +232,7 @@ export const UI = {
   moreTitleNoFacts: 'Cek napas hari ini',
   factsTitle: 'Fakta singkat',
   factsNext: 'Fakta lain',
-  pollTitle: 'Bagaimana napas hari ini?',
+  pollTitle: 'Langit di tempatmu gimana?',
   feedbackButton: 'Kirim masukan',
   feedbackNote: 'Terbuka di Tally. Bisa lapor masalah, kasih saran, atau minta kota baru.',
 
@@ -238,7 +244,7 @@ export const UI = {
   creditFirms: 'NASA FIRMS',
   creditIspu: 'batas level: ISPU (Permen LHK P.14/2020).',
   privacyTitle: 'Privasi',
-  privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban "Bagaimana napas hari ini?" tidak dikirim ke mana pun. Masukan lewat Tally tersimpan di Tally.',
+  privacy: 'Tanpa akun, cookie, atau pelacak. Kota pilihan dan kota pantauan disimpan di HP ini saja. Lokasi, kalau diizinkan, cuma dipakai di browser untuk mencari kota terdekat dan tidak disimpan. Jawaban "Langit di tempatmu gimana?" tidak dikirim ke mana pun. Masukan lewat Tally tersimpan di Tally.',
   creditLine: ['Proyek sukarela oleh ', 'Khi Hady', ' · kodenya terbuka di ', 'GitHub']
 };
 
@@ -246,21 +252,21 @@ export const UI = {
 export const FACTS = [
   'Asap tidak mengenal batas negara. Bisa menyeberang sampai Sarawak dan membuat udara di sana ikut tidak sehat.',
   'Lahan gambut bisa terbakar diam-diam di bawah tanah. Api yang kelihatan padam belum tentu benar-benar selesai.',
-  'El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.',
-  'Masker kain kurang efektif menyaring partikel asap yang sangat halus. Untuk asap, masker N95 lebih baik, asal pas di wajah.'
+  'El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.'
 ];
 
 export const POLLS = [
-  { label: 'Lega', reply: 'Syukurlah. Tetap minum air putih, ya.' },
-  { label: 'Agak sesak', reply: 'Kurangi aktivitas di luar hari ini. Kalau tidak membaik, ada baiknya periksa ke fasilitas kesehatan.' },
-  { label: 'Sesak sekali', reply: `Kalau sesaknya berat atau disertai nyeri dada, sebaiknya segera cari pertolongan medis atau hubungi ${EMERGENCY_NUMBER}. Sementara itu, tetap di dalam dan tutup jendela.` },
-  { label: 'Tidak yakin', reply: 'Cek level kota di atas dan ikuti sarannya.' }
+  { label: 'Cerah', reply: 'Makasih! Senang dengarnya.' },
+  { label: 'Agak berasap', reply: 'Makasih! Kalau yang terlihat beda dari perkiraan, ikuti yang terlihat.' },
+  { label: 'Berasap tebal', reply: 'Makasih! Kalau asap di sekitarmu lebih tebal dari perkiraan, ikuti yang terlihat dan cek angka resmi ISPU.' },
+  { label: 'Tidak yakin', reply: 'Makasih! Coba lihat ke luar jendela sebentar.' }
 ];
 
 /** Instagram Story card (1080×1920). Every line on it comes from here. */
 export const STORY = {
   levelName: name => `Perkiraan: ${name}`,
   stamp: day => `Diperbarui ${day}`,
+  guide: GUIDE_IN_LINK,
   footer: 'Cek kota sebelum keluar',
   footerLight: 'Cek kotamu sebelum keluar',
   url: SITE_HOST

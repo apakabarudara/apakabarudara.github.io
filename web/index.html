@@ -38,9 +38,7 @@ addEventListener('error', e => {
   <symbol id="i-share" viewBox="0 0 24 24"><path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M8.7 10.7l6.6 -3.4"/><path d="M8.7 13.3l6.6 3.4"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/></symbol>
   <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M8.5 4l-5 2.8 1.9 3.6 2.1-1V20h9V9.4l2.1 1 1.9-3.6-5-2.8c-.6 1.3-2 2.2-3.5 2.2s-2.9-.9-3.5-2.2z"/></symbol>
-  <symbol id="i-run" viewBox="0 0 24 24"><path d="M11 5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M4 17l5 1l.75 -1.5"/><path d="M15 21v-4l-4 -3l1 -6"/><path d="M7 12v-3l5 -1l3 3l3 1"/></symbol>
   <symbol id="i-window" viewBox="0 0 24 24"><rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M12 3.5v17M4.5 12h15"/></symbol>
-  <symbol id="i-child" viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="2.5"/><path d="M12 9v6M8 12.5l4-2 4 2M9 20.5l3-5.5 3 5.5"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></symbol>
@@ -105,11 +103,17 @@ addEventListener('error', e => {
 
         <ion-card id="answer" class="hero" data-level="0" aria-live="polite">
           <span class="mascot" aria-hidden="true"><svg class="mascot-art" viewBox="0 0 72 64"><use class="body" href="#blob"/><ellipse class="shine" cx="31" cy="21" rx="6" ry="3.2" transform="rotate(-18 31 21)"/><path class="brow" d="M24 35l6-2.5M48 35l-6-2.5"/><ellipse class="eye" cx="29" cy="40" rx="3" ry="3.6"/><ellipse class="eye" cx="43" cy="40" rx="3" ry="3.6"/><ellipse class="cheek" cx="22" cy="46" rx="4" ry="2.4"/><ellipse class="cheek" cx="50" cy="46" rx="4" ry="2.4"/><path class="mouth happy" d="M31 46q5 5 10 0"/><path class="mouth flat" d="M32 47.5h8"/><path class="mouth sad" d="M31 49q5-5 10 0"/><g class="mask"><path class="strap" d="M25 46l-11-4M47 46l11-4"/><rect x="25" y="43" width="22" height="12" rx="5"/><path class="pleat" d="M29 47.5h14M29 51h14"/></g></svg></span>
-          <p class="lvl"><span id="levelName"></span><span id="scale" class="scale" role="img"><i></i><i></i><i></i><i></i><i></i></span></p>
-          <h2 id="headline" class="headline"></h2>
+          <p class="lvl"><span class="eyebrow" data-copy="eyebrow"></span><span id="scale" class="scale" role="img"><i></i><i></i><i></i><i></i><i></i></span></p>
+          <h2 id="headline" class="headline"><span id="levelName"></span> <span id="levelOf" class="of"></span></h2>
+          <p id="desc" class="desc"></p>
           <p id="quip" class="quip"></p>
           <p id="better" class="improve" hidden></p>
-          <ul id="actions" class="actions"></ul>
+          <div id="guide" class="guide">
+            <h3 data-copy="guideTitle"></h3>
+            <p id="guideSensitive"><b data-copy="guideSensitive"></b> <span></span></p>
+            <p id="guideEveryone"><b data-copy="guideEveryone"></b> <span></span></p>
+            <a id="guideSource" class="guide-src" target="_blank" rel="noopener" data-copy="guideSource"></a>
+          </div>
           <p id="improve" class="improve" hidden></p>
           <div id="symptoms" class="symptoms"><p data-copy="symptomsMild"></p><p data-copy="symptomsEmergency"></p></div>
           <div class="btns">

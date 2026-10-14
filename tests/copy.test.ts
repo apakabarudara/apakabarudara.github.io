@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { ACTIVITIES, FACTS, LEVELS, POLLS, STORY, UI } from '../web/copy.js';
+import { ACTIVITIES, FACTS, LEVELS, OFFICIAL_ISPU, POLLS, STORY, UI } from '../web/copy.js';
 
 const ISPU_NAMES = ['Baik', 'Sedang', 'Tidak Sehat', 'Sangat Tidak Sehat', 'Berbahaya'];
 const SLANG = /\b(gas|halu|plis|lebay|ngebut|vonis|faskes|mantan|DJ|sinetron)\b/i;
@@ -19,7 +19,8 @@ function allCopy(): string[] {
     else if (Array.isArray(value)) value.forEach(walk);
     else if (value && typeof value === 'object') Object.values(value).forEach(walk);
   };
-  walk(LEVELS); walk(ACTIVITIES); walk(UI); walk(FACTS); walk(POLLS); walk(STORY);
+  walk(LEVELS); walk(ACTIVITIES); // OFFICIAL_ISPU is a quote and stays exempt
+   walk(UI); walk(FACTS); walk(POLLS); walk(STORY);
   return out;
 }
 
@@ -27,20 +28,14 @@ describe('LEVELS', () => {
   for (const level of [1, 2, 3, 4, 5]) {
     const copy = LEVELS[level];
 
-    it(`level ${level} uses the official ISPU name, a headline and short advice`, () => {
+    it(`level ${level} uses the official ISPU name and carries none of our own advice`, () => {
       assert.equal(copy.name, ISPU_NAMES[level - 1]);
-      assert.ok(copy.headline.length > 0);
-      // Levels 1–2 leave the everyday advice to the activity tiles and the quip.
-      assert.ok(level <= 2 ? copy.everyone.length === 0 : copy.everyone.length >= 1 && copy.everyone.length <= 2);
-      assert.ok(copy.sensitive.length <= 1);
-      assert.equal(copy.sensitive.length === 0, level === 1);
-      assert.ok(copy.dayLine.length > 0);
+      for (const key of ['headline', 'everyone', 'sensitive', 'dayLine']) assert.ok(!(key in copy), key);
     });
 
     it(`level ${level} is light, and says "kamu", only at levels 1–2`, () => {
       assert.equal((copy.quips ?? []).length > 0, level <= 2);
-      const lines = [copy.headline, ...(copy.quips ?? []), ...copy.everyone, ...copy.sensitive, copy.dayLine];
-      for (const line of lines) if (level >= 3) assert.doesNotMatch(line, KAMU, line);
+      for (const line of copy.quips ?? []) assert.doesNotMatch(line, KAMU, line);
     });
 
     it(`level ${level} offers health access from level 3, 119 from level 4, good news up to level 2`, () => {
@@ -49,42 +44,78 @@ describe('LEVELS', () => {
       assert.equal(typeof copy.goodNews === 'string', level <= 2);
     });
 
-    it(`level ${level} has a status for every activity, consistent with the safety actions`, () => {
+    it(`level ${level} has a status for every household tile, and smoke closes the windows from level 4`, () => {
+      assert.deepEqual(Object.keys(copy.activities).sort(), ACTIVITIES.map(a => a.id).sort());
       for (const activity of ACTIVITIES) assert.ok(['ok', 'caution', 'no'].includes(copy.activities[activity.id]), activity.id);
-      if (level >= 4) assert.deepEqual(copy.activities, { laundry: 'no', exercise: 'no', windows: 'no', kids: 'no' });
-      if (level >= 3) assert.equal(copy.activities.exercise, 'no');
+      if (level >= 4) assert.deepEqual(copy.activities, { laundry: 'no', windows: 'no' });
     });
 
-    it(`level ${level} copy avoids slang older readers stumble on`, () => {
-      const lines = [copy.headline, ...(copy.quips ?? []), ...copy.everyone, ...copy.sensitive, copy.dayLine];
-      for (const line of lines) assert.doesNotMatch(line, SLANG, line);
-    });
-
-    it(`level ${level} never claims "aman" in its headline or actions`, () => {
-      for (const line of [copy.headline, ...copy.everyone, ...copy.sensitive, copy.dayLine]) assert.doesNotMatch(line, /\baman\b/i, line);
+    it(`level ${level} quips avoid slang older readers stumble on, and never claim "aman"`, () => {
+      for (const line of copy.quips ?? []) {
+        assert.doesNotMatch(line, SLANG, line);
+        assert.doesNotMatch(line, /\baman\b/i, line);
+      }
     });
   }
 
-  it('words levels 1 and 2 as agreed, with the actions', () => {
-    assert.equal(LEVELS[1].headline, 'Udara diperkirakan bagus hari ini.');
-    assert.deepEqual(LEVELS[1].everyone, []);
-    assert.deepEqual(LEVELS[2].everyone, []);
-    assert.equal(LEVELS[1].quips.length, 6);
-    assert.equal(LEVELS[2].quips.length, 3);
-    assert.equal(LEVELS[2].headline, 'Masih oke untuk kebanyakan orang.');
-  });
-
-  it('keeps the level 3 work line and the levels 4–5 window line', () => {
-    assert.ok(LEVELS[3].everyone.includes('Kalau bisa, kurangi kerja berat di luar. Kalau harus, istirahat lebih sering.'));
-    assert.equal(UI.windowsShut, 'Sebaiknya jendela ditutup hari ini.');
+  it('words the quips as agreed: non-health only', () => {
+    assert.deepEqual(LEVELS[1].quips, ['Langit lagi bersih-bersihnya.', 'Jemuran lagi senang hari ini.', 'Si Kapas lagi senyum lebar.', 'Awan putih, langit biru.']);
+    assert.deepEqual(LEVELS[2].quips, ['Langit agak berkabut tipis.', 'Si Kapas masih senyum.', 'Langit belum sebersih kemarin, tapi masih cerah.']);
   });
 });
 
-describe('activities', () => {
-  it('uses the agreed notes', () => {
-    const notes = Object.fromEntries(ACTIVITIES.map(a => [a.id, a.notes]));
-    assert.equal(notes.laundry.no, 'Bisa bau asap');
-    for (const id of ['laundry', 'exercise', 'windows', 'kids']) assert.equal(notes[id].ok, 'Oke');
+describe('OFFICIAL_ISPU', () => {
+  // Copied exactly from the ISPU app (ispu.kemenlh.go.id): the category descriptions and ispu_info. A quote must stay exact, so it is
+  // frozen here and left out of the banned-word tests (it says "Boleh").
+  const FROZEN = {
+    1: {
+      description: 'Tingkat kualitas udara yang sangat baik, tidak memberikan efek negatif terhadap manusia, hewan, tumbuhan.',
+      sensitive: null,
+      everyone: 'Sangat baik untuk melakukan kegiatan di luar ruangan.'
+    },
+    2: {
+      description: 'Tingkat kualitas udara masih dapat diterima pada kesehatan manusia, hewan dan tumbuhan.',
+      sensitive: 'Kurangi aktivitas fisik yang terlalu lama atau berat.',
+      everyone: 'Masih dapat beraktivitas di luar ruangan.'
+    },
+    3: {
+      description: 'Tingkat kualitas udara yang bersifat merugikan pada manusia, hewan dan tumbuhan.',
+      sensitive:
+        'Boleh beraktivitas di luar dengan rehat lebih sering dan aktivitas ringan. Amati gejala seperti batuk atau sesak napas. Penderita asma harus mengikuti petunjuk kesehatan dan membawa obat. Penderita penyakit jantung perlu mewaspadai gejala seperti palpitasi, sesak napas, atau kelelahan tidak biasa.',
+      everyone: 'Kurangi aktivitas fisik yang terlalu lama di luar ruangan.'
+    },
+    4: {
+      description: 'Tingkat kualitas udara yang dapat meningkatkan resiko kesehatan pada sejumlah segmen populasi yang terpapar.',
+      sensitive: 'Hindari semua aktivitas di luar ruangan, perbanyak aktivitas di dalam ruangan atau jadwalkan ulang.',
+      everyone: 'Hindari aktivitas fisik terlalu lama di luar ruangan dan pertimbangkan beraktivitas di dalam ruangan.'
+    },
+    5: {
+      description: 'Tingkat kualitas udara yang dapat merugikan kesehatan serius pada populasi dan perlu penanganan cepat.',
+      sensitive: 'Tetap di dalam ruangan dan hanya melakukan sedikit aktivitas.',
+      everyone: 'Hindari seluruh aktivitas di luar ruangan.'
+    }
+  };
+
+  it('is word for word what the ISPU app says', () => {
+    assert.deepEqual(OFFICIAL_ISPU, FROZEN);
+  });
+
+  it('is not part of the banned-word walk, so the quote stays exact', () => {
+    assert.ok(!allCopy().includes(FROZEN[3].sensitive));
+  });
+
+  it('labels and names the source', () => {
+    assert.equal(UI.guideTitle, 'Panduan resmi ISPU');
+    assert.equal(UI.guideSensitive, 'Kelompok sensitif:');
+    assert.equal(UI.guideEveryone, 'Setiap orang:');
+    assert.match(UI.guideSource, /ISPU, Kementerian Lingkungan Hidup/);
+  });
+});
+
+describe('household tiles', () => {
+  it('keeps only "Jemur baju" and "Jendela", under "Urusan rumah hari ini"', () => {
+    assert.deepEqual(ACTIVITIES.map(a => a.label), ['Jemur baju', 'Jendela']);
+    assert.equal(UI.todayTitle, 'Urusan rumah hari ini');
   });
 });
 
@@ -105,28 +136,22 @@ describe('health lines', () => {
     assert.equal(UI.healthQuery, 'fasilitas kesehatan terdekat');
   });
 
-  it('answers "Sesak sekali" with the same suggestion', () => {
-    const reply = POLLS.find(p => p.label === 'Sesak sekali')?.reply ?? '';
-    assert.match(reply, /Kalau sesaknya berat atau disertai nyeri dada, sebaiknya segera cari pertolongan medis atau hubungi 119\./);
+  it('asks about the sky, with replies that send the reader to what they see and to the official figure', () => {
+    assert.equal(UI.pollTitle, 'Langit di tempatmu gimana?');
+    assert.deepEqual(POLLS, [
+      { label: 'Cerah', reply: 'Makasih! Senang dengarnya.' },
+      { label: 'Agak berasap', reply: 'Makasih! Kalau yang terlihat beda dari perkiraan, ikuti yang terlihat.' },
+      { label: 'Berasap tebal', reply: 'Makasih! Kalau asap di sekitarmu lebih tebal dari perkiraan, ikuti yang terlihat dan cek angka resmi ISPU.' },
+      { label: 'Tidak yakin', reply: 'Makasih! Coba lihat ke luar jendela sebentar.' }
+    ]);
   });
 
-  it('puts medical help before "tetap di dalam" in the "Sesak sekali" reply', () => {
-    const reply = POLLS.find(p => p.label === 'Sesak sekali')?.reply ?? '';
-    assert.ok(reply.includes('pertolongan medis') && reply.indexOf('pertolongan medis') < reply.indexOf('tetap di dalam'));
-  });
-
-  it('points "Agak sesak" to a health facility if it does not improve', () => {
-    assert.equal(POLLS.find(p => p.label === 'Agak sesak')?.reply, 'Kurangi aktivitas di luar hari ini. Kalau tidak membaik, ada baiknya periksa ke fasilitas kesehatan.');
-  });
-
-  it('suggests every N95 line with "sebaiknya"', () => {
-    const lines = Object.values(LEVELS).flatMap(l => l.everyone).filter(line => /N95/.test(line));
-    assert.equal(lines.length, 2);
-    for (const line of lines) assert.match(line, /sebaiknya/, line);
+  it('has no N95 advice of our own', () => {
+    for (const line of [...allCopy(), ...FACTS]) assert.doesNotMatch(line, /N95/, line);
   });
 
   it('says whose guidance this follows', () => {
-    assert.equal(UI.medicalNote, 'Saran kesehatan di sini disusun dari panduan Kemenkes, bukan pengganti pemeriksaan dokter.');
+    assert.equal(UI.medicalNote, 'Panduan di sini dikutip dari ISPU (Kementerian Lingkungan Hidup). Untuk kondisi kesehatan, tanyakan ke tenaga kesehatan.');
   });
 });
 
@@ -147,8 +172,8 @@ describe('method sheet', () => {
     for (const line of method) assert.doesNotMatch(line, /akurat|terpercaya|\bvalid|ilmiah|\bpasti\b|jaminan|\baman\b|berbasis sains/i, line);
   });
 
-  it('says the health advice still awaits a health reviewer', () => {
-    assert.equal(UI.methodHealth, 'Saran disusun dari panduan Kemenkes dan masih menunggu tinjauan tenaga kesehatan. Bukan pengganti pemeriksaan dokter.');
+  it('says the same as the medical note: quoted from ISPU, ask a health professional', () => {
+    assert.equal(UI.methodHealth, UI.medicalNote);
   });
 
   it('keeps every section short: at most 4 lines, none over 140 characters', () => {
@@ -168,7 +193,7 @@ describe('all copy', () => {
 
   it('has no jokes in the facts and no body or breathing jokes anywhere', () => {
     for (const line of [...FACTS, ...allCopy()]) assert.doesNotMatch(line, /paru-paru (lagi|ikut)|\bjoget|\bmantan\b|\bdemo\b/i, line);
-    assert.equal(FACTS.length, 4);
+    assert.equal(FACTS.length, 3);
     assert.ok(!FACTS.some(f => /Titik panas bukan cuma/.test(f)));
   });
 
@@ -180,12 +205,7 @@ describe('all copy', () => {
 });
 
 describe('estimates and suggestions', () => {
-  it('words the level 4–5 and overview lines as agreed', () => {
-    assert.equal(LEVELS[5].headline, 'Sebaiknya tetap di dalam ruangan.');
-    assert.equal(LEVELS[5].everyone[1], 'Kalau terpaksa keluar, sebaiknya pakai masker N95');
-    assert.equal(LEVELS[4].everyone[1], 'Kalau harus keluar, sebaiknya pakai masker N95');
-    assert.equal(LEVELS[2].dayLine, 'Masih oke untuk kebanyakan orang.');
-    assert.ok(LEVELS[1].quips.includes('Cocok buat buka jendela lebar-lebar.'));
+  it('words the overview line as agreed', () => {
     assert.equal(UI.overviewSub(12), '12 kota di Sumatera dan Kalimantan, diurutkan dari perkiraan asap paling tebal. Pilih kota.');
   });
 
@@ -201,9 +221,10 @@ describe('estimates and suggestions', () => {
 describe('hedge first', () => {
   it('starts the answer-card level text, the story level line and the section titles with "Perkiraan"', () => {
     for (const level of [1, 2, 3, 4, 5]) {
-      assert.equal(UI.levelHeading(LEVELS[level].name), `Perkiraan: ${LEVELS[level].name}`);
+      assert.equal(UI.levelOf(level), `(${level} dari 5)`);
       assert.match(STORY.levelName(LEVELS[level].name), /^Perkiraan: /);
     }
+    assert.equal(UI.eyebrow, 'Perkiraan hari ini');
     assert.equal(UI.overviewTitle, 'Perkiraan asap hari ini');
     assert.match(UI.outlookSub, /^Perkiraan beberapa hari ke depan\./);
     assert.equal(UI.reasonsTitle, 'Yang mungkin berpengaruh');
@@ -218,17 +239,21 @@ describe('UI', () => {
 
   it('starts every shared text with the brand and "perkiraan, bukan angka resmi"', () => {
     const prefix = /^Apa Kabar Udara \(perkiraan, bukan angka resmi\)\n/;
-    assert.match(UI.shareText('Palembang', 'Rabu 10.00', 3, LEVELS[3].headline), prefix);
+    assert.match(UI.shareText('Palembang', 'Rabu 10.00', 3, null), prefix);
     assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), prefix);
     assert.match(UI.shareOverview, prefix);
   });
 
   it('dates shared messages with city, weekday, time, level name and "level X dari 5"', () => {
     assert.equal(
-      UI.shareText('Palembang', 'Rabu 10.00', 3, LEVELS[3].headline),
-      'Apa Kabar Udara (perkiraan, bukan angka resmi)\nPalembang, Rabu 10.00: Tidak Sehat (level 3 dari 5). Kurangi aktivitas di luar.'
+      UI.shareText('Palembang', 'Rabu 10.00', 3, null),
+      'Apa Kabar Udara (perkiraan, bukan angka resmi)\nPalembang, Rabu 10.00: Tidak Sehat (level 3 dari 5). Panduan resmi ISPU ada di link.'
     );
-    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1), /^Apa Kabar Udara \(perkiraan, bukan angka resmi\)\nPalembang, Rabu 10\.00: Baik \(level 1 dari 5\)\./);
+    assert.equal(
+      UI.shareText('Palembang', 'Rabu 10.00', 1, 'Awan putih, langit biru.'),
+      'Apa Kabar Udara (perkiraan, bukan angka resmi)\nPalembang, Rabu 10.00: Baik (level 1 dari 5). Awan putih, langit biru. Panduan resmi ISPU ada di link.'
+    );
+    assert.match(UI.shareGood('Palembang', 'Rabu 10.00', 1, null), /^Apa Kabar Udara \(perkiraan, bukan angka resmi\)\nPalembang, Rabu 10\.00: Baik \(level 1 dari 5\)\./);
   });
 
   it('words the new lines as agreed', () => {
@@ -247,24 +272,20 @@ describe('UI', () => {
     assert.equal(UI.bestWindow(3, 'besok', '09.00', '11.00', 2), 'Asap paling tipis di siang hari: besok, 09.00–11.00');
     assert.equal(UI.bestWindow(2, 'besok', '09.00', '11.00', 3), 'Asap paling tipis di siang hari: besok, 09.00–11.00');
     assert.equal(UI.bestWindow(1, 'hari ini', '13.00', '15.00'), 'Udara paling segar di siang hari: hari ini, 13.00–15.00');
-    assert.equal(UI.sensitivePrefix, 'Anak, lansia, ibu hamil, sakit paru/jantung:');
-    assert.equal(ACTIVITIES.find(a => a.id === 'exercise')?.notes.caution, 'Ringan saja');
     assert.match(UI.explain(10)[0], /^Level ini perkiraan komputer dari data satelit dan cuaca/);
     assert.match(UI.footerDisclaimer, /^Level dan angka di sini perkiraan, bukan hasil alat ukur\./);
     assert.equal(UI.stripLegend('Sedang', 'Sedang'), 'Semua jam diperkirakan Sedang. Makin tinggi batang, makin tebal asap.');
     assert.equal(UI.stripLegend('Sedang', 'Tidak Sehat'), 'Warna = level per jam, dari Sedang sampai Tidak Sehat. Makin tinggi batang, makin tebal asap.');
     assert.equal(UI.stripRange('Sangat Tidak Sehat', 'Berbahaya'), 'dari Sangat Tidak Sehat sampai Berbahaya');
     assert.equal(UI.stripRange('Berbahaya', 'Berbahaya'), 'semuanya Berbahaya');
-    assert.match(UI.privacy, /tidak dikirim ke mana pun\. Masukan lewat Tally tersimpan di Tally\./);
-    assert.ok(!('feedbackSend' in UI) && !('feedbackThanks' in UI) && !('sensitiveIntro' in UI));
+    assert.match(UI.privacy, /Jawaban "Langit di tempatmu gimana\?" tidak dikirim ke mana pun\. Masukan lewat Tally tersimpan di Tally\./);
+    assert.ok(!('feedbackSend' in UI) && !('feedbackThanks' in UI) && !('sensitiveIntro' in UI) && !('sensitivePrefix' in UI) && !('windowsShut' in UI));
   });
 
   it('words the batch 3 P1 lines as agreed', () => {
     assert.equal(UI.stamp('11.00 WIB'), 'Diperbarui 11.00 WIB ·');
-    assert.equal(UI.todayTitleNeutral, 'Kegiatan hari ini');
     assert.equal(UI.moreTitle, 'Cek napas & fakta asap');
     assert.equal(UI.moreTitleNoFacts, 'Cek napas hari ini');
-    assert.ok(FACTS.includes('Masker kain kurang efektif menyaring partikel asap yang sangat halus. Untuk asap, masker N95 lebih baik, asal pas di wajah.'));
     assert.ok(FACTS.includes('El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.'));
     assert.ok(!FACTS.some(f => /berhari-hari di bawah permukaan/.test(f)));
     assert.equal(UI.storyLinkCopied, 'Link kota ini sudah disalin. Di Instagram, tambahkan stiker Link lalu tempel.');
@@ -272,7 +293,7 @@ describe('UI', () => {
 
   it('words the batch 3 Fun lines as agreed', () => {
     assert.equal(UI.betterSince('Sedang'), 'Perkiraannya membaik sejak terakhir kamu cek (sebelumnya Sedang).');
-    assert.ok(LEVELS[1].quips.includes('Ajak keluarga jalan sore, yuk.') && LEVELS[2].quips.includes('Masih enak buat jalan santai.'));
+    assert.ok(LEVELS[1].quips.includes('Awan putih, langit biru.') && LEVELS[2].quips.includes('Si Kapas masih senyum.'));
   });
 
   it('credits the data sources', () => {

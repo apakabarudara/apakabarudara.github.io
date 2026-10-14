@@ -88,10 +88,14 @@ ion-card {
 .lvl { margin: 0; padding-right: 84px; font-size: var(--fs-sm); font-weight: var(--fw-display); color: var(--lv-label); }
 .headline { margin: var(--sp-1) 0 0; font-size: clamp(var(--fs-xl), 7.6vw, var(--fs-2xl)); font-weight: var(--fw-display); line-height: 1.12; letter-spacing: -.015em; }
 .quip { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); }
-.actions { list-style: none; margin: var(--sp-4) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
-.actions li { position: relative; padding-left: 20px; font-weight: var(--fw-body); }
-.actions li::before { content: ""; position: absolute; left: 2px; top: .55em; width: 9px; height: 9px; border-radius: 50%; background: var(--lv-dot); }
-.actions b { font-weight: var(--fw-display); }
+.eyebrow { font-weight: var(--fw-label); }
+.of { font-size: var(--fs-sm); font-weight: var(--fw-label); letter-spacing: 0; white-space: nowrap; }
+.desc { margin: var(--sp-2) 0 0; font-size: var(--fs-xs); }
+.guide { margin: var(--sp-4) 0 0; padding: var(--sp-3); border-radius: var(--r-btn); background: var(--lv-soft); color: var(--lv-soft-ink); font-size: var(--fs-sm); }
+.guide h3 { margin: 0 0 var(--sp-2); font-size: var(--fs-sm); font-weight: var(--fw-display); }
+.guide p { margin: 0 0 var(--sp-2); }
+.guide b { font-weight: var(--fw-strong); }
+.guide-src { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--fs-xs); color: var(--lv-soft-ink); text-decoration: underline; }
 .symptoms { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); font-weight: var(--fw-label); }
 .note { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); color: var(--ink-2); }
 .note:empty { display: none; }

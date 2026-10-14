@@ -1,5 +1,5 @@
 import './ionic.js';
-import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, POLLS, RAIN, STORY, UI } from './copy.js';
+import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, OFFICIAL_ISPU, POLLS, RAIN, STORY, UI } from './copy.js';
 import {
   activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
   nearest, normalizeWatch, previewOverride, rainKind, rankByLevel, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, WET_DAY_MM
@@ -44,7 +44,6 @@ function icon(name) {
   return svg;
 }
 const cityName = loc => loc.name.split(',')[0];
-const lowerFirst = text => text[0].toLowerCase() + text.slice(1);
 const when = iso => `${clock.format(new Date(iso))} (${ago(iso, new Date())})`;
 const dateOf = day => new Date(`${day}T00:00:00Z`);
 const levelText = level => UI.levelLabel(LEVELS[level].name, level);
@@ -141,13 +140,15 @@ const quipFor = level => dailyQuip(LEVELS[level].quips, localDate(new Date()));
 function renderAnswer(loc, level) {
   const copy = LEVELS[level];
   $('answer').dataset.level = String(level);
-  $('levelName').textContent = UI.levelHeading(copy.name);
+  $('levelName').textContent = copy.name;
+  $('levelOf').textContent = UI.levelOf(level);
   $('scale').setAttribute('aria-label', UI.scaleLabel(level));
   [...$('scale').children].forEach((seg, i) => seg.classList.toggle('on', i + 1 === level));
   const better = improveText(loc, level);
   $('improve').textContent = better ?? '';
   $('improve').hidden = !better;
-  $('headline').textContent = copy.headline;
+  const official = OFFICIAL_ISPU[level];
+  $('desc').textContent = official.description;
   const quip = quipFor(level);
   $('quip').textContent = quip ?? '';
   $('quip').hidden = !quip;
@@ -159,11 +160,11 @@ function renderAnswer(loc, level) {
     void $('answer').offsetWidth; // restart the hop
     $('answer').classList.add('hop');
   }
-  // One list, max 3: everyone's actions, then the sensitive group as one prefixed line.
-  const sensitive = copy.sensitive.slice(0, 1).map(text => el('li', null, el('b', null, UI.sensitivePrefix), ` ${lowerFirst(text)}`));
-  const actions = [...copy.everyone.map(text => el('li', null, text)), ...sensitive].slice(0, 3);
-  $('actions').replaceChildren(...actions);
-  $('actions').hidden = actions.length === 0;
+  // Official ISPU guidance, quoted as is. Level 1 has no separate sensitive-group line.
+  $('guideSensitive').hidden = !official.sensitive;
+  $('guideSensitive').lastElementChild.textContent = official.sensitive ?? '';
+  $('guideEveryone').lastElementChild.textContent = official.everyone;
+  $('guideSource').href = loc.ispu?.source_url ?? ISPU_URL;
   $('symptoms').hidden = !copy.health;
   $('shareGood').hidden = !copy.goodNews;
   $('goodNewsLabel').textContent = copy.goodNews ?? '';
@@ -177,7 +178,7 @@ function renderAnswer(loc, level) {
 }
 
 function renderToday(loc, level) {
-  $('todayTitle').textContent = level <= 2 ? UI.todayTitle : UI.todayTitleNeutral;
+  $('todayTitle').textContent = UI.todayTitle;
   const rain = loc.outlook.find(d => d.date === localDate(new Date()))?.rain_mm ?? 0;
   const statuses = activityStatuses(LEVELS[level].activities, rain, WET_DAY_MM);
   $('activities').replaceChildren(...ACTIVITIES.map(a =>
@@ -189,7 +190,7 @@ function renderToday(loc, level) {
   const from = win ? hm.format(new Date(win.start)) : '';
   const to = win ? hm.format(new Date(win.end)) : '';
   const dayWord = win ? UI.dayWord[relativeDay(win.start, new Date())] : '';
-  $('best').textContent = level >= 4 ? UI.windowsShut : win ? UI.bestWindow(level, dayWord, from, to, win.band) : '';
+  $('best').textContent = win ? UI.bestWindow(level, dayWord, from, to, win.band) : '';
   $('best').hidden = !$('best').textContent;
 
   const peak = Math.max(...hours.map(h => h.pm25), 1);
@@ -211,7 +212,7 @@ function renderToday(loc, level) {
 function showDay(days, idx) {
   dayIndex = idx;
   const day = days[idx];
-  $('dayDetail').replaceChildren(el('strong', null, `${dayLong.format(dateOf(day.date))} · ${LEVELS[day.band].name}`), `${LEVELS[day.band].dayLine} ${RAIN[rainKind(day.rain_mm)]}.`);
+  $('dayDetail').replaceChildren(el('strong', null, `${dayLong.format(dateOf(day.date))} · ${LEVELS[day.band].name}`), `${RAIN[rainKind(day.rain_mm)]}.`);
   [...$('days').children].forEach((chip, i) => chip.setAttribute('aria-pressed', String(i === idx)));
 }
 
@@ -367,7 +368,7 @@ async function share(goodNews) {
   if (target) {
     const level = target.pm25_model.band;
     const day = dayTime.format(new Date(target.pm25_model.updated_at));
-    text = goodNews ? UI.shareGood(cityName(target), day, level) : UI.shareText(cityName(target), day, level, LEVELS[level].headline);
+    text = (goodNews ? UI.shareGood : UI.shareText)(cityName(target), day, level, quipFor(level));
   }
   try {
     if (navigator.share) {

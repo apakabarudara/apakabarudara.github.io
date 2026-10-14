@@ -162,7 +162,7 @@ export async function renderStory(lines) {
   text(lines.city, at.city, size, 800, c.ink);
   text(lines.levelName, at.name, 60, 800, c.label);
   scale(ctx, mid, at.scale, lines.level);
-  let y = text(lines.headline, at.headline, 70, 800, c.ink, 800, 1.18);
+  let y = text(lines.guide, at.headline, 56, 800, c.ink, 800, 1.18);
   if (lines.quip) y = text(lines.quip, y + at.quipGap, at.quipSize, 600, c.ink, 800, 1.3);
   if (lines.improve) y = text(lines.improve, y + 76, 40, 700, c.label, 860, 1.3);
   text(lines.stamp, cardBottom - 56, 34, 600, c.label);

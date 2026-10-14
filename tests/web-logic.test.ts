@@ -91,7 +91,7 @@ describe('bestWindow', () => {
 });
 
 describe('activityStatuses', () => {
-  const clear = { laundry: 'ok', exercise: 'ok', windows: 'ok', kids: 'ok' };
+  const clear = { laundry: 'ok', windows: 'ok' };
   it('turns ok laundry into caution when rain is forecast', () => {
     assert.equal(activityStatuses(clear, 0.5, 1).laundry, 'ok');
     assert.equal(activityStatuses(clear, 1, 1).laundry, 'caution');
@@ -225,10 +225,11 @@ describe('install control', () => {
 describe('storyLines', () => {
   const make = (level: number) => storyLines({ city: 'Palembang', level, copy: LEVELS[level], story: STORY, quip: dailyQuip(LEVELS[level].quips, '2026-10-14'), improve: null, day: 'Rabu 10.00' });
 
-  it('carries city, level, headline and the time, and no numbers from the data', () => {
+  it('carries city, level, the pointer to the official guidance and the time, and no numbers from the data', () => {
     const lines = make(3);
     assert.equal(lines.levelName, 'Perkiraan: Tidak Sehat');
-    assert.equal(lines.headline, 'Kurangi aktivitas di luar.');
+    assert.equal(lines.guide, 'Panduan resmi ISPU ada di link.');
+    assert.ok(!('headline' in lines));
     assert.equal(lines.stamp, 'Diperbarui Rabu 10.00');
     assert.equal(lines.url, 'bisanapasgak.github.io');
     assert.doesNotMatch(JSON.stringify(lines), /µg|PM2/);

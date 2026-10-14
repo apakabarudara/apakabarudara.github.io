@@ -187,14 +187,14 @@ export function storyKey(lines) {
   return JSON.stringify(lines);
 }
 
-/** What the Story card says, in order. Levels 1–2 are light; 3–5 stay plain and calm (no "kamu", no quip). */
+/** What the Story card says, in order: the level, the pointer to the official guidance, no advice of our own. Levels 1–2 add a quip. */
 export function storyLines({ city, level, copy, story, quip, improve, day }) {
   const light = level <= 2;
   return {
     city,
     level,
     levelName: story.levelName(copy.name),
-    headline: copy.headline,
+    guide: story.guide,
     quip: light ? quip : null,
     improve,
     stamp: story.stamp(day),
