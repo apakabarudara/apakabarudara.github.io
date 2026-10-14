@@ -356,7 +356,7 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .sat-frame { position: relative; }
 .sat-frame .pin { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; transform: translate(-50%, -50%); box-sizing: border-box; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1.5px rgba(0, 0, 0, .55), inset 0 0 0 1.5px rgba(0, 0, 0, .55); pointer-events: none; }
 .sat-frame .pin::after { content: ""; position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; transform: translate(-50%, -50%); border-radius: 50%; background: #fff; box-shadow: 0 0 0 1.5px rgba(0, 0, 0, .55); }
-.day .drop { box-sizing: content-box; width: 16px; height: 16px; padding: 3px; border-radius: 50%; background: var(--rain-bg); color: var(--rain); } /* own surface: reads on every chip colour */
+.day .drop { margin-top: auto; box-sizing: content-box; width: 16px; height: 16px; padding: 3px; border-radius: 50%; background: var(--rain-bg); color: var(--rain); } /* own surface: reads on every chip colour */
 .sat-big { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: var(--r-md, 12px); background: var(--ink-2); margin-bottom: var(--sp-3); }
 .sat-stage { position: relative; margin-bottom: var(--sp-3); }
 .sat-stage[hidden] { display: none; }
