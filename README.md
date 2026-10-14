@@ -2,7 +2,7 @@
 
 A playful, mobile-first page that tells people in Indonesia whether the air is safe to go out in during the karhutla (forest and land fire) season.
 
-Live: https://khihadysucahyo.github.io/bisanapasgak/
+Live: https://bisanapasgak.github.io/
 
 Status: Phase 2 done. The ingest job writes real data and `web/index.html` reads it. Hosting, the health review of the band copy and the beta are still to come.
 
