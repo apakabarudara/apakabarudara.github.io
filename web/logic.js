@@ -173,20 +173,29 @@ export function installMode({ standalone, hasPrompt, ios, dismissed, visits }) {
 /** The shareable link to a city: the page address plus #<city id>. */
 export const cityLink = (base, id) => `${base}#${encodeURIComponent(id)}`;
 
+/** One line per day from a list, the same all day (local date) and different from yesterday's. Null when the level has none. */
+export function dailyQuip(quips, today) {
+  if (!quips?.length) return null;
+  return quips[Math.floor(Date.parse(`${today}T00:00:00Z`) / 864e5) % quips.length];
+}
+
+/** The level seen last time when this check is better and good (level 1–2); otherwise null. */
+export const improvedFrom = (previous, level) => (Number.isInteger(previous) && level < previous && level <= 2 ? previous : null);
+
 /** Cache key for a drawn Story card: everything printed on it. */
 export function storyKey(lines) {
   return JSON.stringify(lines);
 }
 
 /** What the Story card says, in order. Levels 1–2 are light; 3–5 stay plain and calm (no "kamu", no quip). */
-export function storyLines({ city, level, copy, story, improve, day }) {
+export function storyLines({ city, level, copy, story, quip, improve, day }) {
   const light = level <= 2;
   return {
     city,
     level,
     levelName: copy.name,
     headline: copy.headline,
-    quip: light ? copy.quip : null,
+    quip: light ? quip : null,
     improve,
     stamp: story.stamp(day),
     footer: light ? story.footerLight : story.footer,

@@ -30,15 +30,16 @@ describe('LEVELS', () => {
     it(`level ${level} uses the official ISPU name, a headline and short advice`, () => {
       assert.equal(copy.name, ISPU_NAMES[level - 1]);
       assert.ok(copy.headline.length > 0);
-      assert.ok(copy.everyone.length >= 1 && copy.everyone.length <= 2);
+      // Levels 1–2 leave the everyday advice to the activity tiles and the quip.
+      assert.ok(level <= 2 ? copy.everyone.length === 0 : copy.everyone.length >= 1 && copy.everyone.length <= 2);
       assert.ok(copy.sensitive.length <= 1);
       assert.equal(copy.sensitive.length === 0, level === 1);
       assert.ok(copy.dayLine.length > 0);
     });
 
     it(`level ${level} is light, and says "kamu", only at levels 1–2`, () => {
-      assert.equal(copy.quip === null, level >= 3);
-      const lines = [copy.headline, copy.quip ?? '', ...copy.everyone, ...copy.sensitive, copy.dayLine];
+      assert.equal((copy.quips ?? []).length > 0, level <= 2);
+      const lines = [copy.headline, ...(copy.quips ?? []), ...copy.everyone, ...copy.sensitive, copy.dayLine];
       for (const line of lines) if (level >= 3) assert.doesNotMatch(line, KAMU, line);
     });
 
@@ -55,7 +56,7 @@ describe('LEVELS', () => {
     });
 
     it(`level ${level} copy avoids slang older readers stumble on`, () => {
-      const lines = [copy.headline, copy.quip ?? '', ...copy.everyone, ...copy.sensitive, copy.dayLine];
+      const lines = [copy.headline, ...(copy.quips ?? []), ...copy.everyone, ...copy.sensitive, copy.dayLine];
       for (const line of lines) assert.doesNotMatch(line, SLANG, line);
     });
 
@@ -66,7 +67,10 @@ describe('LEVELS', () => {
 
   it('words levels 1 and 2 as agreed, with the actions', () => {
     assert.equal(LEVELS[1].headline, 'Udara diperkirakan bagus hari ini.');
-    assert.deepEqual(LEVELS[1].everyone, ['Aktivitas di luar oke']);
+    assert.deepEqual(LEVELS[1].everyone, []);
+    assert.deepEqual(LEVELS[2].everyone, []);
+    assert.equal(LEVELS[1].quips.length, 6);
+    assert.equal(LEVELS[2].quips.length, 3);
     assert.equal(LEVELS[2].headline, 'Masih oke untuk kebanyakan orang.');
   });
 
@@ -179,6 +183,11 @@ describe('UI', () => {
     assert.ok(FACTS.includes('Masker kain hampir tidak menyaring partikel asap. Untuk asap, yang dianjurkan masker N95.'));
     assert.ok(!FACTS.some(f => /berhari-hari di bawah permukaan/.test(f)));
     assert.equal(UI.storyLinkCopied, 'Link kota ini sudah disalin. Di Instagram, tambahkan stiker Link lalu tempel.');
+  });
+
+  it('words the batch 3 Fun lines as agreed', () => {
+    assert.equal(UI.betterSince('Sedang'), 'Membaik sejak terakhir kamu cek (sebelumnya Sedang).');
+    assert.ok(LEVELS[1].quips.includes('Ajak keluarga jalan sore, yuk.') && LEVELS[2].quips.includes('Masih enak buat jalan santai.'));
   });
 
   it('credits the data sources', () => {

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { LEVELS, STORY } from '../web/copy.js';
 import {
-  activityStatuses, ago, bestWindow, cityLink, feedbackUrl, freshness, greeting, hourBands, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
+  activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
   previewOverride, rainKind, rankByLevel, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow
 } from '../web/logic.js';
 
@@ -218,7 +218,7 @@ describe('install control', () => {
 });
 
 describe('storyLines', () => {
-  const make = (level: number) => storyLines({ city: 'Palembang', level, copy: LEVELS[level], story: STORY, improve: null, day: 'Rabu 10.00' });
+  const make = (level: number) => storyLines({ city: 'Palembang', level, copy: LEVELS[level], story: STORY, quip: dailyQuip(LEVELS[level].quips, '2026-10-14'), improve: null, day: 'Rabu 10.00' });
 
   it('carries city, level, headline and the time, and no numbers from the data', () => {
     const lines = make(3);
@@ -242,7 +242,7 @@ describe('storyLines', () => {
 
 describe('storyKey', () => {
   const make = (level: number, improve: string | null = null, day = 'Rabu 10.00', city = 'Palembang') =>
-    storyKey(storyLines({ city, level, copy: LEVELS[level], story: STORY, improve, day }));
+    storyKey(storyLines({ city, level, copy: LEVELS[level], story: STORY, quip: dailyQuip(LEVELS[level].quips, '2026-10-14'), improve, day }));
 
   it('is stable for the same card and changes with city, level, day or improve line', () => {
     assert.equal(make(3), make(3));
@@ -286,5 +286,36 @@ describe('cityLink', () => {
   it('is the page address plus the encoded city id', () => {
     assert.equal(cityLink('https://bisanapasgak.github.io/', 'palangkaraya'), 'https://bisanapasgak.github.io/#palangkaraya');
     assert.equal(cityLink('http://127.0.0.1:8792/', 'a b'), 'http://127.0.0.1:8792/#a%20b');
+  });
+});
+
+describe('dailyQuip', () => {
+  const quips = ['a', 'b', 'c'];
+
+  it('is the same all day and moves on the next day', () => {
+    assert.equal(dailyQuip(quips, '2026-10-14'), dailyQuip(quips, '2026-10-14'));
+    assert.notEqual(dailyQuip(quips, '2026-10-14'), dailyQuip(quips, '2026-10-15'));
+    assert.deepEqual(['2026-10-14', '2026-10-15', '2026-10-16', '2026-10-17'].map(d => dailyQuip(quips, d)).slice(0, 3).sort(), ['a', 'b', 'c']);
+  });
+
+  it('is null when a level has none', () => {
+    assert.equal(dailyQuip(LEVELS[3].quips, '2026-10-14'), null);
+    assert.equal(dailyQuip([], '2026-10-14'), null);
+  });
+});
+
+describe('improvedFrom ("Membaik sejak terakhir kamu cek")', () => {
+  it('returns the earlier level only when it got better and is now level 1–2', () => {
+    assert.equal(improvedFrom(3, 2), 3);
+    assert.equal(improvedFrom(5, 1), 5);
+    assert.equal(improvedFrom(2, 1), 2);
+  });
+
+  it('is null for the same level, worse, still bad, or nothing stored', () => {
+    assert.equal(improvedFrom(2, 2), null);
+    assert.equal(improvedFrom(1, 2), null);
+    assert.equal(improvedFrom(5, 3), null);
+    assert.equal(improvedFrom(undefined, 1), null);
+    assert.equal(improvedFrom('3', 1), null);
   });
 });

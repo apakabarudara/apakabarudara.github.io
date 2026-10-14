@@ -9,13 +9,20 @@
 /** Who counts as sensitive, after Kemenkes: children, older people, pregnant women, people with lung or heart disease. */
 export const SENSITIVE = 'Anak, lansia, ibu hamil, sakit paru/jantung';
 
-/** Per ISPU level. quip only where the tone allows a light line (levels 1–2). */
+/** Per ISPU level. quips (one shown per day, see dailyQuip) only where the tone allows a light line: levels 1–2. */
 export const LEVELS = {
   1: {
     name: 'Baik',
     headline: 'Udara diperkirakan bagus hari ini.',
-    quip: 'Waktu yang enak untuk keluar.',
-    everyone: ['Aktivitas di luar oke'],
+    quips: [
+      'Waktu yang enak untuk keluar.',
+      'Langit lagi bersih. Cocok buat jalan pagi.',
+      'Udaranya lagi bersahabat.',
+      'Jendela boleh dibuka lebar-lebar.',
+      'Hari yang pas buat main di luar.',
+      'Ajak keluarga jalan sore, yuk.'
+    ],
+    everyone: [],
     sensitive: [],
     dayLine: 'Udara diperkirakan bagus.',
     activities: { laundry: 'ok', exercise: 'ok', windows: 'ok', kids: 'ok' },
@@ -26,8 +33,8 @@ export const LEVELS = {
   2: {
     name: 'Sedang',
     headline: 'Masih oke untuk kebanyakan orang.',
-    quip: 'Belum sempurna, tapi masih nyaman untuk keluar.',
-    everyone: ['Aktivitas di luar masih oke'],
+    quips: ['Belum sempurna, tapi masih nyaman untuk keluar.', 'Masih enak buat jalan santai.', 'Cukup baik untuk kegiatan biasa.'],
+    everyone: [],
     sensitive: ['Kurangi olahraga berat yang lama di luar'],
     dayLine: 'Masih oke, hindari olahraga yang terlalu berat.',
     activities: { laundry: 'ok', exercise: 'caution', windows: 'ok', kids: 'ok' },
@@ -38,7 +45,6 @@ export const LEVELS = {
   3: {
     name: 'Tidak Sehat',
     headline: 'Kurangi aktivitas di luar.',
-    quip: null,
     everyone: ['Kurangi olahraga di luar', 'Kalau bisa, kurangi kerja berat di luar. Kalau harus, istirahat lebih sering.'],
     sensitive: ['Lebih banyak di dalam ruangan'],
     dayLine: 'Kurangi aktivitas berat di luar.',
@@ -50,7 +56,6 @@ export const LEVELS = {
   4: {
     name: 'Sangat Tidak Sehat',
     headline: 'Sebisa mungkin di dalam ruangan.',
-    quip: null,
     everyone: ['Tutup jendela dan pintu', 'Kalau harus keluar, pakai masker N95'],
     sensitive: ['Tetap di dalam ruangan'],
     dayLine: 'Rencanakan kegiatan di dalam ruangan.',
@@ -62,7 +67,6 @@ export const LEVELS = {
   5: {
     name: 'Berbahaya',
     headline: 'Tetap di dalam ruangan.',
-    quip: null,
     everyone: ['Tutup jendela dan pintu', 'Keluar hanya kalau terpaksa, dan pakai masker N95'],
     sensitive: ['Tetap di dalam ruangan sepanjang hari'],
     dayLine: 'Tetap di dalam ruangan sepanjang hari.',
@@ -106,6 +110,7 @@ export const UI = {
 
   levelLabel: (name, level) => `${name} · level ${level} dari 5`,
   scaleLabel: level => `level ${level} dari 5`,
+  betterSince: previous => `Membaik sejak terakhir kamu cek (sebelumnya ${previous}).`,
   improveOn: weekday => `Diperkirakan mulai membaik ${weekday}.`,
   improveNone: days => `Belum ada tanda membaik dalam ${days} hari ke depan.`,
   sensitivePrefix: `${SENSITIVE}:`,

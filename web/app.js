@@ -1,7 +1,7 @@
 import './ionic.js';
 import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, POLLS, RAIN, STORY, UI } from './copy.js';
 import {
-  activityStatuses, ago, bestWindow, cityLink, feedbackUrl, freshness, greeting, hourBands, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
+  activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
   nearest, normalizeWatch, previewOverride, rainKind, rankByLevel, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, WET_DAY_MM
 } from './logic.js';
 
@@ -13,6 +13,7 @@ const CITY_KEY = 'bisanapasgak.city';
 const WATCH_KEY = 'bisanapasgak.watch';
 const INSTALL_KEY = 'bisanapasgak.installHidden';
 const VISITS_KEY = 'bisanapasgak.visits';
+const SEEN_KEY = 'bisanapasgak.seen';
 const ALL = '__all';
 const REFRESH_MS = 15 * 60e3;
 const BEST = { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() };
@@ -62,6 +63,7 @@ const store = {
 // Counted once per page load; the install control waits for the second visit.
 const visits = Number(store.read(VISITS_KEY) ?? 0) + 1;
 store.write(VISITS_KEY, String(visits));
+const readSeen = () => { try { return JSON.parse(store.read(SEEN_KEY) ?? '{}') ?? {}; } catch { return {}; } };
 const readWatch = () => { try { return JSON.parse(store.read(WATCH_KEY) ?? '[]'); } catch { return []; } };
 
 let report = null;
@@ -134,6 +136,8 @@ function improveText(loc, level) {
   return 'date' in found ? UI.improveOn(weekdayLong.format(dateOf(found.date))) : UI.improveNone(found.days);
 }
 
+const quipFor = level => dailyQuip(LEVELS[level].quips, localDate(new Date()));
+
 function renderAnswer(loc, level) {
   const copy = LEVELS[level];
   $('answer').dataset.level = String(level);
@@ -144,11 +148,22 @@ function renderAnswer(loc, level) {
   $('improve').textContent = better ?? '';
   $('improve').hidden = !better;
   $('headline').textContent = copy.headline;
-  $('quip').textContent = copy.quip ?? '';
-  $('quip').hidden = !copy.quip;
+  const quip = quipFor(level);
+  $('quip').textContent = quip ?? '';
+  $('quip').hidden = !quip;
+  const before = improvedFrom(readSeen()[loc.id]?.level, level);
+  $('better').textContent = before ? UI.betterSince(LEVELS[before].name) : '';
+  $('better').hidden = !before;
+  $('answer').classList.remove('hop');
+  if (before) {
+    void $('answer').offsetWidth; // restart the hop
+    $('answer').classList.add('hop');
+  }
   // One list, max 3: everyone's actions, then the sensitive group as one prefixed line.
   const sensitive = copy.sensitive.slice(0, 1).map(text => el('li', null, el('b', null, UI.sensitivePrefix), ` ${lowerFirst(text)}`));
-  $('actions').replaceChildren(...[...copy.everyone.map(text => el('li', null, text)), ...sensitive].slice(0, 3));
+  const actions = [...copy.everyone.map(text => el('li', null, text)), ...sensitive].slice(0, 3);
+  $('actions').replaceChildren(...actions);
+  $('actions').hidden = actions.length === 0;
   $('symptoms').hidden = !copy.health;
   $('shareGood').hidden = !copy.goodNews;
   $('goodNewsLabel').textContent = copy.goodNews ?? '';
@@ -251,6 +266,10 @@ function render() {
   renderReasons(loc, renderOutlook(loc));
   renderWatch();
   prepareStory();
+  if (!preview) {
+    // After the render, so "membaik" shows once.
+    store.write(SEEN_KEY, JSON.stringify({ ...readSeen(), [loc.id]: { level, date: localDate(new Date()) } }));
+  }
 }
 
 function fillPicker() {
@@ -368,7 +387,7 @@ let storyFile = { key: null, file: null };
 function storyInput(loc) {
   const level = loc.pm25_model.band;
   const day = dayTime.format(new Date(loc.pm25_model.updated_at));
-  return storyLines({ city: cityName(loc), level, copy: LEVELS[level], story: STORY, improve: improveText(loc, level), day });
+  return storyLines({ city: cityName(loc), level, copy: LEVELS[level], story: STORY, quip: quipFor(level), improve: improveText(loc, level), day });
 }
 
 function makeStory(lines, key) {

@@ -1,5 +1,5 @@
 // Instagram Story card, drawn on a canvas. Text comes from storyLines() in logic.js. Instagram covers the top 14% and the
-// bottom 20% of a Story, so everything sits between y = 270 and y = 1536.
+// bottom 20% of a Story, so text sits between y = 270 and y = 1580.
 const W = 1080;
 const H = 1920;
 const FONT = '"Plus Jakarta Sans", system-ui, sans-serif';
@@ -133,8 +133,12 @@ export async function renderStory(lines) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'alphabetic';
 
-  const cardTop = 430;
-  const cardBottom = 1380;
+  // Levels 1–2 have a quip and room to spare: a taller card and a bigger mascot fill the top and bottom bands, text still inside the safe zones.
+  const light = lines.level <= 2;
+  const at = light
+    ? { cardTop: 400, cardBottom: 1420, mascotY: 262, mascotW: 420, city: 790, name: 880, scale: 960, headline: 1080, quipGap: 80, quipSize: 46, footer: 1512, url: 1566 }
+    : { cardTop: 430, cardBottom: 1380, mascotY: 300, mascotW: 320, city: 740, name: 830, scale: 910, headline: 1030, quipGap: 72, quipSize: 40, footer: 1452, url: 1514 };
+  const { cardTop, cardBottom } = at;
   ctx.shadowColor = 'rgba(38, 31, 39, .18)';
   ctx.shadowBlur = 60;
   ctx.shadowOffsetY = 24;
@@ -142,7 +146,7 @@ export async function renderStory(lines) {
   roundRect(ctx, 70, cardTop, W - 140, cardBottom - cardTop, 72);
   ctx.fill();
   ctx.shadowColor = 'transparent';
-  mascot(ctx, mid - 160, 300, 320, lines.level, c);
+  mascot(ctx, mid - at.mascotW / 2, at.mascotY, at.mascotW, lines.level, c);
 
   const text = (value, y, size, weight, color, maxWidth = 800, lead = 1.2) => {
     ctx.fillStyle = color;
@@ -155,15 +159,15 @@ export async function renderStory(lines) {
   let size = 104;
   ctx.font = `800 ${size}px ${FONT}`;
   while (ctx.measureText(lines.city).width > 800 && size > 60) ctx.font = `800 ${--size}px ${FONT}`;
-  text(lines.city, 740, size, 800, c.ink);
-  text(lines.levelName, 830, 60, 800, c.label);
-  scale(ctx, mid, 910, lines.level);
-  let y = text(lines.headline, 1030, 70, 800, c.ink, 800, 1.18);
-  if (lines.quip) y = text(lines.quip, y + 72, 40, 600, c.ink, 800, 1.3);
+  text(lines.city, at.city, size, 800, c.ink);
+  text(lines.levelName, at.name, 60, 800, c.label);
+  scale(ctx, mid, at.scale, lines.level);
+  let y = text(lines.headline, at.headline, 70, 800, c.ink, 800, 1.18);
+  if (lines.quip) y = text(lines.quip, y + at.quipGap, at.quipSize, 600, c.ink, 800, 1.3);
   if (lines.improve) y = text(lines.improve, y + 76, 40, 700, c.label, 860, 1.3);
   text(lines.stamp, cardBottom - 56, 34, 600, c.label);
 
-  text(lines.footer, 1452, 48, 800, BRAND);
-  text(lines.url, 1514, 38, 600, INK_2);
+  text(lines.footer, at.footer, 48, 800, BRAND);
+  text(lines.url, at.url, 38, 600, INK_2);
   return new Promise((resolve, reject) => canvas.toBlob(blob => (blob ? resolve(blob) : reject(new Error('no blob'))), 'image/png'));
 }

@@ -189,8 +189,15 @@ ion-modal.sheet { --height: auto; --background: var(--surface); --border-radius:
 :is([data-level="0"], [data-level="1"]) .mouth.happy, [data-level="2"] .mouth.flat, [data-level="3"] .mouth.sad { display: inline; }
 :is([data-level="4"], [data-level="5"]) .mascot-art :is(.mask, .brow) { display: inline; }
 :is([data-level="4"], [data-level="5"]) .mascot-art .cheek { display: none; }
-@keyframes bob { 50% { transform: translateY(-5px); } }
-:is([data-level="0"], [data-level="1"], [data-level="2"]) > .mascot { animation: bob 2.6s ease-in-out infinite; }
+/* Alive at levels 1–2 (float and blink), blink only at 3, still at 4–5 and on the neutral card. */
+@keyframes float { 50% { transform: translateY(-3px); } }
+@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+@keyframes hop { 30% { transform: translateY(-14px); } 55% { transform: translateY(0); } 75% { transform: translateY(-5px); } 100% { transform: translateY(0); } }
+.mascot-art .eye { transform-box: fill-box; transform-origin: center; }
+:is([data-level="1"], [data-level="2"]) > .mascot { animation: float 3.2s ease-in-out infinite; }
+:is([data-level="1"], [data-level="2"]) .mascot-art .eye { animation: blink 5s ease-in-out infinite; }
+[data-level="3"] .mascot-art .eye { animation: blink 8s ease-in-out infinite; }
+.hop .mascot-art { animation: hop .9s ease-out 1; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }

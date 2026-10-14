@@ -33,7 +33,7 @@ Residents living in the smoke, opening the page in the morning before going out.
 - Spacing 4 · 8 · 12 · 16 · 20 (panel padding) · 24 · 32. Radius 8 · 14 · 24 · pill.
 - Containers are white with a shadow; controls inside them are tonal fills without one. Dark surfaces get a 1px hairline.
 - One icon set: an inline SVG sprite, 1.75 stroke. The mascot is one SVG cloud whose face follows the level and wears a mask at levels 4–5.
-- Motion: levels 1–2 bob and enter, level 3 enters, levels 4–5 none. `prefers-reduced-motion` turns all of it off.
+- Motion (CSS only): the mascot floats 3 px and blinks every ~5 s at levels 1–2, blinks more slowly at level 3, and is still at levels 4–5 and on the neutral card. `prefers-reduced-motion` turns all of it off.
 
 ## Components
 
@@ -60,7 +60,9 @@ Voice, after a UX-writer review and a plain-language research pass on 2026-10-14
 - **Kapan membaik?**: levels 3–5, first later outlook day with a lower band ("Diperkirakan mulai membaik Jumat.") or "Belum ada tanda membaik dalam n hari ke depan."; nothing at levels 1–2.
 - **PWA install**: manifest plus icons, install control only at the bottom of the city view and only from the second visit, dismissible; iOS Safari gets a two-step sheet.
 - **Pantau kota lain**: up to 3 pinned cities as chips at the top of the city view (with none pinned, a soft button under the share row instead), picked in a sheet with checkboxes; works offline.
-- **Bagikan ke Story**: canvas card, Web Share with a file, download fallback; text kept between 14% and 80% of the height.
+- **Bagikan ke Story**: canvas card, Web Share with a file, download fallback; text kept between 250 px and 1580 px of the 1920 px height. Levels 1–2 get a bigger mascot and the day's quip.
+- **Daily quip** (levels 1–2): `LEVELS[n].quips`; one is picked by local date (`dailyQuip`), so it is the same all day. Levels 1–2 have no "everyone" bullets; level 2 keeps only the sensitive line.
+- **Membaik sejak terakhir kamu cek**: the level last seen per city is kept on the device (`{level, date}`, never in preview). When the new level is lower and 1–2, the card says so once and the mascot hops.
 - **Feedback**: a "Kirim masukan" button above the footer opens an external Google Form in a new tab (`FEEDBACK_URL` and `FEEDBACK_CITY_ENTRY` in `web/app.js`; the row stays hidden while `FEEDBACK_URL` is empty). Nothing is typed into or sent from the page.
 - **Sensitive group**: the answer card names the full list (children, older people, pregnant women, lung or heart disease) instead of "Anak & lansia".
 - **Share row**: "Bagikan ke grup" and "Bagikan ke Story" side by side right under the answer card (stacked below 360 px); the overview keeps one button at the bottom. The Story button also copies the city link for Instagram's Link sticker.
