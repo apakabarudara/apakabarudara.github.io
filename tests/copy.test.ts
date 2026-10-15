@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
+import { ACTIVITIES, EMERGENCY_NUMBER, ENCOURAGE, FACTS, LEVELS, OFFICIAL_ISPU, STORY, TODAY_CARDS, UI } from '../web/copy.js';
 
 const ISPU_NAMES = ['Baik', 'Sedang', 'Tidak Sehat', 'Sangat Tidak Sehat', 'Berbahaya'];
 const SLANG = /\b(gas|halu|plis|lebay|ngebut|vonis|faskes|mantan|DJ|sinetron)\b/i;
@@ -19,7 +19,7 @@ function allCopy(): string[] {
     else if (Array.isArray(value)) value.forEach(walk);
     else if (value && typeof value === 'object') Object.values(value).forEach(walk);
   };
-  walk(LEVELS); walk(ACTIVITIES); // OFFICIAL_ISPU is a quote and stays exempt
+  walk(LEVELS); walk(ACTIVITIES); walk(TODAY_CARDS); walk(ENCOURAGE); // OFFICIAL_ISPU is a quote and stays exempt
    walk(UI); walk(FACTS); walk(STORY);
   return out;
 }
@@ -145,6 +145,27 @@ describe('head note', () => {
   it('hedges first in the header and keeps the method link', () => {
     assert.equal(UI.headNote, 'Perkiraan, bisa meleset ·');
     assert.equal(UI.methodLink, 'Metode & sumber');
+  });
+});
+
+describe('today cards', () => {
+  const BANNED = /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i;
+  const strings = (v: unknown): string[] => (typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(strings) : []);
+  it('has no banned word in any card, encouragement or lead-in string', () => {
+    for (const line of [...strings(TODAY_CARDS), ...strings(ENCOURAGE), UI.ispuLead, UI.ispuTag]) assert.doesNotMatch(line, BANNED, line);
+  });
+  it('says "kamu" only in the light encouragement, and has three variants per group', () => {
+    for (const lines of Object.values(ENCOURAGE)) assert.equal(lines.length, 3);
+    for (const line of [...ENCOURAGE.gentle, ...ENCOURAGE.quiet, ...strings(TODAY_CARDS.laundry), ...strings(TODAY_CARDS.windows), UI.ispuLead]) assert.doesNotMatch(line, KAMU, line);
+  });
+  it('keeps jokes and exclamations out of the quiet group', () => {
+    for (const line of ENCOURAGE.quiet) assert.doesNotMatch(line, /!/, line);
+  });
+  it('holds no ISPU text of its own: quote cards carry only a label, and the lead-in is not a guidance sentence', () => {
+    for (const id of ['exercise', 'kids', 'kidsHigh'] as const) assert.deepEqual(Object.keys(TODAY_CARDS[id]).sort(), ['icon', 'label']);
+    const official = Object.values(OFFICIAL_ISPU).flatMap(o => [o.description, o.everyone, o.sensitive]);
+    for (const line of strings(TODAY_CARDS)) assert.ok(!official.includes(line), line);
+    assert.equal(UI.ispuTag, 'ISPU, KLHK');
   });
 });
 
@@ -307,7 +328,7 @@ describe('UI', () => {
     assert.equal(UI.bestWindow(UI.whenWord('Sore', false), '16.00', '18.00', 2, 3), 'Sore ini, 16.00–18.00');
     assert.equal(UI.bestWindow(UI.whenWord('Malam', false), '19.00', '21.00', 1, 1), 'Malam ini, 19.00–21.00');
     assert.equal(UI.flatDay('Sedang'), 'Rata sepanjang 24 jam: Sedang. Tidak ada jam yang jauh lebih baik.');
-    assert.equal(UI.activitiesNote('Sedang'), 'Menurut level hari ini: Sedang');
+    assert.equal(UI.cardWindow('09.00', '11.00'), 'paling pas 09.00–11.00');
     assert.equal(UI.hourNote('14.00', 'Sedang', false), '14.00 · Sedang');
     assert.equal(UI.partName('Pagi', true), 'Besok pagi');
     assert.equal(UI.partName('Malam', false), 'Malam');
