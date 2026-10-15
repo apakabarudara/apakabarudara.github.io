@@ -59,8 +59,8 @@ describe('LEVELS', () => {
   }
 
   it('words the quips as agreed: non-health only', () => {
-    assert.deepEqual(LEVELS[1].quips, ['Langit lagi bersih-bersihnya.', 'Jemuran lagi senang hari ini.', 'Awan putih, langit biru.']);
-    assert.deepEqual(LEVELS[2].quips, ['Langit agak berkabut tipis.', 'Langit belum sebersih kemarin, tapi masih cerah.']);
+    assert.deepEqual(LEVELS[1].quips, ['Hari baik. Semoga harimu ringan.', 'Si Kapas lagi santai hari ini.', 'Udara lagi ramah hari ini.']);
+    assert.deepEqual(LEVELS[2].quips, ['Udaranya sedang-sedang saja hari ini.', 'Si Kapas masih santai, tapi tetap berjaga.']);
   });
 });
 
@@ -285,7 +285,6 @@ describe('estimates and suggestions', () => {
 describe('hedge first', () => {
   it('starts the answer-card level text, the story level line and the section titles with "Perkiraan"', () => {
     for (const level of [1, 2, 3, 4, 5]) {
-      assert.equal(UI.levelOf(level), `(${level} dari 5)`);
       assert.match(STORY.levelName(LEVELS[level].name), /^Perkiraan: /);
     }
     assert.equal(UI.eyebrow, 'Perkiraan hari ini');
@@ -318,8 +317,8 @@ describe('UI', () => {
       'Udara Palembang Rabu 10.00 (perkiraan): Tidak Sehat, level 3 dari 5.\nBukan angka resmi. Panduan ISPU ada di link.\nApa Kabar Udara'
     );
     assert.equal(
-      UI.shareText('Palembang', 'Rabu 10.00', 1, 'Awan putih, langit biru.'),
-      'Udara Palembang Rabu 10.00 (perkiraan): Baik, level 1 dari 5.\nAwan putih, langit biru.\nBukan angka resmi. Panduan ISPU ada di link.\nApa Kabar Udara'
+      UI.shareText('Palembang', 'Rabu 10.00', 1, 'Udara lagi ramah hari ini.'),
+      'Udara Palembang Rabu 10.00 (perkiraan): Baik, level 1 dari 5.\nUdara lagi ramah hari ini.\nBukan angka resmi. Panduan ISPU ada di link.\nApa Kabar Udara'
     );
     assert.equal(UI.shareOverview, 'Perkiraan asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.\nBukan angka resmi.\nApa Kabar Udara');
   });
@@ -366,7 +365,7 @@ describe('UI', () => {
 
   it('words the batch 3 Fun lines as agreed', () => {
     assert.equal(UI.betterSince('Sedang'), 'Perkiraannya membaik sejak terakhir kamu cek (sebelumnya Sedang).');
-    assert.ok(LEVELS[1].quips.includes('Awan putih, langit biru.'));
+    assert.ok(LEVELS[1].quips.includes('Udara lagi ramah hari ini.'));
   });
 
   it('words the satellite photo lines humbly', () => {

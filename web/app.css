@@ -89,7 +89,6 @@ ion-card {
 .headline { margin: var(--sp-1) 0 0; font-size: clamp(var(--fs-xl), 7.6vw, var(--fs-2xl)); font-weight: var(--fw-display); line-height: 1.12; letter-spacing: -.015em; }
 .quip { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); }
 .eyebrow { font-weight: var(--fw-label); }
-.of { font-size: var(--fs-sm); font-weight: var(--fw-label); letter-spacing: 0; white-space: nowrap; }
 .desc { margin: var(--sp-2) 0 0; font-size: var(--fs-xs); }
 .guide { margin: var(--sp-3) 0 0; padding: var(--sp-2) 0 0 var(--sp-3); border-left: 3px solid var(--lv-soft); color: var(--lv-ink); font-size: var(--fs-xs); }
 .guide h3 { margin: 0 0 var(--sp-1); font-size: var(--fs-xs); font-weight: var(--fw-label); opacity: .85; }

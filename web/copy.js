@@ -43,14 +43,14 @@ export const OFFICIAL_ISPU = {
 export const LEVELS = {
   1: {
     name: 'Baik',
-    quips: ['Langit lagi bersih-bersihnya.', 'Jemuran lagi senang hari ini.', 'Awan putih, langit biru.'],
+    quips: ['Hari baik. Semoga harimu ringan.', 'Si Kapas lagi santai hari ini.', 'Udara lagi ramah hari ini.'],
     activities: { laundry: 'ok', windows: 'ok' },
     health: false,
     emergency: false
   },
   2: {
     name: 'Sedang',
-    quips: ['Langit agak berkabut tipis.', 'Langit belum sebersih kemarin, tapi masih cerah.'],
+    quips: ['Udaranya sedang-sedang saja hari ini.', 'Si Kapas masih santai, tapi tetap berjaga.'],
     activities: { laundry: 'ok', windows: 'ok' },
     health: false,
     emergency: false
@@ -142,7 +142,6 @@ export const UI = {
   locateFailed: 'Lokasi tidak terbaca. Pilih kota dari daftar.',
   nearest: (city, km) => `Kota terdekat: ${city}, sekitar ${km} km. Lokasi tidak disimpan atau dikirim.`,
 
-  levelOf: level => `(${level} dari 5)`,
   levelLabel: (name, level) => `${name} · level ${level} dari 5`,
   scaleLabel: level => `level ${level} dari 5`,
   betterSince: previous => `Perkiraannya membaik sejak terakhir kamu cek (sebelumnya ${previous}).`,

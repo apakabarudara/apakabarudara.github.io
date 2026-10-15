@@ -162,7 +162,6 @@ function renderAnswer(loc, level) {
   const copy = LEVELS[level];
   $('answer').dataset.level = String(level);
   $('levelName').textContent = copy.name;
-  $('levelOf').textContent = UI.levelOf(level);
   $('scale').setAttribute('aria-label', UI.scaleLabel(level));
   [...$('scale').children].forEach((seg, i) => seg.classList.toggle('on', i + 1 === level));
   const better = improveText(loc, level);
