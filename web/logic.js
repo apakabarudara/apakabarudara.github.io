@@ -1,5 +1,6 @@
 // Pure functions for the page. No DOM, so tests/web-logic.test.ts can import them in Node.
 import { bandForPm25 } from '../ingest/bands.ts';
+import { UI } from './copy.js';
 
 export const STALE_MS = 3 * 3600e3;
 export const EXPIRED_MS = 12 * 3600e3;
@@ -358,4 +359,31 @@ export function icsReminder({ title, description, url, now }) {
     `SUMMARY:${esc(title)}`, `DESCRIPTION:${esc(description)}`, `URL:${url}`,
     'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${esc(title)}`, 'TRIGGER:PT0S', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'
   ].join('\r\n') + '\r\n';
+}
+
+const mean = xs => xs.reduce((a, b) => a + b, 0) / xs.length;
+
+/** 'better' | 'worse' | 'steady' from the hourly model: hours 4–9 against the first 3. A change needs >= 15% and >= 5 µg/m3, so small wobble stays 'steady'. Null without 9 usable hours. */
+export function trend(hours) {
+  if (!Array.isArray(hours) || hours.length < 9) return null;
+  const values = hours.slice(0, 9).map(h => h?.pm25);
+  if (!values.every(Number.isFinite)) return null;
+  const now = mean(values.slice(0, 3));
+  const later = mean(values.slice(3));
+  const diff = later - now;
+  if (Math.abs(diff) < 5 || Math.abs(diff) < 0.15 * now) return 'steady';
+  return diff < 0 ? 'better' : 'worse';
+}
+
+/**
+ * The "Sekilas" chips, in order (wind is left out on purpose: the sheet explains it). nearestHotspot: {km, dir} | null (none within 100 km) | undefined (unknown: omit).
+ * bestWindow: {when, from} | null. canOpenMap: the satellite sheet has a photo to open on.
+ */
+export function glanceChips({ nearestHotspot, bestWindow, rainMm, canOpenMap }) {
+  const chips = [];
+  if (nearestHotspot === null) chips.push({ kind: 'hotspot', text: UI.glanceHotspotNone, interactive: Boolean(canOpenMap) });
+  else if (nearestHotspot) chips.push({ kind: 'hotspot', text: UI.glanceHotspot(nearestHotspot.km, nearestHotspot.dir), interactive: Boolean(canOpenMap) });
+  if (bestWindow) chips.push({ kind: 'best', text: UI.glanceBest(bestWindow.when, bestWindow.from), interactive: true });
+  else if (Number.isFinite(rainMm) && rainMm >= WET_DAY_MM) chips.push({ kind: 'rain', text: UI.glanceRain(Math.round(rainMm)), interactive: false });
+  return chips;
 }
