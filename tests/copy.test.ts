@@ -153,7 +153,7 @@ describe('today cards', () => {
   const BANNED = /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i;
   const strings = (v: unknown): string[] => (typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(strings) : []);
   it('has no banned word in any card, encouragement or lead-in string', () => {
-    for (const line of [...strings(TODAY_CARDS), ...strings(ENCOURAGE), UI.ispuLead, UI.ispuBadge, UI.ispuTag]) assert.doesNotMatch(line, BANNED, line);
+    for (const line of [...strings(TODAY_CARDS), ...strings(ENCOURAGE), UI.ispuLead, UI.ispuBadge, UI.ispuTag, UI.guideTitleMeaning]) assert.doesNotMatch(line, BANNED, line);
   });
   it('has three encouragement variants per group, none for levels 1–2', () => {
     assert.deepEqual(Object.keys(ENCOURAGE).sort(), ['gentle', 'quiet']);
@@ -300,9 +300,10 @@ describe('answer card meaning', () => {
     assert.doesNotMatch(html, />(Baik|Berbahaya)</);
     for (const level of [1, 2]) assert.doesNotMatch(OFFICIAL_ISPU[level].description, /\b(akurat|valid|pasti|gratis|boleh|harus|aman|kamu)\b/i);
   });
-  it('shows the ISPU description only at levels 1-2 and never duplicates it as a literal in app code', () => {
+  it('quotes the ISPU description in the guide block at levels 1-2 and never duplicates it as a literal in app code', () => {
     const app = readFileSync(new URL('../web/app.js', import.meta.url), 'utf8');
-    assert.match(app, /\$\('meaning'\)\.hidden = level > 2/);
+    assert.match(app, /\$\('guideDesc'\)\.hidden = guidance/);
+    assert.doesNotMatch(app, /\$\('meaning'\)/);
     for (const level of [1, 2]) assert.ok(!app.includes(OFFICIAL_ISPU[level].description));
   });
 });
