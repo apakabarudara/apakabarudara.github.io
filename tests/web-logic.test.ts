@@ -209,6 +209,13 @@ describe('family cities', () => {
     assert.deepEqual(normalizeWatch(['a', 'x', 'a', 'b', 'c', 'd', 'e'], ids), ['a', 'b', 'c']);
     assert.deepEqual(normalizeWatch(['a', 'b', 'c', 'd'], ids, 'a'), ['a', 'b', 'c', 'd']);
     assert.deepEqual(normalizeWatch('rusak', ids), []);
+    // only the city on screen is pinned: it does not count, three others can still be added
+    let list = ['a'];
+    for (const id of ['b', 'c', 'd']) list = toggleWatch(list, id, ids, 'a').list;
+    assert.deepEqual(list, ['a', 'b', 'c', 'd']);
+    assert.equal(toggleWatch(list, 'e', ids, 'a').refused, true);
+    assert.deepEqual(watchRow(['a'], 'a'), []);
+    assert.deepEqual(watchRow(['a', 'b'], 'a'), ['b']);
     assert.deepEqual(normalizeWatch(null, ids), []);
   });
 

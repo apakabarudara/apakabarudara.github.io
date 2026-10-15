@@ -3,7 +3,7 @@ import { cleanPoints, compassName, FAR_KM, nearestHotspot } from './nearby.js';
 import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, LEVELS, OFFICIAL_ISPU, RAIN, STORY, TODAY_CARDS, UI } from './copy.js';
 import {
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
-  glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM
+  glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, WATCH_MAX, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
@@ -749,20 +749,31 @@ function renderWatch() {
   const chips = watchRow(watch, current).map(id => {
     const loc = report.locations.find(l => l.id === id);
     const level = bandOf(loc);
-    const chip = el('button', 'gchip', el('span', 'c', cityName(loc)), el('span', 'n', LEVELS[level].name));
+    const bars = el('span', 'mini-scale', ...[1, 2, 3, 4, 5].map(n => el('i', n === level ? 'on' : null)));
+    bars.setAttribute('aria-hidden', 'true');
+    const chip = el('button', 'gchip', bars, el('span', 'c', cityName(loc)));
     chip.type = 'button';
     chip.dataset.level = String(level);
-    chip.setAttribute('aria-label', UI.watchChip(cityName(loc), level, LEVELS[level].name));
+    const label = UI.watchChip(cityName(loc), level, LEVELS[level].name);
+    chip.setAttribute('aria-label', label);
+    chip.title = label;
     chip.addEventListener('click', () => choose(id));
     return chip;
   });
-  const add = el('button', 'chip add', el('span', null, `+ ${UI.watchAdd}`));
+  // Compact dashed "+" at the end of the row while there is room for another city.
+  const add = el('button', 'watch-add');
   add.type = 'button';
+  // Only the city on screen is pinned: the row still shows, with a labelled add button, so the control stays above the fold.
+  if (chips.length === 0) add.append(el('span', null, UI.watchAdd));
+  add.classList.toggle('labeled', chips.length === 0);
+  add.setAttribute('aria-label', UI.watchAdd);
+  add.title = UI.watchAdd;
   add.addEventListener('click', openWatchSheet);
-  $('watch').replaceChildren(...chips, add);
+  $('watch').replaceChildren(...chips, ...(chips.length < WATCH_MAX ? [add] : []));
   // Nobody pinned yet: no chip row above the answer, one soft button below the share row.
-  $('watch').hidden = chips.length === 0;
-  $('watchSolo').hidden = chips.length > 0;
+  const nobody = watch.length === 0;
+  $('watch').hidden = nobody;
+  $('watchSolo').hidden = !nobody;
 }
 
 function openWatchSheet() {

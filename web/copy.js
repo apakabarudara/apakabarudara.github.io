@@ -284,7 +284,7 @@ export const UI = {
   moreTitle: 'Fakta asap',
   satTitle: 'Foto satelit',
   // Answer-card glance: model-based trend line and the "Sekilas" chips. Wind and rain are data; no sky or weather talk.
-  glanceTrend: { better: '6 jam ke depan: cenderung membaik', worse: '6 jam ke depan: cenderung memburuk', steady: '6 jam ke depan: cenderung stabil' },
+  glanceTrend: { better: '6 jam ke depan: cenderung membaik', worse: '6 jam ke depan: cenderung memburuk', steady: '6 jam ke depan: tidak banyak berubah' },
   glanceTrendLabel: text => `Perkiraan: ${text}`,
   glanceLabel: 'Sekilas',
   glanceHotspot: (km, dir) => `Titik panas terdekat ${km < 1 ? 'kurang dari 1 km' : `${Math.round(km)} km ke ${String(dir).toLowerCase()}`}`,
