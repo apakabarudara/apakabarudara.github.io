@@ -178,12 +178,23 @@ export const UI = {
   remindTitle: 'Cek Apa Kabar Udara',
   remindBody: url => `Perkiraan asap dan kualitas udara di kotamu hari ini: ${url}`,
   remindDone: 'Pengingat 07.00 selama 30 hari dibuat. Buka berkasnya untuk menambahkannya ke Kalender.',
-  todayTitle: 'Urusan rumah hari ini',
+  todayTitle: 'Kapan udara paling lega?',
+  todaySub: '24 jam ke depan',
   // From level 3 the window can still be smoky: say its own estimated band so it never reads as a nudge outdoors.
-  bestWindow: (level, dayWord, from, to, windowBand) => {
-    const line = `${level === 1 ? 'Udara paling segar' : 'Asap paling tipis'} di siang hari: ${dayWord}, ${from}–${to}`;
+  bestWindow: (dayWord, part, from, to, level, windowBand) => {
+    const line = `Paling lega: ${dayWord} ${part}, ${from}–${to}`;
     return level >= 3 && windowBand >= 3 ? `${line} (perkiraan: masih ${LEVELS[windowBand].name})` : line;
   },
+  dayParts: { pagi: 'Pagi', siang: 'Siang', sore: 'Sore', malam: 'Malam' },
+  partName: (name, tomorrow) => (tomorrow ? `${name} besok` : name),
+  partRange: (from, to) => `${from}–${to}`,
+  tagNow: 'Sekarang',
+  tagBest: 'Paling lega',
+  tagWorst: 'Paling tebal',
+  flatDay: levelName => `Hari ini rata: ${levelName} sepanjang hari. Tidak ada jam yang jauh lebih baik.`,
+  hoursSummary: 'Lihat per jam',
+  hourNote: (time, name, tomorrow) => `${tomorrow ? 'besok ' : ''}${time} · ${name}`,
+  legendBest: 'Paling lega',
   // First line of every shared text says "perkiraan": forwarded without context, a claim reads as a hoax unless it says it is an estimate.
   shareFallback: title => `${title}\nBukan angka resmi.`,
   dayWord: { today: 'hari ini', tomorrow: 'besok' },
