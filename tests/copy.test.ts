@@ -265,7 +265,7 @@ describe('all copy', () => {
 
   it('has no jokes in the facts and no body or breathing jokes anywhere', () => {
     for (const line of [...FACTS, ...allCopy()]) assert.doesNotMatch(line, /paru-paru (lagi|ikut)|\bjoget|\bmantan\b|\bdemo\b/i, line);
-    assert.equal(FACTS.length, 3);
+    assert.equal(FACTS.length, 4);
     assert.ok(!FACTS.some(f => /Titik panas bukan cuma/.test(f)));
   });
 

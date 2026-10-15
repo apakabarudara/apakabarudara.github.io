@@ -189,6 +189,8 @@ export const UI = {
 
   methodLink: 'Metode & sumber',
   calendarLink: 'Kalender cetak',
+  whyLink: 'Di balik asap',
+  whyFail: 'Halaman ini belum bisa dibuka. Coba lagi sebentar lagi.',
   hazeLabel: 'Suasana latar',
   hazeOn: 'nyala',
   hazeOff: 'mati',
@@ -345,6 +347,7 @@ export const UI = {
 
 /** Facts in the "Cek langit & fakta asap" fold. Plain statements; hidden at levels 4–5. */
 export const FACTS = [
+  'Menurut BNPB, sekitar 90 persen kejadian karhutla disebabkan perbuatan manusia, langsung maupun tidak langsung.',
   'Asap tidak mengenal batas negara. Bisa menyeberang sampai Sarawak dan membuat udara di sana ikut tidak sehat.',
   'Lahan gambut bisa terbakar diam-diam di bawah tanah. Api yang kelihatan padam belum tentu benar-benar selesai.',
   'El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.'

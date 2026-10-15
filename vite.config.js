@@ -13,7 +13,7 @@ const SW_TEMPLATE = fileURLToPath(new URL('./web/sw.js', import.meta.url));
 // sat/ holds the hourly satellite photos: generated at build time, changing every run, so never cached with the shell.
 const NOT_PRECACHED = new Set(['robots.txt', 'og-image.png']);
 // The lazy map chunk (Leaflet and its CSS) is fetched on demand: precaching it would add it to every first visit's transfer.
-const LAZY_CHUNK = /^assets\/(satmap|kids|calendar)-/;
+const LAZY_CHUNK = /^assets\/(satmap|kids|calendar|why)-/;
 const NOT_PRECACHED_DIRS = new Set(['sat']);
 function publicFiles(dir = PUBLIC_DIR, prefix = '') {
   return readdirSync(dir, { withFileTypes: true }).flatMap(entry =>
@@ -56,6 +56,6 @@ export default defineConfig({
   root: 'web',
   base: './',
   plugins: [siteFiles()],
-  build: { outDir: '../dist', emptyOutDir: true, target: 'es2020', cssCodeSplit: true, chunkSizeWarningLimit: 700, rollupOptions: { output: { codeSplitting: { groups: [{ name: 'satmap', test: /node_modules[\\/]leaflet|web[\\/]satmap/, priority: 2 }, { name: 'kids', test: /web[\\/]kids/, priority: 2 }, { name: 'calendar', test: /web[\\/]calendar/, priority: 2 }, { name: 'index', test: /./, priority: 1 }] } } }, assetsInlineLimit: 0, reportCompressedSize: true },
+  build: { outDir: '../dist', emptyOutDir: true, target: 'es2020', cssCodeSplit: true, chunkSizeWarningLimit: 700, rollupOptions: { output: { codeSplitting: { groups: [{ name: 'satmap', test: /node_modules[\\/]leaflet|web[\\/]satmap/, priority: 2 }, { name: 'kids', test: /web[\\/]kids/, priority: 2 }, { name: 'calendar', test: /web[\\/]calendar/, priority: 2 }, { name: 'why', test: /web[\\/]why/, priority: 2 }, { name: 'index', test: /./, priority: 1 }] } } }, assetsInlineLimit: 0, reportCompressedSize: true },
   server: { host: '127.0.0.1' }
 });
