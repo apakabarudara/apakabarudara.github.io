@@ -876,7 +876,7 @@ $('shareCopy').addEventListener('click', copyLink);
 $('factsNext').addEventListener('click', nextFact);
 
 // Bottom sheets that fit their content: "Apa ini?", the iOS install steps, "Pantau kota lain".
-for (const id of ['about', 'method', 'iosSheet', 'watchSheet', 'kidsSheet']) {
+for (const id of ['about', 'method', 'iosSheet', 'watchSheet', 'kidsSheet', 'calendarSheet']) {
   $(id).breakpoints = [0, 1];
   $(id).initialBreakpoint = 1;
 }
@@ -906,6 +906,7 @@ $('watchClose').addEventListener('click', () => $('watchSheet').dismiss());
 
 // "Hari Libur Asap": the pack is its own chunk, fetched and built on first open.
 let kidsReady = false;
+let kidsPrint = [];
 async function openKids() {
   count('paket-anak-buka');
   $('kidsNote').textContent = '';
@@ -915,7 +916,7 @@ async function openKids() {
       const kids = renderKids();
       $('kidsSheetTitle').textContent = kids.title;
       $('kidsBody').replaceChildren(kids.sheet);
-      $('printArea').replaceChildren(...kids.print);
+      kidsPrint = kids.print;
       kids.sheet.querySelector('.kids-print').addEventListener('click', printKids);
       kidsReady = true;
     }
@@ -926,11 +927,56 @@ async function openKids() {
 }
 function printKids() {
   count('paket-anak-cetak');
+  $('printArea').replaceChildren(...kidsPrint); // the printable area is shared with the calendar
   document.body.classList.add('kids-printing'); // app.css prints only #printArea while this is set
   window.print();
 }
-addEventListener('afterprint', () => document.body.classList.remove('kids-printing'));
+addEventListener('afterprint', () => document.body.classList.remove('kids-printing', 'cal-printing'));
 
+// "Kalender Kertas": its own chunk too. The chosen month is drawn in the sheet's thumbnail and, at print time, into #printArea.
+let calendar = null;
+let calendarMonth = null;
+const calendarCity = () => (selected() ? cityName(selected()) : '');
+function selectMonth(i) {
+  calendarMonth = calendar.months[i];
+  [...$('calendarChoices').children].forEach((chip, j) => chip.setAttribute('aria-checked', String(i === j)));
+  $('calendarThumb').innerHTML = calendar.page(calendarMonth, calendarCity());
+  $('calendarThumb').setAttribute('aria-label', `${calendar.CAL.previewAlt}: ${calendar.label(calendarMonth)}`);
+}
+async function openCalendar() {
+  count('kalender-buka');
+  $('calendarNote').textContent = '';
+  try {
+    if (!calendar) {
+      const mod = await import('./calendar.js');
+      calendar = { CAL: mod.CAL, page: mod.calendarPage, label: mod.monthLabel, months: mod.monthChoices() };
+      $('calendarSheetTitle').textContent = mod.CAL.title;
+      $('calendarIntro').textContent = mod.CAL.intro;
+      $('calendarChoices').setAttribute('aria-label', mod.CAL.monthsLabel);
+      $('calendarPrint').textContent = mod.CAL.print;
+      $('calendarChoices').replaceChildren(...calendar.months.map((m, i) => {
+        const chip = el('button', 'share-choice', mod.monthLabel(m));
+        chip.type = 'button';
+        chip.setAttribute('role', 'radio');
+        chip.addEventListener('click', () => selectMonth(i));
+        return chip;
+      }));
+    }
+    selectMonth(calendarMonth ? calendar.months.indexOf(calendarMonth) : 0);
+    $('calendarSheet').present();
+  } catch {
+    $('calendarNote').textContent = UI.calendarFail;
+  }
+}
+function printCalendar() {
+  count('kalender-cetak');
+  $('printArea').innerHTML = calendar.page(calendarMonth, calendarCity());
+  document.body.classList.add('cal-printing');
+  window.print();
+}
+$('calendarOpen').addEventListener('click', openCalendar);
+$('calendarPrint').addEventListener('click', printCalendar);
+$('calendarClose').addEventListener('click', () => $('calendarSheet').dismiss());
 $('kidsOpen').addEventListener('click', openKids);
 $('kidsClose').addEventListener('click', () => $('kidsSheet').dismiss());
 for (const box of document.querySelectorAll('[data-install]')) {

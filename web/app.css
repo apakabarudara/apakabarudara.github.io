@@ -510,9 +510,9 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 #printArea { display: none; }
 @media print {
   @page { size: A4; margin: 12mm; }
-  body.kids-printing ion-app { display: none !important; }
-  body.kids-printing #printArea { display: block; color: #000; background: #fff; font-family: var(--font); }
-  html:has(.kids-printing), .kids-printing { height: auto !important; overflow: visible !important; position: static !important; background: #fff !important; }
+  body:is(.kids-printing, .cal-printing) ion-app { display: none !important; }
+  body:is(.kids-printing, .cal-printing) #printArea { display: block; color: #000; background: #fff; font-family: var(--font); }
+  html:has(.kids-printing, .cal-printing), .kids-printing, .cal-printing { height: auto !important; overflow: visible !important; position: static !important; background: #fff !important; }
   .kp { break-after: page; }
   .kp:last-child { break-after: auto; }
   .kp h2 { margin: 0 0 4mm; font-size: 20pt; }
@@ -524,6 +524,38 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
   .kp-text li { margin-top: 2mm; break-inside: avoid; }
   .kp-answers, .kp-note { margin: 6mm 0 0; font-size: 10pt; }
 }
+
+/* Kalender Kertas: one A4 sheet (186 x 272 mm inside the 12 mm page margin), always black on white, sized in px at 96 dpi. */
+.cal-page { width: 703px; height: 1028px; padding: 0; background: #fff; color: #000; font-family: var(--font); font-weight: 500; display: flex; flex-direction: column; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.cal-page * { box-sizing: border-box; }
+.cal-page header { display: flex; justify-content: space-between; align-items: flex-end; }
+.cal-page h1 { margin: 0; font-size: 48px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+.cal-sub { margin-top: 8px; font-size: 22px; font-weight: 600; color: #333; }
+.cal-f { font-size: 14px; font-weight: 600; text-align: right; line-height: 2.1; }
+.cal-g { flex: 1; min-height: 0; margin-top: 24px; border: 3px solid #000; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+.cal-h, .cal-b { display: grid; grid-template-columns: repeat(7, 1fr); }
+.cal-b { flex: 1; grid-template-rows: repeat(var(--rows), 1fr); }
+.cal-h div { padding: 8px 0; border-bottom: 3px solid #000; font-size: 14px; font-weight: 800; text-align: center; letter-spacing: .5px; }
+.cal-h div + div, .cal-c:not(:nth-child(7n+1)) { border-left: 2px solid #000; }
+.cal-c { position: relative; border-top: 2px solid #000; min-height: 0; }
+.cal-b .cal-c:nth-child(-n+7) { border-top: 0; }
+.cal-c span { position: absolute; left: 9px; top: 6px; font-size: 15px; font-weight: 700; }
+.cal-c i { position: absolute; left: 50%; top: 56%; width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 2px solid #000; border-radius: 50%; }
+.cal-e { background: repeating-linear-gradient(135deg, #fff 0 6px, #eee 6px 7px); }
+.cal-leg { display: flex; justify-content: space-between; margin-top: 22px; }
+.cal-lg { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; line-height: 1.2; }
+.cal-lg b { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #000; flex: none; }
+.cal-lg em { display: block; font-style: normal; font-weight: 800; font-size: 11px; color: #555; }
+.cal-ins { margin-top: 20px; font-size: 16px; font-weight: 700; }
+.cal-note { margin-top: 5px; font-size: 12px; color: #444; line-height: 1.5; }
+.cal-page footer { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #000; padding-top: 10px; font-size: 13px; font-weight: 600; }
+.cal-r { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 700; letter-spacing: .3px; }
+.cal-mascot { width: 46px; height: 41px; }
+.cal-intro { margin: var(--sp-2) 0 0; }
+.cal-thumb { width: 260px; height: 380px; margin: var(--sp-3) auto; border: 1px solid var(--line); border-radius: var(--r-sm); background: #fff; box-shadow: var(--shadow-sm); overflow: hidden; }
+.cal-thumb .cal-page { width: 703px; transform: translate(10px, 14px) scale(.34); transform-origin: 0 0; pointer-events: none; }
+.cal-print { display: flex; width: 100%; justify-content: center; align-items: center; margin-top: var(--sp-2); }
+@media print { .cal-page { break-inside: avoid; } }
 
 /* Bagikan sheet: card choice, preview, actions */
 .share-choices { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-3); }

@@ -181,6 +181,8 @@ export const UI = {
   official: 'Cek angka resmi pemerintah (ISPU)',
 
   methodLink: 'Metode & sumber',
+  calendarLink: 'Kalender cetak',
+  calendarFail: 'Kalender belum bisa dibuka. Coba lagi sebentar lagi.',
   methodTitle: 'Metode & sumber',
   methodSourcesTitle: 'Dari mana datanya',
   methodSources: [
