@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 import {
+  pmRounded,
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, firstWetDay, rainOutlook, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
   icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, followsOtherIndex, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom, whatsappUrl, orderShareActions, trend, glanceChips
 } from '../web/logic.js';
@@ -697,5 +698,25 @@ describe('firstWetDay / rainOutlook ("Hujan pertama")', () => {
     assert.equal(rainOutlook(outlook, '2026-10-14', 1, 2), null);
     assert.equal(rainOutlook([], '2026-10-14', 1, 4), null);
     assert.equal(rainOutlook(undefined, '2026-10-14', 1, 4), null);
+  });
+});
+
+describe('pmRounded', () => {
+  const id = new Intl.NumberFormat('id-ID').format;
+  it('rounds to whole numbers, never decimals', () => {
+    assert.equal(pmRounded(37.5), '38');
+    assert.equal(pmRounded(0.4), '0');
+    assert.equal(pmRounded(172.4), '172');
+    assert.equal(pmRounded(1234.6, id), '1.235');
+  });
+  it('is null for missing, NaN or negative values', () => {
+    for (const v of [undefined, null, NaN, -1, Infinity, '12']) assert.equal(pmRounded(v as number), null);
+  });
+  it('pill strings carry the number, the unit and no banned words', () => {
+    assert.equal(UI.pmPill('172'), 'PM2,5 ≈ 172 µg/m³ · model');
+    for (const t of [UI.pmPill('9'), UI.pmPillLabel('9')]) {
+      assert.doesNotMatch(t, /akurat|valid|pasti|gratis|aman|boleh|harus|kali batas|ISPU/i);
+      assert.doesNotMatch(t.replace('PM2,5', ''), /\d[.,]\d/);
+    }
   });
 });

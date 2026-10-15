@@ -175,6 +175,8 @@ export const UI = {
   call: number => `Telepon ${number}`,
   stamp: time => `Diperbarui ${time} · bisa meleset ·`,
   explainTitle: 'Apa ini?',
+  pmPill: n => `PM2,5 ≈ ${n} µg/m³ · model`,
+  pmPillLabel: n => `Angka model PM2,5 sekitar ${n} mikrogram per meter kubik. Buka penjelasan.`,
   explain: pm => [
     'Level ini perkiraan komputer dari data satelit dan cuaca, bukan hasil alat ukur di kota ini.',
     'Di dekat kebakaran gambut, asap bisa lebih tebal dari perkiraan. Kalau asap di sekitar terlihat tebal, ikuti yang terlihat.',

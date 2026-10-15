@@ -131,6 +131,10 @@ button.gchip:focus-visible { outline-color: var(--focus); }
 .watch button.gchip { color: var(--ink); background: var(--surface); border-color: var(--line); }
 
 .eyebrow { font-weight: var(--fw-label); }
+.pm-pill { position: relative; display: block; width: fit-content; max-width: 100%; margin: var(--sp-1) 0 var(--sp-1);  white-space: nowrap; padding: 1px var(--sp-2); border: 1px solid var(--line); border-radius: var(--r-pill); background: none; font: inherit; font-size: var(--fs-xs); font-weight: 400; line-height: 1.4; color: var(--ink-2); font-variant-numeric: tabular-nums; cursor: pointer; }
+.pm-pill::after { content: ""; position: absolute; inset: -12px -4px; }
+.pm-pill:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.pm-pill[hidden] { display: none; }
 .desc { margin: var(--sp-2) 0 0; font-size: var(--fs-xs); }
 .guide { margin: var(--sp-3) 0 0; padding: var(--sp-2) 0 0 var(--sp-3); border-left: 3px solid var(--lv-soft); color: var(--lv-ink); font-size: var(--fs-xs); }
 .guide h3 { margin: 0 0 var(--sp-1); font-size: var(--fs-xs); font-weight: var(--fw-label); opacity: .85; }
