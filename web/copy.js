@@ -43,7 +43,7 @@ export const OFFICIAL_ISPU = {
 export const LEVELS = {
   1: {
     name: 'Baik',
-    quips: ['Kabar baik: udara lagi ramah.', 'Semoga harimu seringan udaranya.', 'Hari baik. Nikmati ya.'],
+    quips: ['Kabar baik: udara lagi ramah.', 'Udaranya baik hari ini. Syukurlah.', 'Hari baik. Nikmati ya.'],
     activities: { laundry: 'ok', windows: 'ok' },
     health: false,
     emergency: false

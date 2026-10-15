@@ -59,7 +59,7 @@ describe('LEVELS', () => {
   }
 
   it('words the quips as agreed: non-health only', () => {
-    assert.deepEqual(LEVELS[1].quips, ['Kabar baik: udara lagi ramah.', 'Semoga harimu seringan udaranya.', 'Hari baik. Nikmati ya.']);
+    assert.deepEqual(LEVELS[1].quips, ['Kabar baik: udara lagi ramah.', 'Udaranya baik hari ini. Syukurlah.', 'Hari baik. Nikmati ya.']);
     assert.deepEqual(LEVELS[2].quips, ['Udaranya biasa-biasa saja hari ini.', 'Kita pantau terus ya.']);
   });
 });
