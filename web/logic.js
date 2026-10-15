@@ -214,6 +214,14 @@ export const worsenedFrom = (previous, level) => (Number.isInteger(previous) && 
 /** Row height for `count` ranking rows between two y positions (whole pixels, so rows never run past `bottom`). */
 export const rankRowHeight = (count, top = 270, bottom = 1360) => Math.floor((bottom - top) / count);
 
+/** WhatsApp's "send to" link: the text and the link as one message, every newline encoded. */
+export const whatsappUrl = (text, link) => `https://wa.me/?text=${encodeURIComponent(`${text}\n${link}`)}`;
+
+export const SHARE_ACTIONS = ['wa', 'system', 'save', 'copy'];
+
+/** The share rows with the one used last on top; the rest keep their default order. An unknown `last` changes nothing. */
+export const orderShareActions = last => (SHARE_ACTIONS.includes(last) ? [last, ...SHARE_ACTIONS.filter(a => a !== last)] : [...SHARE_ACTIONS]);
+
 /** Cache key for a drawn Story card: everything printed on it. */
 export function storyKey(lines) {
   return JSON.stringify(lines);

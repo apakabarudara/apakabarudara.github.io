@@ -2,7 +2,7 @@ import './ionic.js';
 import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, LEVELS, OFFICIAL_ISPU, RAIN, STORY, TODAY_CARDS, UI } from './copy.js';
 import {
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
-  nearest, normalizeWatch, previewOverride, rainKind, outlookLines, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worldviewUrl, worsenedFrom, WET_DAY_MM
+  nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
@@ -103,7 +103,6 @@ function show(view) {
   renderInstall();
   $('tagline').hidden = view !== 'overview';
   $('headNote').hidden = view === 'overview'; // always there on city and message views, no close button
-  $('story').hidden = view !== 'city';
   // City view: the share row sits right under the answer card. Overview: one share button at the bottom.
   if (view === 'city') $('answer').after($('shareBlock'), $('watchSolo'));
   else $('city').after($('shareBlock'));
@@ -495,32 +494,6 @@ function useLocation() {
   );
 }
 
-async function share() {
-  if (!report) return;
-  count('bagikan');
-  const loc = selected();
-  const live = freshness(report.generated_at, new Date()) !== 'expired';
-  const target = loc && live && !preview ? loc : null;
-  const page = `${location.origin}${location.pathname}`;
-  const url = target ? cityLink(page, target.id) : page;
-  let text = live ? UI.shareOverview : UI.shareFallback(document.title);
-  if (target) {
-    const level = target.pm25_model.band;
-    const day = dayTime.format(new Date(target.pm25_model.updated_at));
-    text = UI.shareText(cityName(target), day, level, quipFor(level));
-  }
-  try {
-    if (navigator.share) {
-      await navigator.share({ title: document.title, text, url });
-    } else {
-      await navigator.clipboard.writeText(`${text} ${url}`);
-      $('shareNote').textContent = UI.shared;
-    }
-  } catch {
-    // Share sheet dismissed or clipboard refused: nothing to undo.
-  }
-}
-
 // The Story cards, drawn ahead of the tap: iOS only lets navigator.share run while the tap's user activation is still live.
 const storyJobs = new Map(); // key -> Promise<File>, while drawing
 const storyFiles = new Map(); // key -> File, drawn
@@ -567,66 +540,133 @@ function prepareStory() {
   else setTimeout(run, 300);
 }
 
-let storySheet = null; // one action sheet, re-presented with the buttons of the city on screen
+// "Bagikan": one sheet with a preview of the card, WhatsApp, the system share, the PNG and the link.
+const SHARE_LAST_KEY = 'akud-share-last'; // the action used last, so it leads next time
+const previewUrls = new Map(); // card key -> object URL of the drawn PNG
+let shareCtx = null; // { loc, cards, card, text, link } while the sheet is open; loc is null in the overview
+let previewSeq = 0;
 
-/** The "Story" tap opens a small action sheet; each choice shares its own, already drawn card inside that choice's tap. */
-function chooseStory() {
+/** What a share says and links to: the city on screen while the data is live, otherwise the overview. */
+function shareTarget() {
   const loc = selected();
-  if (!report || !loc || preview) return;
-  $('shareNote').textContent = '';
-  if (!storySheet) {
-    storySheet = el('ion-action-sheet');
-    document.querySelector('ion-app').append(storySheet);
+  const live = freshness(report.generated_at, new Date()) !== 'expired';
+  const target = loc && live && !preview ? loc : null;
+  const page = `${location.origin}${location.pathname}`;
+  let text = live ? UI.shareOverview : UI.shareFallback(document.title);
+  if (target) {
+    const level = target.pm25_model.band;
+    text = UI.shareText(cityName(target), dayTime.format(new Date(target.pm25_model.updated_at)), level, quipFor(level));
   }
-  const sheet = storySheet;
-  sheet.buttons = [
-    ...storyCards(loc).map(card => ({ text: card.label, handler: () => { shareStory(loc, card); } })),
-    { text: UI.cancel, role: 'cancel' }
-  ];
-  sheet.present();
+  return { loc: target, text, link: target ? cityLink(page, target.id) : page };
 }
 
-/** A card as a PNG: shared as a file where the browser can (phones offer Instagram Story), otherwise downloaded. */
-async function shareStory(loc, { lines, key }) {
-  count('story');
-  $('shareNote').textContent = '';
-  // Instagram Stories take no web link from the web: copy it for the Link sticker. Not awaited, and before share, which consumes the tap.
-  let linkCopied = false;
-  navigator.clipboard?.writeText(cityLink(`${location.origin}${location.pathname}`, loc.id)).then(() => { linkCopied = true; }, () => {});
-  // Ready file: share is the first await, so the tap's activation is still live.
-  const ready = storyFiles.get(key) ?? null;
-  let file = ready;
-  try {
-    if (ready && navigator.canShare?.({ files: [ready] })) {
-      await navigator.share({ files: [ready] });
-      if (linkCopied) $('shareNote').textContent = UI.storyLinkCopied;
-      return;
-    }
-    file = ready ?? (await makeStory(lines, key));
-  } catch (error) {
-    shareFailed(error, key);
+const setStatus = text => { $('shareStatus').textContent = text; };
+
+function openShare() {
+  if (!report) return;
+  count('bagikan-buka');
+  const { loc, text, link } = shareTarget();
+  const cards = loc ? storyCards(loc) : [];
+  shareCtx = { loc, cards, card: cards[0] ?? null, text, link };
+  setStatus('');
+  $('sharePreviewBlock').hidden = !loc;
+  $('shareSave').hidden = !loc;
+  $('shareSystem').hidden = !navigator.share;
+  $('shareWa').href = whatsappUrl(text, link);
+  const rows = Object.fromEntries([...$('shareActions').children].map(node => [node.dataset.act, node]));
+  $('shareActions').append(...orderShareActions(store.read(SHARE_LAST_KEY)).map(act => rows[act]));
+  $('shareChoices').replaceChildren(...cards.map((card, i) => {
+    const chip = el('button');
+    chip.type = 'button';
+    chip.className = 'share-choice';
+    chip.setAttribute('role', 'radio');
+    chip.textContent = card.label;
+    chip.addEventListener('click', () => selectCard(i));
+    return chip;
+  }));
+  if (loc) selectCard(0);
+  $('shareSheet').present();
+}
+
+function selectCard(i) {
+  const card = shareCtx.cards[i];
+  shareCtx.card = card;
+  [...$('shareChoices').children].forEach((chip, j) => chip.setAttribute('aria-checked', String(i === j)));
+  const seq = ++previewSeq;
+  const img = $('sharePreview');
+  if (previewUrls.has(card.key)) {
+    img.src = previewUrls.get(card.key);
+    img.alt = previewAlt();
+    img.hidden = false;
+    $('sharePreviewSk').hidden = true;
     return;
   }
+  img.hidden = true;
+  $('sharePreviewSk').hidden = false;
+  makeStory(card.lines, card.key).then(
+    file => {
+      if (!previewUrls.has(card.key)) previewUrls.set(card.key, URL.createObjectURL(file));
+      if (seq !== previewSeq) return;
+      img.src = previewUrls.get(card.key);
+      img.alt = previewAlt();
+      img.hidden = false;
+      $('sharePreviewSk').hidden = true;
+    },
+    () => { if (seq === previewSeq) { $('sharePreviewSk').hidden = true; setStatus(UI.storyFailed); } }
+  );
+}
+
+const previewAlt = () => UI.shareSheetPreviewAlt(cityName(shareCtx.loc), LEVELS[shareCtx.loc.pm25_model.band].name);
+
+/** Counts, remembers the choice, clears the status line. */
+function used(act) {
+  count(`bagikan-${act === 'system' ? 'sistem' : act === 'copy' ? 'salin' : act === 'save' ? 'simpan' : 'wa'}`);
+  store.write(SHARE_LAST_KEY, act);
+  setStatus('');
+}
+
+function shareWhatsapp() { used('wa'); } // the link itself opens the chat picker
+
+/** The ready PNG goes out inside this tap (iOS needs the activation); not drawn yet, so text and link only. */
+async function shareSystem() {
+  used('system');
+  const { card, text, link } = shareCtx;
+  const file = card ? storyFiles.get(card.key) : null;
   try {
-    if (navigator.canShare?.({ files: [file] })) {
-      await navigator.share({ files: [file] });
-      if (linkCopied) $('shareNote').textContent = UI.storyLinkCopied;
-      return;
-    }
-    const link = el('a');
-    link.href = URL.createObjectURL(file);
-    link.download = file.name;
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(link.href), 10000);
-    $('shareNote').textContent = linkCopied ? `${UI.storySaved} ${UI.storyLinkCopied}` : UI.storySaved;
+    if (file && navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file], text, url: link });
+    else await navigator.share({ text, url: link });
   } catch (error) {
-    shareFailed(error, key);
+    if (error?.name !== 'AbortError') setStatus(UI.storyFailed);
   }
 }
 
-function shareFailed(error, key) {
-  if (error?.name === 'AbortError') return; // share sheet dismissed
-  $('shareNote').textContent = error?.name === 'NotAllowedError' && storyFiles.has(key) ? UI.storyTapAgain : UI.storyFailed;
+/** The PNG as a download. Instagram takes no web link from the web, so the city link is copied for the Link sticker (not awaited: iOS). */
+async function saveImage() {
+  used('save');
+  const { card, link } = shareCtx;
+  let linkCopied = false;
+  navigator.clipboard?.writeText(link).then(() => { linkCopied = true; }, () => {});
+  try {
+    const file = storyFiles.get(card.key) ?? (await makeStory(card.lines, card.key));
+    const a = el('a');
+    a.href = URL.createObjectURL(file);
+    a.download = file.name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+    setStatus(linkCopied ? `${UI.storySaved} ${UI.storyLinkCopied}` : UI.storySaved);
+  } catch {
+    setStatus(UI.storyFailed);
+  }
+}
+
+async function copyLink() {
+  used('copy');
+  try {
+    await navigator.clipboard.writeText(shareCtx.link);
+    setStatus(UI.shared);
+  } catch {
+    setStatus(UI.storyFailed);
+  }
 }
 
 // Pantau kota lain: up to 3 pinned cities as chips; the one on screen is left out of the row.
@@ -742,7 +782,15 @@ for (const id of ['locate', 'locateOverview']) {
   if ('geolocation' in navigator) $(id).addEventListener('click', useLocation);
   else $(id).hidden = true;
 }
-$('share').addEventListener('click', () => share(false));
+$('share').addEventListener('click', openShare);
+$('shareSheet').breakpoints = [0, 1];
+$('shareSheet').initialBreakpoint = 1;
+$('shareSheetClose').addEventListener('click', () => $('shareSheet').dismiss());
+$('shareSheet').addEventListener('didDismiss', () => $('share').focus());
+$('shareWa').addEventListener('click', shareWhatsapp);
+$('shareSystem').addEventListener('click', shareSystem);
+$('shareSave').addEventListener('click', saveImage);
+$('shareCopy').addEventListener('click', copyLink);
 $('factsNext').addEventListener('click', nextFact);
 
 // Bottom sheets that fit their content: "Apa ini?", the iOS install steps, "Pantau kota lain".
@@ -796,7 +844,6 @@ function printKids() {
 addEventListener('afterprint', () => document.body.classList.remove('kids-printing'));
 $('kidsOpen').addEventListener('click', openKids);
 $('kidsClose').addEventListener('click', () => $('kidsSheet').dismiss());
-$('story').addEventListener('click', chooseStory);
 for (const box of document.querySelectorAll('[data-install]')) {
   box.querySelector('.install-go').addEventListener('click', install);
   box.querySelector('.install-x').addEventListener('click', () => {

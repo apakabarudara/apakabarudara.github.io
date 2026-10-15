@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import { LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 import {
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
-  icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom
+  icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom, whatsappUrl, orderShareActions
 } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
@@ -556,5 +556,26 @@ describe('satellite map helpers', () => {
   it('boxes a point by 15 degrees, or by the given size', () => {
     assert.deepEqual(mapBounds(-2, 113), [[-17, 98], [13, 128]]);
     assert.deepEqual(mapBounds(1, 2, 1), [[0, 1], [2, 3]]);
+  });
+});
+
+describe('whatsappUrl', () => {
+  it('encodes the text and the link, leaving no raw newline or space', () => {
+    const url = whatsappUrl('Udara Palembang (perkiraan): Baik.\nApa Kabar Udara', 'https://x.id/p/#palembang kota');
+    assert.ok(url.startsWith('https://wa.me/?text='));
+    assert.doesNotMatch(url, /[\n\s]/);
+    const decoded = decodeURIComponent(url.slice('https://wa.me/?text='.length));
+    assert.equal(decoded, 'Udara Palembang (perkiraan): Baik.\nApa Kabar Udara\nhttps://x.id/p/#palembang kota');
+  });
+});
+
+describe('orderShareActions', () => {
+  it('keeps the default order without a last action or with an unknown one', () => {
+    assert.deepEqual(orderShareActions(null), ['wa', 'system', 'save', 'copy']);
+    assert.deepEqual(orderShareActions('x'), ['wa', 'system', 'save', 'copy']);
+  });
+  it('puts the last used action first and keeps the others in order', () => {
+    assert.deepEqual(orderShareActions('save'), ['save', 'wa', 'system', 'copy']);
+    assert.deepEqual(orderShareActions('copy'), ['copy', 'wa', 'system', 'save']);
   });
 });

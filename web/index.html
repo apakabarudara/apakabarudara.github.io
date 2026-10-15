@@ -231,7 +231,6 @@ addEventListener('error', e => {
       <div id="shareBlock" hidden>
         <div class="share-row">
           <ion-button id="share" class="wide soft" expand="block"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-share"/></svg><span data-copy="share"></span></ion-button>
-          <ion-button id="story" class="wide soft" expand="block"><svg class="ic" slot="start" aria-hidden="true"><use href="#i-image"/></svg><span data-copy="storyButton"></span></ion-button>
         </div>
         <button id="remind" class="text-link" type="button"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg><span data-copy="remind"></span></button>
         <p id="shareNote" class="note" aria-live="polite"></p>
@@ -332,6 +331,25 @@ addEventListener('error', e => {
       <ul id="reportContacts" class="report-contacts"></ul>
       <p id="reportLocal" class="small"></p>
       <p id="reportNotSent" class="small"></p>
+    </div>
+  </ion-modal>
+  <ion-modal id="shareSheet" class="sheet" aria-labelledby="shareSheetTitle">
+    <div class="sheet-body">
+      <div class="sheet-head">
+        <h2 id="shareSheetTitle" data-copy="shareSheetTitle"></h2>
+        <ion-button id="shareSheetClose" fill="clear"><span data-copy="close"></span></ion-button>
+      </div>
+      <div id="sharePreviewBlock">
+        <div id="shareChoices" class="share-choices" role="radiogroup" data-copy-label="shareSheetChoices"></div>
+        <div class="share-preview"><span id="sharePreviewSk" class="sk"></span><img id="sharePreview" alt="" hidden></div>
+      </div>
+      <div id="shareActions" class="share-actions">
+        <a id="shareWa" class="share-act" data-act="wa" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><span data-copy="shareSheetWa"></span></a>
+        <button id="shareSystem" class="share-act" data-act="system" type="button"><svg class="ic" aria-hidden="true"><use href="#i-boxup"/></svg><span data-copy="shareSheetSystem"></span></button>
+        <button id="shareSave" class="share-act" data-act="save" type="button"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg><span data-copy="shareSheetSave"></span></button>
+        <button id="shareCopy" class="share-act" data-act="copy" type="button"><svg class="ic" aria-hidden="true"><use href="#i-share"/></svg><span data-copy="shareSheetCopy"></span></button>
+      </div>
+      <p id="shareStatus" class="note" role="status" aria-live="polite"></p>
     </div>
   </ion-modal>
   <ion-modal id="kidsSheet" class="sheet" aria-labelledby="kidsSheetTitle">
