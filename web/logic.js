@@ -266,6 +266,13 @@ export function dayPartOf(hour) {
 /** Index of the hour that contains `now`, or -1 when the strip does not cover it. */
 export const nowIndex = (hours, now) => hours.findIndex(h => Date.parse(h.time) <= now.getTime() && now.getTime() < Date.parse(h.time) + 3600e3);
 
+/** Levels that occur in the strip, ascending: one legend swatch each. */
+export const presentBands = bands => [...new Set(bands)].sort((a, b) => a - b);
+
+/** Hours that get a regular tick label: every `every`-th, minus those too close to the "now" label (`clear` hours either side). */
+export const tickIndexes = (count, every, current, clear) =>
+  Array.from({ length: count }, (_, i) => i).filter(i => i % every === 0 && (current < 0 || i === current || Math.abs(i - current) >= clear));
+
 /**
  * Cuts the strip into chronological day-part segments (a new one whenever the part changes), each with its local range,
  * whether it starts on a later local day than `now` (`tomorrow`) and whether it holds the current hour.

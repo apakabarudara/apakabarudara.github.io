@@ -375,8 +375,7 @@ describe('UI', () => {
     assert.equal(UI.partName('Malam', false), 'Malam');
     assert.match(UI.explain(10)[0], /^Level ini perkiraan komputer dari data satelit dan cuaca/);
     assert.match(UI.footerDisclaimer, /^Level dan angka di sini perkiraan, bukan hasil alat ukur\./);
-    assert.equal(UI.stripLegend('Sedang', 'Sedang'), 'Semua jam diperkirakan Sedang. Makin tinggi batang, makin tebal asap.');
-    assert.equal(UI.stripLegend('Sedang', 'Tidak Sehat'), 'Warna = level per jam, dari Sedang sampai Tidak Sehat. Makin tinggi batang, makin tebal asap.');
+    assert.equal(UI.stripScale, 'Tinggi batang dibandingkan jam terparah dalam 24 jam.');
     assert.equal(UI.stripRange('Sangat Tidak Sehat', 'Berbahaya'), 'dari Sangat Tidak Sehat sampai Berbahaya');
     assert.equal(UI.stripRange('Berbahaya', 'Berbahaya'), 'semuanya Berbahaya');
     assert.match(UI.privacy, /GoatCounter, tanpa profil per orang/);

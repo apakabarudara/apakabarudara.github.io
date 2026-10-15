@@ -238,8 +238,7 @@ export const UI = {
   stripLabel: (range, window) => `Asap per jam, 24 jam ke depan, ${range}.${window}`,
   stripRange: (low, high) => (low === high ? `semuanya ${low}` : `dari ${low} sampai ${high}`),
   stripBest: (from, to) => ` Paling tipis ${from}–${to}.`,
-  stripLegend: (low, high) =>
-    low === high ? `Semua jam diperkirakan ${low}. Makin tinggi batang, makin tebal asap.` : `Warna = level per jam, dari ${low} sampai ${high}. Makin tinggi batang, makin tebal asap.`,
+  stripScale: 'Tinggi batang dibandingkan jam terparah dalam 24 jam.',
   stripNow: 'Sekarang',
 
   outlookTitle: 'Besok gimana?',
