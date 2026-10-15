@@ -642,3 +642,5 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .why-h { margin: var(--sp-4) 0 var(--sp-1); font-size: var(--fs-md, 1rem); }
 .why-monitor { list-style: none; margin: 0 0 var(--sp-3); padding: 0; }
 .why-monitor li { display: flex; flex-direction: column; padding-bottom: var(--sp-2); }
+.why-kicker { margin-bottom: var(--sp-1); }
+.why-bg > .why-card:first-of-type { margin-top: var(--sp-1); }
