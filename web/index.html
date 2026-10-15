@@ -275,6 +275,8 @@ addEventListener('error', e => {
             <p data-copy="privacy"></p>
           </details>
           <button id="methodLink" class="fine-link" type="button" data-copy="methodLink"></button>
+          <button id="calendarOpen" class="fine-link" type="button" data-copy="calendarLink"></button>
+          <span id="calendarNote" class="note" role="status"></span>
         </div>
         <p class="credit"><span data-copy-credit="0"></span><a href="https://github.com/khihadysucahyo" target="_blank" rel="noopener" data-copy-credit="1"></a><span data-copy-credit="2"></span><a href="https://github.com/apakabarudara/apakabarudara.github.io" target="_blank" rel="noopener" data-copy-credit="3"></a></p>
       </footer>
@@ -290,6 +292,7 @@ addEventListener('error', e => {
       <p id="aboutDesc" class="small"></p>
       <div id="explain" class="explain"></div>
       <p class="small" data-copy="guideCaution"></p>
+      <div id="glossary" class="glossary"><p class="small"><b data-copy="glossaryTitle"></b></p></div>
       <div class="sources">
         <p class="small"><b data-copy="sourcesTitle"></b></p>
         <a id="guideSource" class="guide-src" target="_blank" rel="noopener" data-copy="guideSource"></a>
@@ -364,6 +367,18 @@ addEventListener('error', e => {
         <ion-button id="kidsClose" fill="clear"><span data-copy="close"></span></ion-button>
       </div>
       <div id="kidsBody"></div>
+    </div>
+  </ion-modal>
+  <ion-modal id="calendarSheet" class="sheet" aria-labelledby="calendarSheetTitle">
+    <div class="sheet-body">
+      <div class="sheet-head">
+        <h2 id="calendarSheetTitle"></h2>
+        <ion-button id="calendarClose" fill="clear"><span data-copy="close"></span></ion-button>
+      </div>
+      <p id="calendarIntro" class="cal-intro"></p>
+      <div id="calendarChoices" class="share-choices" role="radiogroup"></div>
+      <div id="calendarThumb" class="cal-thumb" role="img"></div>
+      <button id="calendarPrint" class="kids-print cal-print" type="button"></button>
     </div>
   </ion-modal>
   <ion-modal id="method" class="sheet" aria-labelledby="methodTitle">
