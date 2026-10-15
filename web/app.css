@@ -177,16 +177,25 @@ ion-badge.lv { --background: var(--lv-soft); --color: var(--lv-soft-ink); --padd
 .encourage { margin: var(--sp-3) 0 0; font-size: var(--fs-sm); color: var(--ink-2); }
 .encourage[hidden] { display: none; }
 .best { margin: var(--sp-4) 0 var(--sp-2); font-weight: var(--fw-strong); }
-.parts { list-style: none; margin: var(--sp-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.parts { container-type: inline-size; list-style: none; margin: var(--sp-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .part { display: flex; align-items: center; gap: var(--sp-3); min-height: 52px; padding: 6px var(--sp-3); border-radius: var(--r-btn); background: var(--lv-soft); color: var(--lv-soft-ink); }
 .part > .ic { flex: none; width: 26px; height: 26px; }
-.part .text { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--sp-2); }
-.part .name { font-weight: var(--fw-strong); line-height: 1.3; }
-.part .range { flex-basis: 100%; font-size: var(--fs-xs); font-weight: var(--fw-label); font-variant-numeric: tabular-nums; opacity: .85; line-height: 1.3; }
-.part .tag { padding: 0 8px; border-radius: var(--r-pill); background: var(--lv-soft-ink); color: var(--lv-soft); font-size: var(--fs-xs); font-weight: var(--fw-strong); line-height: 1.5; }
-.part .lvl-name { flex: none; max-width: 38%; text-align: right; font-size: var(--fs-xs); font-weight: var(--fw-strong); line-height: 1.25; }
+.part .lvl-name { hyphens: manual; }
+.part .text { flex: 1 1 0; min-width: min-content; display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--sp-2); row-gap: 2px; }
+.part .name { white-space: nowrap; font-weight: var(--fw-strong); line-height: 1.3; }
+.part .range { flex-basis: 100%; white-space: nowrap; font-size: var(--fs-xs); font-weight: var(--fw-label); font-variant-numeric: tabular-nums; opacity: .85; line-height: 1.3; }
+.part .tag { white-space: nowrap; padding: 0 8px; border-radius: var(--r-pill); background: var(--lv-soft-ink); color: var(--lv-soft); font-size: var(--fs-xs); font-weight: var(--fw-strong); line-height: 1.5; }
+.part .lvl-name { flex: 0 1 auto; min-width: 0; max-width: 40%; overflow-wrap: normal; text-align: right; font-size: var(--fs-xs); font-weight: var(--fw-strong); line-height: 1.25; }
+/* Narrow card (small phone or enlarged text): the level name moves under the day part instead of squeezing it. */
+@container (max-width: 300px) {
+  .part { display: grid; grid-template-columns: 26px minmax(0, 1fr) 28px; column-gap: var(--sp-2); }
+  .part > .ic { grid-row: 1 / span 2; }
+  .part .text { grid-column: 2; min-width: 0; }
+  .part .lvl-name { grid-column: 2; grid-row: 2; max-width: none; text-align: left; }
+  .part .mascot-art { grid-column: 3; grid-row: 1 / span 2; }
+}
 .part.is-best { box-shadow: inset 0 0 0 2px var(--lv-label); }
-.part .mascot-art, .flat .mascot-art { flex: none; width: 32px; height: 29px; filter: none; }
+.part .mascot-art, .flat .mascot-art { flex: none; width: 28px; height: 26px; filter: none; }
 .part .mascot-art .eye, .flat .mascot-art .eye { animation: none; }
 .flat { display: flex; align-items: center; gap: var(--sp-3); margin: var(--sp-3) 0 0; padding: var(--sp-3); border-radius: var(--r-btn); background: var(--lv-soft); color: var(--lv-soft-ink); font-weight: var(--fw-strong); }
 .flat[hidden] { display: none; }
@@ -238,6 +247,7 @@ ion-badge.lv { --background: var(--lv-soft); --color: var(--lv-soft-ink); --padd
 ion-modal.sheet { --height: auto; --background: var(--surface); --border-radius: var(--r-card); --backdrop-opacity: .45; }
 .sheet-body { max-height: 85vh; overflow-y: auto; padding: var(--sp-3) var(--sp-panel) calc(var(--sp-panel) + env(safe-area-inset-bottom, 0px)); color: var(--ink); font-size: var(--fs-sm); line-height: 1.5; }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); }
+.sheet-head ion-button { min-height: 44px; }
 .sheet-head h2 { margin: 0; font-size: var(--fs-lg); font-weight: var(--fw-display); }
 #aboutClose { height: 44px; font-size: var(--fs-sm); --padding-start: var(--sp-2); --padding-end: var(--sp-2); }
 .method h3 { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); font-weight: var(--fw-label); }
@@ -447,6 +457,8 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 [data-level="5"] .mini-scale i.on { --c: var(--l5-dot); }
 .watch .mini-scale i.on { --c: var(--lv-bar); } /* bar tokens clear 3:1 on the neutral surface in both themes */
 .watch-add { position: relative; flex: none; width: 44px; height: 44px; padding: 0; border: 1.5px dashed var(--brand); border-radius: 50%; background: transparent; color: var(--brand); cursor: pointer; }
+.watch-add.manage { border: 1.5px solid var(--line); color: var(--ink-2); display: inline-flex; align-items: center; justify-content: center; }
+.watch-add.manage::before, .watch-add.manage::after { content: none; }
 .watch-add.labeled { width: auto; padding: 0 var(--sp-4); border-radius: var(--r-pill); font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-strong); }
 .watch-add.labeled::before, .watch-add.labeled::after { content: none; }
 .watch-add::before, .watch-add::after { content: ""; position: absolute; top: 50%; left: 50%; width: 14px; height: 2px; margin: -1px 0 0 -7px; border-radius: 1px; background: currentColor; }

@@ -252,6 +252,8 @@ export const UI = {
   iosSteps: ['Ketuk tombol Bagikan di bilah Safari.', 'Pilih “Tambah ke Layar Utama”, lalu ketuk Tambah.'],
 
   watchAdd: 'Pantau kota lain',
+  watchManage: 'Atur kota pantauan',
+  watchHelp: 'Ketuk untuk menambah atau melepas',
   watchAddSolo: 'Pantau kota keluarga',
   watchRowLabel: 'Kota pantauan',
   watchSub: 'Pilih sampai 3 kota, misalnya tempat keluarga tinggal. Tersimpan di HP ini saja.',

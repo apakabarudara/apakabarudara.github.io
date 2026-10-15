@@ -364,10 +364,15 @@ describe('daySegments', () => {
 
   it('lists the levels present once, ascending, and keeps the regular ticks clear of the now label', () => {
     assert.deepEqual(presentBands([3, 1, 3, 2, 1]), [1, 2, 3]);
-    assert.deepEqual(tickIndexes(24, 6, -1, 5), [0, 6, 12, 18]);
-    assert.deepEqual(tickIndexes(24, 6, 1, 5), [6, 12, 18]); // 0 is too close to the now label, 6 is 5 away and stays
-    assert.deepEqual(tickIndexes(24, 6, 12, 5), [0, 6, 12, 18]); // now on a tick: that tick is the now label
-    assert.deepEqual(tickIndexes(24, 6, 14, 5), [0, 6]);
+    assert.deepEqual(tickIndexes(24, 6, -1, 7), [0, 6, 12, 18]);
+    assert.deepEqual(tickIndexes(24, 6, 0, 7), [12, 18]); // the now label replaces the tick under it
+    assert.deepEqual(tickIndexes(24, 6, 1, 7), [12, 18]);
+    assert.deepEqual(tickIndexes(24, 6, 2, 7), [12, 18]);
+    assert.deepEqual(tickIndexes(24, 6, 5, 7), [12, 18]);
+    assert.deepEqual(tickIndexes(24, 6, 12, 7), [0]);
+    assert.deepEqual(tickIndexes(24, 6, 14, 7), [0, 6]);
+    assert.deepEqual(tickIndexes(24, 6, 22, 7), [0, 6, 12]);
+    assert.deepEqual(tickIndexes(24, 6, 23, 7), [0, 6, 12]);
   });
 
   it('detects a flat day and tags best and worst segments', () => {

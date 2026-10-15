@@ -21,7 +21,7 @@ const ALL = '__all';
 const REFRESH_MS = 15 * 60e3;
 const BEST = { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() };
 const TICK_EVERY = 6;
-const TICK_CLEAR = 5; // hours a regular tick label keeps from the "Sekarang" label
+const TICK_CLEAR = 7; // hours a regular tick label keeps from the "Sekarang" label
 
 const num = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 });
 const clock = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
@@ -791,16 +791,21 @@ function renderWatch() {
     chip.addEventListener('click', () => choose(id));
     return chip;
   });
-  // Compact dashed "+" at the end of the row while there is room for another city.
-  const add = el('button', 'watch-add');
+  // End of the row, always reachable: dashed "+" while there is room, a solid sliders icon once WATCH_MAX are pinned. Both open the same sheet.
+  const full = chips.length >= WATCH_MAX;
+  const add = el('button', full ? 'watch-add manage' : 'watch-add');
   add.type = 'button';
   // Only the city on screen is pinned: the row still shows, with a labelled add button, so the control stays above the fold.
   if (chips.length === 0) add.append(el('span', null, UI.watchAdd));
+  if (full) {
+    add.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>';
+  }
   add.classList.toggle('labeled', chips.length === 0);
-  add.setAttribute('aria-label', UI.watchAdd);
-  add.title = UI.watchAdd;
+  const label = full ? UI.watchManage : UI.watchAdd;
+  add.setAttribute('aria-label', label);
+  add.title = label;
   add.addEventListener('click', openWatchSheet);
-  $('watch').replaceChildren(...chips, ...(chips.length < WATCH_MAX ? [add] : []));
+  $('watch').replaceChildren(...chips, add);
   // Nobody pinned yet: no chip row above the answer, one soft button below the share row.
   const nobody = watch.length === 0;
   $('watch').hidden = nobody;
@@ -811,7 +816,7 @@ function openWatchSheet() {
   const ids = report.locations.map(l => l.id);
   const note = $('watchNote');
   const count = () => { note.textContent = UI.watchCount(watchRow(watch, current).length); };
-  $('watchList').replaceChildren(...rankByLevel(report.locations).filter(l => l.id !== current).map(loc => {
+  $('watchList').replaceChildren(...rankByLevel(report.locations).filter(l => l.id !== current).sort((a, b) => Number(watch.includes(b.id)) - Number(watch.includes(a.id))).map(loc => {
     const box = el('input');
     box.type = 'checkbox';
     box.checked = watch.includes(loc.id);
