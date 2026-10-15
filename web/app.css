@@ -180,21 +180,14 @@ ion-badge.lv { --background: var(--lv-soft); --color: var(--lv-soft-ink); --padd
 .parts { container-type: inline-size; list-style: none; margin: var(--sp-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .part { display: flex; align-items: center; gap: var(--sp-3); min-height: 52px; padding: 6px var(--sp-3); border-radius: var(--r-btn); background: var(--lv-soft); color: var(--lv-soft-ink); }
 .part > .ic { flex: none; width: 26px; height: 26px; }
-.part .lvl-name { hyphens: manual; }
 .part .text { flex: 1 1 0; min-width: min-content; display: flex; flex-direction: column; gap: 2px; }
-.part .meta { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--sp-2); row-gap: 2px; } /* range first, tags after it: every capsule is two lines */
+.part .top { display: flex; align-items: center; column-gap: var(--sp-2); min-width: 0; }
+.part .meta { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 6px; font-size: var(--fs-xs); line-height: 1.5; } /* two lines per capsule: name + tag, then range + level */
 .part .name { white-space: nowrap; font-weight: var(--fw-strong); line-height: 1.3; }
-.part .range { white-space: nowrap; font-size: var(--fs-xs); font-weight: var(--fw-label); font-variant-numeric: tabular-nums; opacity: .85; line-height: 1.5; }
+.part .range { white-space: nowrap; font-weight: var(--fw-label); font-variant-numeric: tabular-nums; opacity: .85; }
 .part .tag { white-space: nowrap; padding: 0 8px; border-radius: var(--r-pill); background: var(--lv-soft-ink); color: var(--lv-soft); font-size: var(--fs-xs); font-weight: var(--fw-strong); line-height: 1.5; }
-.part .lvl-name { flex: 0 1 auto; min-width: 0; max-width: 40%; overflow-wrap: normal; text-align: right; font-size: var(--fs-xs); font-weight: var(--fw-strong); line-height: 1.25; }
-/* Narrow card (small phone or enlarged text): the level name moves under the day part instead of squeezing it. */
-@container (max-width: 420px) {
-  .part { display: grid; grid-template-columns: 26px minmax(0, 1fr) 28px; column-gap: var(--sp-2); }
-  .part > .ic { grid-row: 1 / span 2; }
-  .part .text { grid-column: 2; min-width: 0; }
-  .part .lvl-name { grid-column: 2; grid-row: 2; max-width: none; text-align: left; }
-  .part .mascot-art { grid-column: 3; grid-row: 1 / span 2; }
-}
+.part .lvl-name { font-weight: var(--fw-strong); hyphens: manual; }
+.part .lvl-name::before { content: "·"; margin-right: 6px; opacity: .6; }
 .part.is-best { box-shadow: inset 0 0 0 2px var(--lv-label); }
 .part .mascot-art, .flat .mascot-art { flex: none; width: 28px; height: 26px; filter: none; }
 .part .mascot-art .eye, .flat .mascot-art .eye { animation: none; }
