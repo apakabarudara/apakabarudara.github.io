@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 import {
-  activityStatuses, ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
-  icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom
+  ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
+  icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom
 } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
@@ -90,14 +90,42 @@ describe('bestWindow', () => {
   });
 });
 
-describe('activityStatuses', () => {
-  const clear = { laundry: 'ok', windows: 'ok' };
-  it('turns ok laundry into caution when rain is forecast', () => {
-    assert.equal(activityStatuses(clear, 0.5, 1).laundry, 'ok');
-    assert.equal(activityStatuses(clear, 1, 1).laundry, 'caution');
+describe('todayCards', () => {
+  const ids = (level: number, laundry = 'ok', windows = 'ok', rain = 0, win = true) => todayCards(level, { laundry, windows }, rain, 1, win);
+  it('picks the cards by level', () => {
+    assert.deepEqual(ids(1).map(c => c.id), ['terrace', 'exercise', 'laundry', 'sky']);
+    assert.deepEqual(ids(2).map(c => c.id), ['terrace', 'exercise', 'laundry', 'sky']);
+    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.id), ['laundry', 'windows', 'outdoor']);
+    assert.deepEqual(ids(4, 'no', 'no').map(c => c.id), ['windows', 'laundry', 'kidsHigh']);
+    assert.deepEqual(ids(5, 'no', 'no').map(c => c.id), ['windows', 'laundry', 'kidsHigh']);
   });
-  it('never relaxes a smoky no', () => {
-    assert.equal(activityStatuses({ ...clear, laundry: 'no' }, 12, 1).laundry, 'no');
+  it('lets rain override laundry at every level, then smoke, else clear', () => {
+    const laundry = (level: number, la: string, rain: number) => ids(level, la, 'ok', rain).find(c => c.id === 'laundry')?.variant;
+    assert.equal(laundry(1, 'ok', 1), 'rain');
+    assert.equal(laundry(5, 'no', 12), 'rain');
+    assert.equal(laundry(1, 'ok', 0.9), 'clear');
+    assert.equal(laundry(3, 'no', 0), 'smoke');
+  });
+  it('shows the best window only where it helps, never on ISPU quotes', () => {
+    assert.deepEqual(ids(1).map(c => c.window), [true, false, true, true]);
+    assert.deepEqual(ids(1, 'ok', 'ok', 5).map(c => c.window), [true, false, false, true]);
+    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.window), [false, true, false]);
+    assert.deepEqual(ids(4, 'no', 'no').map(c => c.window), [false, false, false]);
+    assert.ok(ids(1, 'ok', 'ok', 0, false).every(c => !c.window));
+  });
+  it('quotes the general sentence for exercise and level 3 outdoor, the sensitive one only for kids at levels 4–5', () => {
+    assert.equal(ids(3, 'no', 'caution').find(c => c.id === 'outdoor')?.variant, 'everyone');
+    assert.equal(ids(4, 'no', 'no').find(c => c.id === 'kidsHigh')?.variant, 'sensitive');
+    assert.equal(ids(1).find(c => c.id === 'exercise')?.variant, 'everyone');
+  });
+});
+
+describe('encouragement rotation', () => {
+  it('is the same all day and moves with the date', () => {
+    const lines = ['a', 'b', 'c'];
+    assert.equal(dailyQuip(lines, '2026-10-15'), dailyQuip(lines, '2026-10-15'));
+    assert.notEqual(dailyQuip(lines, '2026-10-15'), dailyQuip(lines, '2026-10-16'));
+    assert.equal(new Set(['15', '16', '17'].map(d => dailyQuip(lines, `2026-10-${d}`))).size, 3);
   });
 });
 

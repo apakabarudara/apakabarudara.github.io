@@ -1,8 +1,8 @@
 import './ionic.js';
-import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, OFFICIAL_ISPU, RAIN, STORY, UI } from './copy.js';
+import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, LEVELS, OFFICIAL_ISPU, RAIN, STORY, TODAY_CARDS, UI } from './copy.js';
 import {
-  activityStatuses, ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
-  nearest, normalizeWatch, previewOverride, rainKind, outlookLines, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worldviewUrl, worsenedFrom, WET_DAY_MM
+  ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
+  nearest, normalizeWatch, previewOverride, rainKind, outlookLines, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worldviewUrl, worsenedFrom, WET_DAY_MM
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
@@ -267,17 +267,25 @@ function renderParts(segments, bands, win, level) {
   }));
 }
 
+/** One card: icon, label, our line (or the verbatim ISPU sentence with its lead-in and tag), and the best window when it applies. */
+function todayCard(card, level, windowText) {
+  const def = TODAY_CARDS[card.id];
+  const children = [el('span', 'label', def.label)];
+  const quoted = card.id === 'exercise' || card.id === 'outdoor' || card.id === 'kidsHigh';
+  if (quoted) {
+    children.push(el('span', 'lead', UI.ispuLead), el('span', 'quote', OFFICIAL_ISPU[level][card.variant]), el('span', 'tag', UI.ispuTag));
+  } else {
+    children.push(el('span', 'status', typeof def.text === 'string' ? def.text : def.text[card.variant]));
+    if (card.window) children.push(el('span', 'when', windowText));
+  }
+  const item = el('li', quoted && level >= 3 ? 'activity wide' : 'activity', icon(def.icon), el('span', 'text', ...children));
+  item.dataset.level = String(level);
+  return item;
+}
+
 function renderToday(loc, level) {
   $('todayTitle').textContent = UI.todayTitle;
   const rain = loc.outlook.find(d => d.date === localDate(new Date()))?.rain_mm ?? 0;
-  const statuses = activityStatuses(LEVELS[level].activities, rain, WET_DAY_MM);
-  $('activities').replaceChildren(...ACTIVITIES.map(a => {
-    const item = el('li', 'activity', icon(a.icon), el('span', 'text', el('span', 'label', a.label), el('span', 'status', a.notes[statuses[a.id]])));
-    item.dataset.level = String(ACTIVITY_TONE[statuses[a.id]]);
-    return item;
-  }));
-
-  $('activitiesNote').textContent = UI.activitiesNote(LEVELS[level].name);
 
   const hours = Array.isArray(loc.next_hours) ? loc.next_hours : [];
   const now = new Date();
@@ -286,10 +294,15 @@ function renderToday(loc, level) {
   const to = win ? hm.format(new Date(win.end)) : '';
   const bands = hourBands(hours);
   const range = hours.length ? levelRange(bands) : null;
+  const segments = hours.length > 0 ? daySegments(hours, bands, now) : [];
+  // The cards show a window only when the headline above does (levels 1–3, not a flat day).
+  const hasWindow = Boolean(win) && level <= 3 && hours.length > 0 && !isFlatDay(segments);
+  $('activities').replaceChildren(...todayCards(level, LEVELS[level].activities, rain, WET_DAY_MM, hasWindow).map(card => todayCard(card, level, UI.cardWindow(from, to))));
+  const group = level <= 2 ? 'light' : level === 3 ? 'gentle' : 'quiet';
+  $('encourage').textContent = dailyQuip(ENCOURAGE[group], localDate(new Date()));
   for (const id of ['best', 'parts', 'flat', 'hours']) $(id).hidden = hours.length === 0;
   if (hours.length === 0) return;
 
-  const segments = daySegments(hours, bands, now);
   renderParts(segments, bands, win, level);
   $('best').textContent = !$('best').hidden && win ? UI.bestWindow(UI.whenWord(UI.dayParts[dayPartOf(new Date(win.start).getHours())], relativeDay(win.start, now) === 'tomorrow'), from, to, level, win.band) : '';
 

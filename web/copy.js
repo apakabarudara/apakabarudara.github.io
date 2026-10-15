@@ -81,6 +81,34 @@ export const ACTIVITIES = [
   { id: 'windows', icon: 'window', label: 'Jendela', notes: { ok: 'Oke', caution: 'Saat asap tipis', no: 'Tutup' } }
 ];
 
+const LAUNDRY = ACTIVITIES[0];
+const WINDOWS = ACTIVITIES[1];
+
+/**
+ * The adaptive cards under "Kapan udara paling lega?" (which ones: todayCards in logic.js). Friend voice: playful only at levels 1–2.
+ * Health-adjacent cards carry no wording of ours: they show the verbatim OFFICIAL_ISPU sentence under a short lead-in and the ISPU tag.
+ */
+export const TODAY_CARDS = {
+  terrace: { icon: 'sun', label: 'Ngopi di teras', text: 'Teras lagi baik hati. Kopi dulu?' },
+  sky: { icon: 'image', label: 'Foto langit', text: { 1: 'Langitnya bersih. Sayang kalau tidak difoto.', 2: 'Langitnya masih cerah. Satu foto, yuk?' } },
+  laundry: {
+    icon: 'shirt',
+    label: LAUNDRY.label,
+    text: { rain: 'Hujan hari ini, jemur di dalam saja', smoke: LAUNDRY.notes.no, clear: 'Jemuran senang hari ini' }
+  },
+  windows: { icon: 'window', label: WINDOWS.label, text: WINDOWS.notes },
+  exercise: { icon: 'pin', label: 'Olahraga di luar' },
+  outdoor: { icon: 'pin', label: 'Aktivitas di luar' },
+  kidsHigh: { icon: 'pin', label: 'Anak di luar' }
+};
+
+/** One line under the cards, one per day (see dailyQuip). light: levels 1–2, gentle: level 3, quiet: levels 4–5 (no "kamu", no jokes). */
+export const ENCOURAGE = {
+  light: ['Hari bagus. Semangat ya!', 'Udaranya lagi ramah. Nikmati harimu ya.', 'Semoga harimu ringan dan menyenangkan.'],
+  gentle: ['Tetap semangat, kita pantau bareng.', 'Pelan-pelan saja hari ini, kita lihat sama-sama.', 'Kita terus pantau, sama-sama.'],
+  quiet: ['Hari yang berat. Pelan-pelan saja, kita lewati bareng.', 'Kita lewati hari ini bareng, satu jam demi satu jam.', 'Turut prihatin. Kita di sini, bareng-bareng.']
+};
+
 export const RAIN = { none: 'Tidak hujan', some: 'Ada hujan', heavy: 'Hujan lebat' };
 
 export const EMERGENCY_NUMBER = '119';
@@ -192,7 +220,9 @@ export const UI = {
   tagNow: 'Sekarang',
   tagWorst: 'Paling tebal',
   flatDay: levelName => `Rata sepanjang 24 jam: ${levelName}. Tidak ada jam yang jauh lebih baik.`,
-  activitiesNote: levelName => `Menurut level hari ini: ${levelName}`,
+  cardWindow: (from, to) => `paling pas ${from}–${to}`,
+  ispuLead: 'Kita ikuti panduan resmi ya:',
+  ispuTag: 'ISPU, KLHK',
   hoursSummary: 'Lihat per jam',
   hourNote: (time, name, tomorrow) => `${tomorrow ? 'besok ' : ''}${time} · ${name}`,
   legendBest: 'paling lega',
