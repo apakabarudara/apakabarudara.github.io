@@ -4,7 +4,7 @@ import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, GLOSSARY, LEVELS, OFFICIAL_ISPU, RA
 import {
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, rainOutlook, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
   glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, followsOtherIndex, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, WATCH_MAX, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM,
-  hazeEnabled, hazeLevel, hazeStored,
+  hazeEnabled, hazeLevel, hazeStored, pmRounded,
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
@@ -229,6 +229,16 @@ function renderAnswer(loc, level) {
   $('call').hidden = !copy.emergency;
   $('stamp').textContent = UI.stamp(clock.format(new Date(loc.pm25_model.updated_at)));
   $('explain').replaceChildren(...UI.explain(num.format(Math.round(loc.pm25_model.value))).map(text => el('p', null, text)));
+  const pm = pmRounded(loc.pm25_model.value, num.format);
+  const pill = $('pmPill');
+  pill.hidden = pm === null;
+  if (pm !== null) {
+    pill.textContent = UI.pmPill(pm);
+    pill.setAttribute('aria-label', UI.pmPillLabel(pm));
+    const para = $('explain').children[2]; // the PM2.5 paragraph
+    para.id = 'explainPm';
+    para.tabIndex = -1;
+  }
   $('official').href = loc.ispu?.source_url ?? ISPU_URL;
   $('factsBlock').hidden = level >= 4; // no jokes or trivia at levels 4–5
   $('more').hidden = level >= 4; // the card only holds the facts
@@ -947,6 +957,13 @@ $('watchSoloBtn').addEventListener('click', openWatchSheet);
 const sheet = $('about');
 $('aboutBtn').addEventListener('click', () => sheet.present());
 $('guideMore').addEventListener('click', () => sheet.present());
+$('pmPill').addEventListener('click', async () => {
+  count('angka-model');
+  await sheet.present();
+  const para = $('explainPm');
+  para?.scrollIntoView({ block: 'center' });
+  para?.focus({ preventScroll: true });
+});
 $('aboutClose').addEventListener('click', () => sheet.dismiss());
 $('methodClose').addEventListener('click', () => $('method').dismiss());
 $('methodLink').addEventListener('click', () => $('method').present());

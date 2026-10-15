@@ -420,3 +420,8 @@ export const hazeEnabled = (stored, saveData) => (stored === '1' ? true : stored
 
 /** The string to remember for the switch. */
 export const hazeStored = on => (on ? '1' : '0');
+
+// Rounded whole µg/m³ as a formatted string, or null when the model value is missing, NaN or negative.
+export function pmRounded(value, format = String) {
+  return Number.isFinite(value) && value >= 0 ? format(Math.round(value)) : null;
+}
