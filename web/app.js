@@ -7,6 +7,8 @@ import {
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
+// iOS Safari ignores user-scalable=no; cancelling the pinch gesture is the reliable way to keep the page at 100%.
+document.addEventListener('gesturestart', e => e.preventDefault(), { passive: false });
 const ISPU_URL = 'https://ispu.kemenlh.go.id/app/#/';
 const FEEDBACK_URL = 'https://tally.so/r/vG7RPD'; // Tally form link; empty hides the feedback row
 const FEEDBACK_CITY_PARAM = 'kota'; // the form's hidden field that records the city

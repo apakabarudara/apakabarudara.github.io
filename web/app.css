@@ -52,8 +52,8 @@
 }
 
 [hidden] { display: none !important; }
-/* Pinch-zoom stays on (WCAG 1.4.4, low-vision users); manipulation only drops double-tap zoom and the tap delay. */
-html, body { touch-action: manipulation; }
+/* App-like: page zoom is locked on purpose (owner decision). Low-vision users get an in-app text-size option later instead. The map keeps its own gestures (.sat-map sets touch-action: none). */
+html, body { touch-action: pan-x pan-y; }
 body { font-weight: var(--fw-body); }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
