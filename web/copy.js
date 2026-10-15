@@ -154,6 +154,7 @@ export const UI = {
   improveOn: weekday => `Diperkirakan mulai membaik ${weekday}.`,
   improveNone: days => `Perkiraan ${days} hari ke depan belum menunjukkan perbaikan.`,
   guideTitle: 'Menurut ISPU, kalau levelnya memang begini:',
+  guideTitleMeaning: 'Kata ISPU:',
   guideSensitive: 'Kelompok sensitif:',
   guideEveryone: 'Setiap orang:',
   guideSource: 'Sumber: ISPU, Kementerian Lingkungan Hidup (dikutip 14 Okt 2026)',

@@ -176,9 +176,6 @@ function renderAnswer(loc, level) {
   const quip = quipFor(level);
   $('quip').textContent = quip ?? '';
   $('quip').hidden = !quip;
-  // Levels 3–5 already carry the official guidance below; 1–2 get the verbatim category description.
-  $('meaningText').textContent = official.description;
-  $('meaning').hidden = level > 2;
   $('scaleLo').textContent = LEVELS[1].name;
   $('scaleHi').textContent = LEVELS[5].name;
   const before = improvedFrom(readSeen()[loc.id]?.level, level);
@@ -193,9 +190,14 @@ function renderAnswer(loc, level) {
     $('answer').classList.add('hop');
   }
   // Official ISPU guidance, quoted as is. Level 1 has no separate sensitive-group line.
-  $('guide').hidden = level < 3; // the guidance only earns its space from level 3
-  $('guideSensitive').hidden = !official.sensitive;
+  // Levels 1–2 quote the verbatim category description in the same block; the guidance lines only show from level 3.
+  const guidance = level >= 3;
+  $('guideTitle').textContent = guidance ? UI.guideTitle : UI.guideTitleMeaning;
+  $('guideDesc').textContent = official.description;
+  $('guideDesc').hidden = guidance;
+  $('guideSensitive').hidden = !guidance || !official.sensitive;
   $('guideSensitive').lastElementChild.textContent = official.sensitive ?? '';
+  $('guideEveryone').hidden = !guidance;
   $('guideEveryone').lastElementChild.textContent = official.everyone;
   $('guideSource').href = loc.ispu?.source_url ?? ISPU_URL;
   $('symptoms').hidden = !copy.health;
