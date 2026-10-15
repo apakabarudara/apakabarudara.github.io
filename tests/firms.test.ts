@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import { boundingBox, countNearby, parseFirmsCsv } from '../ingest/firms.ts';
+import { LOCATIONS } from '../ingest/locations.ts';
 import type { Location } from '../ingest/types.ts';
 
 // 15 real NOAA-20 rows from NASA's public SouthEast_Asia_24h file (2026-10-14) around Palangkaraya:
@@ -71,5 +72,29 @@ describe('countNearby', () => {
 describe('boundingBox', () => {
   it('pads the extremes of all locations', () => {
     assert.deepEqual(boundingBox([PALANGKARAYA, PONTIANAK], 1), { west: 108.325, south: -3.20833, east: 114.91667, north: 0.96806 });
+  });
+});
+
+describe('LOCATIONS', () => {
+  it('has unique ids and names, and a sane id pattern', () => {
+    assert.equal(new Set(LOCATIONS.map(l => l.id)).size, LOCATIONS.length);
+    assert.equal(new Set(LOCATIONS.map(l => l.name)).size, LOCATIONS.length);
+    for (const l of LOCATIONS) assert.match(l.id, /^[a-z]+(-[a-z]+)*$/, l.id);
+  });
+
+  it('keeps every location, with its 100 km radius, inside the padded FIRMS box', () => {
+    const box = boundingBox(LOCATIONS, 1);
+    const radiusDeg = 100 / 111; // a degree of latitude is the shortest span, so this is the generous side
+    for (const l of LOCATIONS) {
+      assert.ok(l.lon - radiusDeg >= box.west && l.lon + radiusDeg <= box.east, l.id);
+      assert.ok(l.lat - radiusDeg >= box.south && l.lat + radiusDeg <= box.north, l.id);
+    }
+  });
+
+  it('includes Kuala Lumpur without widening the box beyond the 13 Indonesian cities', () => {
+    const kl = LOCATIONS.find(l => l.id === 'kuala-lumpur');
+    assert.equal(kl?.name, 'Kuala Lumpur, Malaysia');
+    assert.deepEqual(boundingBox(LOCATIONS, 1), boundingBox(LOCATIONS.filter(l => l.id !== 'kuala-lumpur'), 1));
+    assert.equal(LOCATIONS.length, 14);
   });
 });

@@ -107,7 +107,7 @@ The shape lives in `ingest/types.ts`.
 | `outlook` | Mean PM2.5 per complete local day from today, banded like `pm25_model`, plus that day's forecast rain in mm. CAMS global forecasts 5 days, so expect about 4 entries, not 7. |
 | `next_hours` | Modelled PM2.5 for each of the next 24 hours from the current hour, UTC times. Hourly values. The strip colours each bar with the daily PM2.5 breakpoints as a guide; the level itself always comes from `pm25_model.band`. |
 
-Cities are in `ingest/locations.ts`.
+Cities are in `ingest/locations.ts` (Kuala Lumpur is the one outside Indonesia; its levels still follow Indonesia's ISPU and the page says so, see `OTHER_INDEX_IDS` in `web/logic.js`).
 
 ## data/hotspots.json
 

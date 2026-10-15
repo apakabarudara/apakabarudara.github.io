@@ -3,8 +3,10 @@ import { describe, it } from 'node:test';
 import { LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 import {
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
-  icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom, whatsappUrl, orderShareActions, trend, glanceChips
+  icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, followsOtherIndex, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom, whatsappUrl, orderShareActions, trend, glanceChips
 } from '../web/logic.js';
+
+import { LOCATIONS } from '../ingest/locations.ts';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
 const hoursAgo = (h: number): string => new Date(NOW.getTime() - h * 3600e3).toISOString();
@@ -491,10 +493,17 @@ describe('worsenedFrom', () => {
   });
 });
 
+describe('non-Indonesian index note', () => {
+  it('applies to Kuala Lumpur only', () => {
+    assert.equal(followsOtherIndex('kuala-lumpur'), true);
+    for (const l of LOCATIONS.filter(l => l.id !== 'kuala-lumpur')) assert.equal(followsOtherIndex(l.id), false, l.id);
+  });
+});
+
 describe('Story outlook and ranking cards', () => {
   const day = (date: string, band: number) => ({ date, band, pm25_mean: 1, rain_mm: 0 });
   const loc = (id: string, name: string, band: number, value: number) => ({ id, name: `${name}, Sumatera`, pm25_model: { band, value } });
-  const names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
+  const names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
   const locations = names.map((n, i) => loc(n.toLowerCase(), `Kota ${n}`, (i % 5) + 1, i));
   const levelName = (band: number): string => LEVELS[band].name;
   const outlook = outlookLines({
@@ -520,17 +529,18 @@ describe('Story outlook and ranking cards', () => {
   });
 
   it('ranking: all rows thickest smoke first, the viewer city marked', () => {
-    assert.equal(ranking.rows.length, 13);
+    assert.equal(ranking.rows.length, names.length);
     const levels = ranking.rows.map((r: { level: number }) => r.level);
     assert.deepEqual(levels, [...levels].sort((a, b) => b - a));
     assert.deepEqual(ranking.rows.filter((r: { current: boolean }) => r.current).map((r: { city: string }) => r.city), ['Kota C']);
     assert.equal(ranking.title, 'Perkiraan asap hari ini');
   });
 
-  it('rankRowHeight: 13 rows fit between y 270 and 1360, whole pixels', () => {
-    const h = rankRowHeight(13);
+  it('rankRowHeight: 14 rows fit between y 270 and 1360, whole pixels', () => {
+    const h = rankRowHeight(14);
     assert.equal(Number.isInteger(h), true);
-    assert.ok(h * 13 <= 1360 - 270 && (h + 1) * 13 > 1360 - 270);
+    assert.ok(h * 14 <= 1360 - 270 && (h + 1) * 14 > 1360 - 270);
+    assert.ok(h >= 70);
   });
 
   it('no line on the new cards has a banned word, advice or "Panduan"', () => {

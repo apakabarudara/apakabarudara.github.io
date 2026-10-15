@@ -6,6 +6,10 @@ export const STALE_MS = 3 * 3600e3;
 export const EXPIRED_MS = 12 * 3600e3;
 const EARTH_RADIUS_KM = 6371.0088;
 
+/** Cities outside Indonesia, whose country publishes its own index; the levels shown still follow Indonesia's ISPU. */
+const OTHER_INDEX_IDS = ['kuala-lumpur'];
+export const followsOtherIndex = id => OTHER_INDEX_IDS.includes(id);
+
 /** 'fresh' under 3 hours, 'stale' under 12, otherwise 'expired' (also for a missing or unreadable timestamp). */
 export function freshness(generatedAt, now) {
   const age = now.getTime() - Date.parse(generatedAt);
