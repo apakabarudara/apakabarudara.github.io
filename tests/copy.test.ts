@@ -59,8 +59,8 @@ describe('LEVELS', () => {
   }
 
   it('words the quips as agreed: non-health only', () => {
-    assert.deepEqual(LEVELS[1].quips, ['Hari baik. Semoga harimu ringan.', 'Si Kapas lagi santai hari ini.', 'Udara lagi ramah hari ini.']);
-    assert.deepEqual(LEVELS[2].quips, ['Udaranya sedang-sedang saja hari ini.', 'Si Kapas masih santai, tapi tetap berjaga.']);
+    assert.deepEqual(LEVELS[1].quips, ['Kabar baik: udara lagi ramah.', 'Semoga harimu seringan udaranya.', 'Hari baik. Nikmati ya.']);
+    assert.deepEqual(LEVELS[2].quips, ['Udaranya biasa-biasa saja hari ini.', 'Kita pantau terus ya.']);
   });
 });
 
@@ -317,8 +317,8 @@ describe('UI', () => {
       'Udara Palembang Rabu 10.00 (perkiraan): Tidak Sehat, level 3 dari 5.\nBukan angka resmi. Panduan ISPU ada di link.\nApa Kabar Udara'
     );
     assert.equal(
-      UI.shareText('Palembang', 'Rabu 10.00', 1, 'Udara lagi ramah hari ini.'),
-      'Udara Palembang Rabu 10.00 (perkiraan): Baik, level 1 dari 5.\nUdara lagi ramah hari ini.\nBukan angka resmi. Panduan ISPU ada di link.\nApa Kabar Udara'
+      UI.shareText('Palembang', 'Rabu 10.00', 1, 'Kabar baik: udara lagi ramah.'),
+      'Udara Palembang Rabu 10.00 (perkiraan): Baik, level 1 dari 5.\nKabar baik: udara lagi ramah.\nBukan angka resmi. Panduan ISPU ada di link.\nApa Kabar Udara'
     );
     assert.equal(UI.shareOverview, 'Perkiraan asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.\nBukan angka resmi.\nApa Kabar Udara');
   });
@@ -365,7 +365,7 @@ describe('UI', () => {
 
   it('words the batch 3 Fun lines as agreed', () => {
     assert.equal(UI.betterSince('Sedang'), 'Perkiraannya membaik sejak terakhir kamu cek (sebelumnya Sedang).');
-    assert.ok(LEVELS[1].quips.includes('Udara lagi ramah hari ini.'));
+    assert.ok(LEVELS[1].quips.includes('Kabar baik: udara lagi ramah.'));
   });
 
   it('words the satellite photo lines humbly', () => {
