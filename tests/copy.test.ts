@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import { todayCards } from '../web/logic.js';
-import { ACTIVITIES, EMERGENCY_NUMBER, ENCOURAGE, FACTS, LEVELS, OFFICIAL_ISPU, STORY, TODAY_CARDS, UI } from '../web/copy.js';
+import { ACTIVITIES, EMERGENCY_NUMBER, ENCOURAGE, FACTS, GLOSSARY, LEVELS, OFFICIAL_ISPU, STORY, TODAY_CARDS, UI } from '../web/copy.js';
 
 const ISPU_NAMES = ['Baik', 'Sedang', 'Tidak Sehat', 'Sangat Tidak Sehat', 'Berbahaya'];
 const SLANG = /\b(gas|halu|plis|lebay|ngebut|vonis|faskes|mantan|DJ|sinetron)\b/i;
@@ -420,5 +420,19 @@ describe('glance copy', () => {
   });
   it('says nothing about the sky, weather or yesterday', () => {
     for (const line of lines()) assert.doesNotMatch(line, /\b(langit|cerah|mendung|cuaca|kemarin|biru|awan)\b/i, line);
+  });
+});
+
+describe('glossary ("Istilah")', () => {
+  const BANNED = /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i;
+  it('has PM2.5, ISPU and Titik panas, each with a definition', () => {
+    assert.deepEqual(GLOSSARY.map(g => g.term), ['PM2.5', 'ISPU', 'Titik panas']);
+    for (const g of GLOSSARY) assert.ok(g.text.length > 20, g.term);
+  });
+  it('has no banned word and no "kamu" in the heading or any entry', () => {
+    for (const line of [UI.glossaryTitle, ...GLOSSARY.flatMap(g => [g.term, g.text])]) {
+      assert.doesNotMatch(line, BANNED, line);
+      assert.doesNotMatch(line, KAMU, line);
+    }
   });
 });

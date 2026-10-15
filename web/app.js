@@ -1,6 +1,6 @@
 import './ionic.js';
 import { cleanPoints, compassName, FAR_KM, nearestHotspot } from './nearby.js';
-import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, LEVELS, OFFICIAL_ISPU, RAIN, STORY, TODAY_CARDS, UI } from './copy.js';
+import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, GLOSSARY, LEVELS, OFFICIAL_ISPU, RAIN, STORY, TODAY_CARDS, UI } from './copy.js';
 import {
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
   glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, WATCH_MAX, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM
@@ -880,6 +880,12 @@ for (const id of ['about', 'method', 'iosSheet', 'watchSheet', 'kidsSheet']) {
   $(id).breakpoints = [0, 1];
   $(id).initialBreakpoint = 1;
 }
+// "Istilah": three closed rows in the "Apa ini?" sheet; each counts once when first opened.
+$('glossary').append(...GLOSSARY.map(({ term, text }) => {
+  const row = el('details', 'fine', el('summary', null, term), el('p', null, text));
+  row.addEventListener('toggle', () => count('istilah-buka'), { once: true });
+  return row;
+}));
 $('watchSoloBtn').addEventListener('click', openWatchSheet);
 const sheet = $('about');
 $('aboutBtn').addEventListener('click', () => sheet.present());
@@ -924,6 +930,7 @@ function printKids() {
   window.print();
 }
 addEventListener('afterprint', () => document.body.classList.remove('kids-printing'));
+
 $('kidsOpen').addEventListener('click', openKids);
 $('kidsClose').addEventListener('click', () => $('kidsSheet').dismiss());
 for (const box of document.querySelectorAll('[data-install]')) {

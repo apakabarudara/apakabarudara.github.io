@@ -117,6 +117,13 @@ export const SITE_HOST = 'apakabarudara.github.io';
 /** Shared texts carry the level and this pointer, never our own advice. */
 const GUIDE_IN_LINK = 'Bukan angka resmi. Panduan ISPU ada di link.';
 
+// DRAFT wording awaiting review
+export const GLOSSARY = [
+  { term: 'PM2.5', text: 'Partikel debu yang sangat halus, jauh lebih kecil dari sehelai rambut, dan bisa ikut terhirup. Angka di sini adalah perkiraan model, bukan hasil alat ukur.' },
+  { term: 'ISPU', text: 'Indeks Standar Pencemar Udara: acuan resmi pemerintah untuk menamai kualitas udara. Kita memakai batas levelnya (Permen LHK P.14/2020), dan panduan di sini dikutip dari ISPU apa adanya.' },
+  { term: 'Titik panas', text: 'Titik yang terdeteksi satelit lebih panas dari sekitarnya. Bisa api, bisa juga bukan.' }
+];
+
 export const UI = {
   loadingHeadline: 'Mengecek udara…',
   brand: 'Apa Kabar Udara',
@@ -152,6 +159,7 @@ export const UI = {
   guideSource: 'Sumber: ISPU, Kementerian Lingkungan Hidup (dikutip 14 Okt 2026)',
   guideWho: 'Panduan umum saat asap tebal: WHO/Europe ↗',
   guideMore: 'Sumber & dasar aturan',
+  glossaryTitle: 'Istilah',
   sourcesTitle: 'Sumber panduan',
   guideCaution: 'Perkiraan bisa meleset. Kalau ragu, anggap satu tingkat lebih buruk.',
   guideRegulation: 'Dasar aturan: Permen LHK No. 14 Tahun 2020 tentang ISPU',
