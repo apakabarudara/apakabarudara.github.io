@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T18:43:47.459Z",
+  "generated_at": "2026-10-15T18:46:23.834Z",
   "locations": [
     {
       "id": "pekanbaru",
@@ -22,9 +22,9 @@
         "count": 1,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
-      "wind_dir": "Timur laut",
+      "wind_dir": "Timur",
       "outlook": [
         {
           "date": "2026-10-16",
@@ -171,7 +171,7 @@
         "count": 1,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Utara",
       "outlook": [
@@ -320,7 +320,7 @@
         "count": 567,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Timur laut",
       "outlook": [
@@ -469,7 +469,7 @@
         "count": 735,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -618,7 +618,7 @@
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -767,7 +767,7 @@
         "count": 7,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Utara",
       "outlook": [
@@ -916,7 +916,7 @@
         "count": 354,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Barat laut",
       "outlook": [
@@ -1065,7 +1065,7 @@
         "count": 129,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Barat laut",
       "outlook": [
@@ -1214,7 +1214,7 @@
         "count": 344,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -1363,7 +1363,7 @@
         "count": 201,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -1512,7 +1512,7 @@
         "count": 89,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Barat",
       "outlook": [
@@ -1661,7 +1661,7 @@
         "count": 65,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Barat daya",
       "outlook": [
@@ -1810,7 +1810,7 @@
         "count": 22,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Barat",
       "outlook": [
@@ -1959,7 +1959,7 @@
         "count": 1,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T18:43:47.459Z"
+        "updated_at": "2026-10-15T18:46:23.834Z"
       },
       "wind_dir": "Barat daya",
       "outlook": [
