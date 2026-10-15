@@ -936,7 +936,7 @@ $('shareCopy').addEventListener('click', copyLink);
 $('factsNext').addEventListener('click', nextFact);
 
 // Bottom sheets that fit their content: "Apa ini?", the iOS install steps, "Pantau kota lain".
-for (const id of ['about', 'method', 'iosSheet', 'watchSheet', 'kidsSheet', 'whySheet', 'calendarSheet']) {
+for (const id of ['about', 'method', 'iosSheet', 'watchSheet', 'kidsSheet', 'whySheet', 'calendarSheet', 'moreSheet']) {
   $(id).breakpoints = [0, 1];
   $(id).initialBreakpoint = 1;
 }
@@ -998,7 +998,7 @@ addEventListener('afterprint', () => document.body.classList.remove('kids-printi
 let whyReady = false;
 async function openWhy() {
   count('di-balik-asap');
-  $('whyNote').textContent = '';
+  $('footNote').textContent = '';
   try {
     if (!whyReady) {
       const { renderWhy } = await import('./why.js');
@@ -1009,11 +1009,30 @@ async function openWhy() {
     }
     $('whySheet').present();
   } catch {
-    $('whyNote').textContent = UI.whyFail;
+    $('footNote').textContent = UI.whyFail;
   }
 }
 $('whyOpen').addEventListener('click', openWhy);
-$('whyFooter').addEventListener('click', openWhy);
+// "Fitur lain": the small sheet closes first, so the chosen sheet never stacks on it.
+for (const [id, open] of [['whyFooter', openWhy], ['calendarOpen', openCalendar]]) {
+  $(id).addEventListener('click', async () => {
+    await $('moreSheet').dismiss();
+    open();
+  });
+}
+$('moreOpen').addEventListener('click', () => $('moreSheet').present());
+$('moreClose').addEventListener('click', () => $('moreSheet').dismiss());
+// "Sumber data" and "Privasi": one shared panel under the row, one open at a time.
+const finePanels = [['creditsBtn', 'creditsPanel'], ['privacyBtn', 'privacyPanel']];
+for (const [btn] of finePanels) {
+  $(btn).addEventListener('click', () => {
+    for (const [b, panel] of finePanels) {
+      const open = b === btn && $(b).getAttribute('aria-expanded') !== 'true';
+      $(b).setAttribute('aria-expanded', String(open));
+      $(panel).hidden = !open;
+    }
+  });
+}
 $('whyClose').addEventListener('click', () => $('whySheet').dismiss());
 
 let calendar = null;
@@ -1027,7 +1046,7 @@ function selectMonth(i) {
 }
 async function openCalendar() {
   count('kalender-buka');
-  $('calendarNote').textContent = '';
+  $('footNote').textContent = '';
   try {
     if (!calendar) {
       const mod = await import('./calendar.js');
@@ -1047,7 +1066,7 @@ async function openCalendar() {
     selectMonth(calendarMonth ? calendar.months.indexOf(calendarMonth) : 0);
     $('calendarSheet').present();
   } catch {
-    $('calendarNote').textContent = UI.calendarFail;
+    $('footNote').textContent = UI.calendarFail;
   }
 }
 function printCalendar() {
@@ -1056,7 +1075,6 @@ function printCalendar() {
   document.body.classList.add('cal-printing');
   window.print();
 }
-$('calendarOpen').addEventListener('click', openCalendar);
 $('calendarPrint').addEventListener('click', printCalendar);
 $('calendarClose').addEventListener('click', () => $('calendarSheet').dismiss());
 $('kidsOpen').addEventListener('click', openKids);

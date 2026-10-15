@@ -417,8 +417,13 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .footer { display: flex; flex-direction: column; gap: var(--sp-3); margin-top: var(--sp-2); padding-top: var(--sp-5); border-top: 1px solid var(--line); font-size: var(--fs-xs); color: var(--ink-2); line-height: 1.5; }
 .footer p { margin: 0; }
 .footer .disclaimer { font-size: var(--fs-sm); color: var(--ink); }
-.fine-list { display: flex; flex-direction: column; }
-.fine-list .fine-link { align-self: flex-start; }
+.fine-list { display: flex; flex-direction: column; margin: calc(-1 * var(--sp-2)) 0; } /* the 44px rows already carry their own air */
+.fine-list .fine-row { gap: 0 var(--sp-4); }
+.fine-list .fine-link { font-weight: var(--fw-body, 400); color: var(--ink-2); padding: 0; }
+.fine-link[aria-expanded="true"] { color: var(--ink); }
+.fine-panel { margin: 0 0 var(--sp-2); }
+.more-row { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; min-height: 44px; padding: var(--sp-3) 0; background: none; border: 0; border-top: 1px solid var(--line); font: inherit; text-align: start; color: var(--ink-2); cursor: pointer; }
+.more-row b { font-weight: var(--fw-label); color: var(--ink); }
 .footer a { color: var(--ink); padding: 14px 2px; margin: -14px -2px; } /* inline links: a 44px tap area without moving the text */
 .fine summary { cursor: pointer; display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; font-weight: var(--fw-label); color: var(--ink); }
 .fine p { margin: 0 0 var(--sp-3); }
