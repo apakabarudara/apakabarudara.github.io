@@ -95,7 +95,7 @@ describe('todayCards', () => {
   it('picks the cards by level', () => {
     assert.deepEqual(ids(1).map(c => c.id), ['terrace', 'exercise', 'laundry', 'sky']);
     assert.deepEqual(ids(2).map(c => c.id), ['terrace', 'exercise', 'laundry', 'sky']);
-    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.id), ['laundry', 'windows', 'kids', 'exercise']);
+    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.id), ['laundry', 'windows', 'outdoor']);
     assert.deepEqual(ids(4, 'no', 'no').map(c => c.id), ['windows', 'laundry', 'kidsHigh']);
     assert.deepEqual(ids(5, 'no', 'no').map(c => c.id), ['windows', 'laundry', 'kidsHigh']);
   });
@@ -109,12 +109,13 @@ describe('todayCards', () => {
   it('shows the best window only where it helps, never on ISPU quotes', () => {
     assert.deepEqual(ids(1).map(c => c.window), [true, false, true, true]);
     assert.deepEqual(ids(1, 'ok', 'ok', 5).map(c => c.window), [true, false, false, true]);
-    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.window), [false, true, false, false]);
+    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.window), [false, true, false]);
     assert.deepEqual(ids(4, 'no', 'no').map(c => c.window), [false, false, false]);
     assert.ok(ids(1, 'ok', 'ok', 0, false).every(c => !c.window));
   });
-  it('quotes the sensitive sentence for kids and the general one for exercise', () => {
-    assert.equal(ids(3, 'no', 'caution').find(c => c.id === 'kids')?.variant, 'sensitive');
+  it('quotes the general sentence for exercise and level 3 outdoor, the sensitive one only for kids at levels 4–5', () => {
+    assert.equal(ids(3, 'no', 'caution').find(c => c.id === 'outdoor')?.variant, 'everyone');
+    assert.equal(ids(4, 'no', 'no').find(c => c.id === 'kidsHigh')?.variant, 'sensitive');
     assert.equal(ids(1).find(c => c.id === 'exercise')?.variant, 'everyone');
   });
 });

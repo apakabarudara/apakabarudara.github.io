@@ -98,7 +98,7 @@ export const TODAY_CARDS = {
   },
   windows: { icon: 'window', label: WINDOWS.label, text: WINDOWS.notes },
   exercise: { icon: 'pin', label: 'Olahraga di luar' },
-  kids: { icon: 'pin', label: 'Anak main di luar' },
+  outdoor: { icon: 'pin', label: 'Aktivitas di luar' },
   kidsHigh: { icon: 'pin', label: 'Anak di luar' }
 };
 

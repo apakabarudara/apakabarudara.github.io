@@ -67,8 +67,8 @@ export function bestWindow(hours, { span, fromHour, toHour, localHour }) {
 
 /**
  * The cards under "Kapan udara paling lega?" for the day's level: [{ id, variant, window }]. `window` says the card may show the best window.
- * Laundry: rain wins, then smoke (level 3+), else clear. Windows keep the level's own status. ISPU cards (exercise, kids) quote
- * the `variant` field of OFFICIAL_ISPU; kids take the sensitive-group sentence. No window on smoky or rainy laundry, closed windows or ISPU quotes.
+ * Laundry: rain wins, then smoke (level 3+), else clear. Windows keep the level's own status. ISPU cards (exercise, outdoor, kidsHigh) quote
+ * the `variant` field of OFFICIAL_ISPU; only kidsHigh (levels 4–5, restrictive wording) takes the sensitive-group sentence. No window on smoky or rainy laundry, closed windows or ISPU quotes.
  */
 export function todayCards(level, levelActivities, rainMm, wetDayMm, hasWindow) {
   const laundry = rainMm >= wetDayMm ? 'rain' : levelActivities.laundry === 'ok' ? 'clear' : 'smoke';
@@ -83,7 +83,7 @@ export function todayCards(level, levelActivities, rainMm, wetDayMm, hasWindow) 
       { id: 'sky', variant: String(level), window: hasWindow }
     ];
   }
-  if (level === 3) return [laundryCard, windowsCard, { id: 'kids', variant: 'sensitive', window: false }, exercise];
+  if (level === 3) return [laundryCard, windowsCard, { id: 'outdoor', variant: 'everyone', window: false }];
   return [windowsCard, laundryCard, { id: 'kidsHigh', variant: 'sensitive', window: false }];
 }
 

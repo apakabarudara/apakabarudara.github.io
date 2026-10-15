@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
+import { todayCards } from '../web/logic.js';
 import { ACTIVITIES, EMERGENCY_NUMBER, ENCOURAGE, FACTS, LEVELS, OFFICIAL_ISPU, STORY, TODAY_CARDS, UI } from '../web/copy.js';
 
 const ISPU_NAMES = ['Baik', 'Sedang', 'Tidak Sehat', 'Sangat Tidak Sehat', 'Berbahaya'];
@@ -161,8 +162,18 @@ describe('today cards', () => {
   it('keeps jokes and exclamations out of the quiet group', () => {
     for (const line of ENCOURAGE.quiet) assert.doesNotMatch(line, /!/, line);
   });
+  it('never surfaces a permissive ISPU sentence on any card at any level', () => {
+    for (let level = 1; level <= 5; level++) {
+      for (const card of todayCards(level, LEVELS[level as 1].activities, 0, 1, true)) {
+        if (!(card.id in TODAY_CARDS) || !['exercise', 'outdoor', 'kidsHigh'].includes(card.id)) continue;
+        const sentence = OFFICIAL_ISPU[level as 1][card.variant as 'everyone' | 'sensitive'];
+        assert.ok(sentence, `${level} ${card.id}`);
+        assert.doesNotMatch(sentence as string, /^Boleh\b|\bboleh\b/i, `${level} ${card.id}`);
+      }
+    }
+  });
   it('holds no ISPU text of its own: quote cards carry only a label, and the lead-in is not a guidance sentence', () => {
-    for (const id of ['exercise', 'kids', 'kidsHigh'] as const) assert.deepEqual(Object.keys(TODAY_CARDS[id]).sort(), ['icon', 'label']);
+    for (const id of ['exercise', 'outdoor', 'kidsHigh'] as const) assert.deepEqual(Object.keys(TODAY_CARDS[id]).sort(), ['icon', 'label']);
     const official = Object.values(OFFICIAL_ISPU).flatMap(o => [o.description, o.everyone, o.sensitive]);
     for (const line of strings(TODAY_CARDS)) assert.ok(!official.includes(line), line);
     assert.equal(UI.ispuTag, 'ISPU, KLHK');
