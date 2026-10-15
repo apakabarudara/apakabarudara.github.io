@@ -403,11 +403,13 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 #watchSolo { display: flex; justify-content: center; }
 .text-link { display: inline-flex; align-items: center; gap: var(--sp-1); min-height: 44px; padding: 0 var(--sp-2); border: 0; background: none; color: var(--brand); font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-strong); cursor: pointer; }
 .text-link .ic { width: 16px; height: 16px; }
-.pill-row { display: flex; justify-content: center; gap: var(--sp-2); }
-.pill { flex: 1 1 0; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-1); min-height: 44px; padding: 0 var(--sp-3); border: 1px solid color-mix(in srgb, var(--brand) 35%, transparent); border-radius: var(--r-pill); background: none; color: var(--brand); font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-strong); cursor: pointer; }
-.pill .ic { width: 16px; height: 16px; flex: none; }
-#shareBlock.urgent .pill-share { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
-@media (max-width: 339px) { .pill-row { flex-direction: column; } }
+.pill-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: var(--sp-3); }
+.btn-tonal, .btn-link { display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-1); min-height: 44px; border: 0; font: inherit; cursor: pointer; }
+.btn-tonal { padding: 0 var(--sp-4); border-radius: var(--r-pill); background: var(--brand-soft); color: var(--brand-soft-ink); font-size: var(--fs-md); font-weight: var(--fw-strong); }
+.btn-link { padding: 0 var(--sp-2); background: none; color: var(--brand); font-size: var(--fs-sm); font-weight: var(--fw-label); }
+.btn-link:hover, .btn-link:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+.btn-tonal .ic, .btn-link .ic { width: 16px; height: 16px; flex: none; }
+#shareBlock.urgent .btn-tonal { background: var(--brand); color: var(--on-brand); }
 .share-row ion-button.wide { flex: 1 1 0; min-width: 0; margin-top: 0; }
 @media (max-width: 359px) { .share-row { flex-direction: column; } }
 #watchSolo ion-button.wide { margin-top: 0; }
