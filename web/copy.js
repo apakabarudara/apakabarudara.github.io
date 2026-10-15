@@ -346,7 +346,7 @@ export const UI = {
 
 /** Facts in the "Cek langit & fakta asap" fold. Plain statements; hidden at levels 4–5. */
 export const FACTS = [
-  'Menurut BNPB, sekitar 90 persen kejadian karhutla disebabkan perbuatan manusia, langsung maupun tidak langsung.',
+  'Menurut Kemenhut, 107.465 hektare hutan dan lahan terbakar pada Januari sampai Juni 2026.',
   'Asap tidak mengenal batas negara. Bisa menyeberang sampai Sarawak dan membuat udara di sana ikut tidak sehat.',
   'Lahan gambut bisa terbakar diam-diam di bawah tanah. Api yang kelihatan padam belum tentu benar-benar selesai.',
   'El Niño cenderung membuat musim kemarau lebih kering dan lebih panjang, sehingga api lebih mudah menyebar.'
