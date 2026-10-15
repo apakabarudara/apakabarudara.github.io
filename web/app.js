@@ -109,6 +109,7 @@ function show(view) {
   else $('city').after($('shareBlock'));
   $('shareBlock').hidden = view === 'message' || (view === 'city' && Boolean(preview));
   if (view !== 'city') {
+    $('shareBlock').classList.remove('urgent');
     $('watchSolo').hidden = true;
     $('factsBlock').hidden = false;
   }
@@ -161,6 +162,7 @@ const quipFor = level => dailyQuip(LEVELS[level].quips, localDate(new Date()));
 function renderAnswer(loc, level) {
   const copy = LEVELS[level];
   $('answer').dataset.level = String(level);
+  $('shareBlock').classList.toggle('urgent', level >= 4);
   $('levelName').textContent = copy.name;
   $('scale').setAttribute('aria-label', UI.scaleLabel(level));
   [...$('scale').children].forEach((seg, i) => seg.classList.toggle('on', i + 1 === level));
