@@ -447,6 +447,8 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 [data-level="5"] .mini-scale i.on { --c: var(--l5-dot); }
 .watch .mini-scale i.on { --c: var(--lv-bar); } /* bar tokens clear 3:1 on the neutral surface in both themes */
 .watch-add { position: relative; flex: none; width: 44px; height: 44px; padding: 0; border: 1.5px dashed var(--brand); border-radius: 50%; background: transparent; color: var(--brand); cursor: pointer; }
+.watch-add.manage { border: 1.5px solid var(--line); color: var(--ink-2); display: inline-flex; align-items: center; justify-content: center; }
+.watch-add.manage::before, .watch-add.manage::after { content: none; }
 .watch-add.labeled { width: auto; padding: 0 var(--sp-4); border-radius: var(--r-pill); font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-strong); }
 .watch-add.labeled::before, .watch-add.labeled::after { content: none; }
 .watch-add::before, .watch-add::after { content: ""; position: absolute; top: 50%; left: 50%; width: 14px; height: 2px; margin: -1px 0 0 -7px; border-radius: 1px; background: currentColor; }
