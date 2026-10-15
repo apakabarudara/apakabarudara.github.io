@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T21:45:23.443Z",
+  "generated_at": "2026-10-15T23:41:17.946Z",
   "locations": [
     {
       "id": "pekanbaru",
@@ -12,19 +12,19 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 94.3,
+        "value": 95.2,
         "unit": "ug/m3",
         "band": 3,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 3,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
-      "wind_dir": "Barat daya",
+      "wind_dir": "Barat",
       "outlook": [
         {
           "date": "2026-10-16",
@@ -52,14 +52,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 96.9
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 98
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 100.6
@@ -147,6 +139,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 35.9
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 34.2
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 34.1
         }
       ]
     },
@@ -161,19 +161,19 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 95.8,
+        "value": 93.2,
         "unit": "ug/m3",
         "band": 3,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 3,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
-      "wind_dir": "Timur laut",
+      "wind_dir": "Utara",
       "outlook": [
         {
           "date": "2026-10-16",
@@ -201,14 +201,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 74
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 60.1
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 50.1
@@ -296,6 +288,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 13.5
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 13.9
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 15.8
         }
       ]
     },
@@ -310,19 +310,19 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 163,
+        "value": 172.6,
         "unit": "ug/m3",
         "band": 4,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 467,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
-      "wind_dir": "Tenggara",
+      "wind_dir": "Selatan",
       "outlook": [
         {
           "date": "2026-10-16",
@@ -350,14 +350,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 232.4
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 221.7
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 205.8
@@ -445,6 +437,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 117.8
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 104.3
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 94.1
         }
       ]
     },
@@ -459,17 +459,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 143.7,
+        "value": 145.5,
         "unit": "ug/m3",
         "band": 3,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 820,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
       "wind_dir": "Selatan",
       "outlook": [
@@ -499,14 +499,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 154.1
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 168.1
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 179.7
@@ -594,6 +586,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 70.3
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 86.6
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 99.9
         }
       ]
     },
@@ -608,19 +608,19 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 64.7,
+        "value": 62.2,
         "unit": "ug/m3",
         "band": 3,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
-      "wind_dir": "Timur laut",
+      "wind_dir": "Tenggara",
       "outlook": [
         {
           "date": "2026-10-16",
@@ -648,14 +648,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 41.2
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 38.2
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 35.7
@@ -743,6 +735,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 31.4
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 29.9
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 20.3
         }
       ]
     },
@@ -757,17 +757,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 234.6,
+        "value": 215.3,
         "unit": "ug/m3",
         "band": 4,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 4,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
       "wind_dir": "Timur laut",
       "outlook": [
@@ -797,14 +797,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 83.4
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 69.2
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 70.3
@@ -892,6 +884,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 250.5
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 252.4
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 257
         }
       ]
     },
@@ -906,19 +906,19 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 831.8,
+        "value": 814.3,
         "unit": "ug/m3",
         "band": 5,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 382,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
-      "wind_dir": "Timur",
+      "wind_dir": "Utara",
       "outlook": [
         {
           "date": "2026-10-16",
@@ -946,14 +946,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 413.5
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 253.3
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 212.3
@@ -1041,6 +1033,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 979.8
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 1013.3
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 990.9
         }
       ]
     },
@@ -1055,19 +1055,19 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 266.7,
+        "value": 258.7,
         "unit": "ug/m3",
         "band": 5,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 267,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
-      "wind_dir": "Barat laut",
+      "wind_dir": "Timur laut",
       "outlook": [
         {
           "date": "2026-10-16",
@@ -1095,14 +1095,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 229.1
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 221.2
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 170.9
@@ -1190,6 +1182,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 313.9
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 332.5
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 358.6
         }
       ]
     },
@@ -1204,17 +1204,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 77.2,
+        "value": 79,
         "unit": "ug/m3",
         "band": 3,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 349,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -1244,14 +1244,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 78
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 113.6
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 148.5
@@ -1339,6 +1331,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 117.3
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 149.5
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 176.5
         }
       ]
     },
@@ -1353,17 +1353,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 39.6,
+        "value": 38.5,
         "unit": "ug/m3",
         "band": 2,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 201,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -1393,14 +1393,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 46.3
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 51.5
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 58
@@ -1488,6 +1480,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 45.5
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 56.9
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 65.7
         }
       ]
     },
@@ -1502,19 +1502,19 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 35.7,
+        "value": 36.1,
         "unit": "ug/m3",
         "band": 2,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 107,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
-      "wind_dir": "Timur laut",
+      "wind_dir": "Utara",
       "outlook": [
         {
           "date": "2026-10-16",
@@ -1542,14 +1542,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 47.4
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 45.3
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 40.2
@@ -1637,6 +1629,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 12.9
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 14.6
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 18.7
         }
       ]
     },
@@ -1651,17 +1651,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 37.7,
+        "value": 37,
         "unit": "ug/m3",
         "band": 2,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 67,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
       "wind_dir": "Selatan",
       "outlook": [
@@ -1691,14 +1691,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 39.8
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 38.6
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 36.3
@@ -1786,6 +1778,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 19.3
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 20.9
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 17.5
         }
       ]
     },
@@ -1800,19 +1800,19 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 36.8,
+        "value": 36.7,
         "unit": "ug/m3",
         "band": 2,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 22,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
-      "wind_dir": "Barat",
+      "wind_dir": "Barat daya",
       "outlook": [
         {
           "date": "2026-10-16",
@@ -1840,14 +1840,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 39.6
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 38.3
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 34.6
@@ -1935,6 +1927,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 21.7
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 20
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 19.3
         }
       ]
     },
@@ -1949,17 +1949,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 80.1,
+        "value": 79.9,
         "unit": "ug/m3",
         "band": 3,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-15T21:00:00.000Z"
+        "updated_at": "2026-10-15T23:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 1,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T21:45:23.443Z"
+        "updated_at": "2026-10-15T23:41:17.946Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -1989,14 +1989,6 @@
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-15T21:00:00.000Z",
-          "pm25": 26.5
-        },
-        {
-          "time": "2026-10-15T22:00:00.000Z",
-          "pm25": 18.9
-        },
         {
           "time": "2026-10-15T23:00:00.000Z",
           "pm25": 22.8
@@ -2084,6 +2076,14 @@
         {
           "time": "2026-10-16T20:00:00.000Z",
           "pm25": 38
+        },
+        {
+          "time": "2026-10-16T21:00:00.000Z",
+          "pm25": 34.8
+        },
+        {
+          "time": "2026-10-16T22:00:00.000Z",
+          "pm25": 31.8
         }
       ]
     }
