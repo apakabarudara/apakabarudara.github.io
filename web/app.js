@@ -1,7 +1,7 @@
 import './ionic.js';
 import { ACTIVITIES, EMERGENCY_NUMBER, FACTS, LEVELS, OFFICIAL_ISPU, RAIN, STORY, UI } from './copy.js';
 import {
-  activityStatuses, ago, bestWindow, cityLink, dailyQuip, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
+  activityStatuses, ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
   nearest, normalizeWatch, previewOverride, rainKind, outlookLines, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worldviewUrl, worsenedFrom, WET_DAY_MM
 } from './logic.js';
 
@@ -231,34 +231,103 @@ async function renderSatThumb(loc) {
   btn.hidden = false;
 }
 
+const PART_ICONS = { pagi: 'sunrise', siang: 'sun', sore: 'sunset', malam: 'moon' };
+const ACTIVITY_TONE = { ok: 1, caution: 3, no: 4 }; // status picks a level colour
+const KAPAS_FACE = '<use class="body" href="#blob"/><ellipse class="shine" cx="31" cy="21" rx="6" ry="3.2" transform="rotate(-18 31 21)"/><path class="brow" d="M24 35l6-2.5M48 35l-6-2.5"/><ellipse class="eye" cx="29" cy="40" rx="3" ry="3.6"/><ellipse class="eye" cx="43" cy="40" rx="3" ry="3.6"/><ellipse class="cheek" cx="22" cy="46" rx="4" ry="2.4"/><ellipse class="cheek" cx="50" cy="46" rx="4" ry="2.4"/><path class="mouth happy" d="M31 46q5 5 10 0"/><path class="mouth flat" d="M32 47.5h8"/><path class="mouth sad" d="M31 49q5-5 10 0"/><g class="mask"><path class="strap" d="M25 46l-11-4M47 46l11-4"/><rect x="25" y="43" width="22" height="12" rx="5"/><path class="pleat" d="M29 47.5h14M29 51h14"/></g>';
+
+/** Si Kapas's face; its look comes from the data-level of the element it sits in. */
+function kapasFace() {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'mascot-art');
+  svg.setAttribute('viewBox', '0 0 72 64');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.innerHTML = KAPAS_FACE;
+  return svg;
+}
+
+function renderParts(segments, bands, win, level) {
+  const flat = isFlatDay(segments);
+  const tags = segmentTags(segments, level <= 3 ? win : null);
+  $('parts').hidden = flat;
+  $('flat').hidden = !flat;
+  $('best').hidden = flat || !win || level > 3;
+  if (flat) {
+    $('flat').dataset.level = String(segments[0].band);
+    $('flat').replaceChildren(kapasFace(), UI.flatDay(LEVELS[segments[0].band].name));
+    $('parts').replaceChildren();
+    return;
+  }
+  $('parts').replaceChildren(...segments.map((seg, i) => {
+    const tagText = [seg.now ? UI.tagNow : '', i === tags.worst ? UI.tagWorst : ''].filter(Boolean);
+    const text = el('span', 'text', el('span', 'name', UI.partName(UI.dayParts[seg.part], seg.tomorrow)), ...tagText.map(t => el('span', 'tag', t)), el('span', 'range', UI.partRange(hm.format(new Date(seg.start)), hm.format(new Date(seg.end)))));
+    const item = el('li', i === tags.best ? 'part is-best' : 'part', icon(PART_ICONS[seg.part]), text, el('span', 'lvl-name', LEVELS[seg.band].name), kapasFace());
+    item.dataset.level = String(seg.band);
+    if (i === tags.best) item.title = UI.legendBest;
+    return item;
+  }));
+}
+
 function renderToday(loc, level) {
   $('todayTitle').textContent = UI.todayTitle;
   const rain = loc.outlook.find(d => d.date === localDate(new Date()))?.rain_mm ?? 0;
   const statuses = activityStatuses(LEVELS[level].activities, rain, WET_DAY_MM);
-  $('activities').textContent = ACTIVITIES.map(a => `${a.label}: ${a.notes[statuses[a.id]]}`).join(' · ');
+  $('activities').replaceChildren(...ACTIVITIES.map(a => {
+    const item = el('li', 'activity', icon(a.icon), el('span', 'text', el('span', 'label', a.label), el('span', 'status', a.notes[statuses[a.id]])));
+    item.dataset.level = String(ACTIVITY_TONE[statuses[a.id]]);
+    return item;
+  }));
+
+  $('activitiesNote').textContent = UI.activitiesNote(LEVELS[level].name);
 
   const hours = Array.isArray(loc.next_hours) ? loc.next_hours : [];
-  const win = level <= 3 && hours.length > 0 ? bestWindow(hours, BEST) : null;
+  const now = new Date();
+  const win = hours.length > 0 ? bestWindow(hours, BEST) : null;
   const from = win ? hm.format(new Date(win.start)) : '';
   const to = win ? hm.format(new Date(win.end)) : '';
-  const dayWord = win ? UI.dayWord[relativeDay(win.start, new Date())] : '';
-  $('best').textContent = win ? UI.bestWindow(level, dayWord, from, to, win.band) : '';
-  $('best').hidden = !$('best').textContent;
+  const bands = hourBands(hours);
+  const range = hours.length ? levelRange(bands) : null;
+  for (const id of ['best', 'parts', 'flat', 'hours']) $(id).hidden = hours.length === 0;
+  if (hours.length === 0) return;
+
+  const segments = daySegments(hours, bands, now);
+  renderParts(segments, bands, win, level);
+  $('best').textContent = !$('best').hidden && win ? UI.bestWindow(UI.whenWord(UI.dayParts[dayPartOf(new Date(win.start).getHours())], relativeDay(win.start, now) === 'tomorrow'), from, to, level, win.band) : '';
 
   const peak = Math.max(...hours.map(h => h.pm25), 1);
-  const best = new Set(win?.indexes ?? []);
-  const bands = hourBands(hours);
+  const best = new Set(level <= 3 && !isFlatDay(segments) ? win?.indexes ?? [] : []);
+  const current = nowIndex(hours, now);
+  const note = $('hourNote');
+  note.textContent = '';
   $('strip').replaceChildren(...hours.map((h, i) => {
-    const bar = el('i', [best.has(i) ? 'best' : '', i === 0 ? 'now' : ''].join(' ').trim());
+    const time = hm.format(new Date(h.time));
+    const bar = el('button', [best.has(i) ? 'best' : '', i === current ? 'now' : ''].join(' ').trim());
+    bar.type = 'button';
     bar.dataset.bar = String(bands[i]);
     bar.style.height = `${Math.max(10, (h.pm25 / peak) * 100)}%`;
+    bar.setAttribute('aria-label', `${time} · ${LEVELS[bands[i]].name}`);
+    bar.setAttribute('aria-pressed', 'false');
+    bar.addEventListener('click', () => {
+      for (const other of $('strip').children) other.setAttribute('aria-pressed', String(other === bar));
+      note.textContent = UI.hourNote(time, LEVELS[bands[i]].name, relativeDay(h.time, new Date()) === 'tomorrow');
+    });
     return bar;
   }));
-  const range = hours.length ? levelRange(bands) : null;
-  $('strip').setAttribute('aria-label', range ? UI.stripLabel(UI.stripRange(LEVELS[range.min].name, LEVELS[range.max].name), win ? UI.stripBest(from, to) : '') : '');
-  $('ticks').replaceChildren(...hours.filter((_, i) => i % TICK_EVERY === 0).map((h, i) => el('span', null, i === 0 ? UI.stripNow : hm.format(new Date(h.time)))));
-  $('stripLegend').textContent = range ? UI.stripLegend(LEVELS[range.min].name, LEVELS[range.max].name) : '';
-  for (const id of ['strip', 'ticks', 'stripLegend']) $(id).hidden = hours.length === 0;
+  $('strip').setAttribute('aria-label', UI.stripLabel(UI.stripRange(LEVELS[range.min].name, LEVELS[range.max].name), win && level <= 3 ? UI.stripBest(from, to) : ''));
+  $('ticks').replaceChildren(...hours.flatMap((h, i) => {
+    if (i % TICK_EVERY !== 0) return [];
+    const tick = el('span', i === current ? 'now' : '', i === current ? UI.tagNow : hm.format(new Date(h.time)));
+    tick.style.left = `calc(${((i + 0.5) / hours.length) * 100}% )`;
+    return [tick];
+  }));
+  const legend = $('stripLegend');
+  legend.replaceChildren(UI.stripLegend(LEVELS[range.min].name, LEVELS[range.max].name));
+  if (best.size) legend.append(' ', el('span', 'sw'), UI.legendBest);
+  // Opens on its own only on a day that varies; a reader's own toggle survives the 15-minute refresh.
+  const key = `${loc.id}:${range.max - range.min >= 2}`;
+  if ($('hours').dataset.auto !== key) {
+    $('hours').dataset.auto = key;
+    $('hours').open = range.max - range.min >= 2;
+  }
 }
 
 function showDay(days, idx) {

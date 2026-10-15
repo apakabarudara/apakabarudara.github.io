@@ -149,9 +149,10 @@ describe('head note', () => {
 });
 
 describe('household tiles', () => {
-  it('keeps only "Jemur baju" and "Jendela", under "Urusan rumah hari ini"', () => {
+  it('keeps only "Jemur baju" and "Jendela", under "Kapan udara paling lega?"', () => {
     assert.deepEqual(ACTIVITIES.map(a => a.label), ['Jemur baju', 'Jendela']);
-    assert.equal(UI.todayTitle, 'Urusan rumah hari ini');
+    assert.equal(UI.todayTitle, 'Kapan udara paling lega?');
+    assert.equal(UI.todaySub, '24 jam ke depan');
   });
 });
 
@@ -301,10 +302,15 @@ describe('UI', () => {
   });
 
   it('words the batch 3 P0 lines as agreed', () => {
-    assert.equal(UI.bestWindow(3, 'besok', '09.00', '11.00', 3), 'Asap paling tipis di siang hari: besok, 09.00–11.00 (perkiraan: masih Tidak Sehat)');
-    assert.equal(UI.bestWindow(3, 'besok', '09.00', '11.00', 2), 'Asap paling tipis di siang hari: besok, 09.00–11.00');
-    assert.equal(UI.bestWindow(2, 'besok', '09.00', '11.00', 3), 'Asap paling tipis di siang hari: besok, 09.00–11.00');
-    assert.equal(UI.bestWindow(1, 'hari ini', '13.00', '15.00'), 'Udara paling segar di siang hari: hari ini, 13.00–15.00');
+    assert.equal(UI.bestWindow(UI.whenWord('Pagi', true), '06.00', '08.00', 3, 3), 'Besok pagi, 06.00–08.00 · masih Tidak Sehat');
+    assert.equal(UI.bestWindow(UI.whenWord('Siang', true), '11.00', '13.00', 3, 2), 'Besok siang, 11.00–13.00');
+    assert.equal(UI.bestWindow(UI.whenWord('Sore', false), '16.00', '18.00', 2, 3), 'Sore ini, 16.00–18.00');
+    assert.equal(UI.bestWindow(UI.whenWord('Malam', false), '19.00', '21.00', 1, 1), 'Malam ini, 19.00–21.00');
+    assert.equal(UI.flatDay('Sedang'), 'Rata sepanjang 24 jam: Sedang. Tidak ada jam yang jauh lebih baik.');
+    assert.equal(UI.activitiesNote('Sedang'), 'Menurut level hari ini: Sedang');
+    assert.equal(UI.hourNote('14.00', 'Sedang', false), '14.00 · Sedang');
+    assert.equal(UI.partName('Pagi', true), 'Besok pagi');
+    assert.equal(UI.partName('Malam', false), 'Malam');
     assert.match(UI.explain(10)[0], /^Level ini perkiraan komputer dari data satelit dan cuaca/);
     assert.match(UI.footerDisclaimer, /^Level dan angka di sini perkiraan, bukan hasil alat ukur\./);
     assert.equal(UI.stripLegend('Sedang', 'Sedang'), 'Semua jam diperkirakan Sedang. Makin tinggi batang, makin tebal asap.');

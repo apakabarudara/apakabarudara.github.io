@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { LEVELS, OFFICIAL_ISPU, STORY } from '../web/copy.js';
+import { LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 import {
-  activityStatuses, ago, bestWindow, cityLink, dailyQuip, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
+  activityStatuses, ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
   icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, toggleWatch, upcomingDays, watchRow, worsenedFrom
 } from '../web/logic.js';
 
@@ -274,6 +274,85 @@ describe('hourly strip levels', () => {
     const bands = hourBands([{ pm25: 10 }, { pm25: 15.6 }, { pm25: 150.4 }, { pm25: 400 }, { pm25: 851 }]);
     assert.deepEqual(bands, [1, 2, 3, 5, 5]);
     assert.deepEqual(levelRange(bands), { min: 1, max: 5 });
+  });
+});
+
+// Local-time hours (new Date(y, m, d, h)), so these run the same in any time zone.
+const strip = (startHour: number, pm: (i: number) => number, day = 14) =>
+  Array.from({ length: 24 }, (_, i) => ({ time: new Date(2026, 9, day, startHour + i).toISOString(), pm25: pm(i) }));
+
+describe('dayPartOf', () => {
+  it('cuts the day at 05, 11, 15 and 18', () => {
+    const parts = [4, 5, 10, 11, 14, 15, 17, 18, 23, 0].map(dayPartOf);
+    assert.deepEqual(parts, ['malam', 'pagi', 'pagi', 'siang', 'siang', 'sore', 'sore', 'malam', 'malam', 'malam']);
+  });
+});
+
+describe('daySegments', () => {
+  const bandsOf = (hours: { pm25: number }[]) => hourBands(hours);
+
+  it('from 09:00 gives Pagi, Siang, Sore, Malam and Pagi besok, with the first one now', () => {
+    const hours = strip(9, () => 10);
+    const segs = daySegments(hours, bandsOf(hours), new Date(2026, 9, 14, 9, 30));
+    assert.deepEqual(segs.map(s => s.part), ['pagi', 'siang', 'sore', 'malam', 'pagi']);
+    assert.deepEqual(segs.map(s => s.tomorrow), [false, false, false, false, true]);
+    assert.deepEqual(segs.map(s => s.now), [true, false, false, false, false]);
+    assert.deepEqual(segs.map(s => [s.from, s.to]), [[0, 2], [2, 6], [6, 9], [9, 20], [20, 24]]);
+    assert.equal(new Date(segs[0].end).getHours(), 11);
+  });
+
+  it('wraps past midnight: from 20:00 the night spans two dates and the next morning is besok', () => {
+    const hours = strip(20, () => 10);
+    const segs = daySegments(hours, bandsOf(hours), new Date(2026, 9, 14, 20, 5));
+    assert.deepEqual(segs.map(s => s.part), ['malam', 'pagi', 'siang', 'sore', 'malam']);
+    assert.deepEqual(segs.map(s => s.tomorrow), [false, true, true, true, true]);
+    assert.equal(segs[0].to, 9); // 20:00 to 04:00
+  });
+
+  it('takes the worst band of the hours in a segment', () => {
+    const hours = strip(9, i => (i === 1 ? 60 : 10)); // 10:00 is band 3, the rest band 1
+    const segs = daySegments(hours, bandsOf(hours), new Date(2026, 9, 14, 9));
+    assert.equal(segs[0].band, 3);
+    assert.equal(segs[1].band, 1);
+  });
+
+  it('marks no segment as now when the data does not cover the current hour', () => {
+    const hours = strip(9, () => 10);
+    assert.equal(nowIndex(hours, new Date(2026, 9, 14, 8)), -1);
+    assert.ok(daySegments(hours, bandsOf(hours), new Date(2026, 9, 14, 8)).every(s => !s.now));
+  });
+
+  it('detects a flat day and tags best and worst segments', () => {
+    const flat = strip(9, () => 30);
+    assert.equal(isFlatDay(daySegments(flat, bandsOf(flat), new Date(2026, 9, 14, 9))), true);
+    const varied = strip(9, i => (i < 6 ? 10 : 200)); // Pagi+Siang clean, the rest thick
+    const segs = daySegments(varied, bandsOf(varied), new Date(2026, 9, 14, 9));
+    assert.equal(isFlatDay(segs), false);
+    const win = bestWindow(varied, { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() });
+    assert.deepEqual(segmentTags(segs, win), { best: 0, worst: 2 });
+    assert.deepEqual(segmentTags(segs, null), { best: -1, worst: 2 });
+  });
+
+  it('does not call a one-level difference the worst', () => {
+    const hours = strip(9, i => (i < 6 ? 10 : 30));
+    const segs = daySegments(hours, bandsOf(hours), new Date(2026, 9, 14, 9));
+    assert.equal(segmentTags(segs, null).worst, -1);
+  });
+});
+
+describe('best window wording', () => {
+  const opts = { span: 2, fromHour: 6, toHour: 21, localHour: (iso: string) => new Date(iso).getHours() };
+  it('names the part from the window hour: a 06:00 window is pagi, never siang', () => {
+    const morning = strip(5, i => (i === 1 || i === 2 ? 5 : 80), 14);
+    const win = bestWindow(morning, opts)!;
+    assert.equal(new Date(win.start).getHours(), 6);
+    const part = UI.dayParts[dayPartOf(new Date(win.start).getHours())];
+    assert.equal(part, 'Pagi');
+    assert.equal(UI.bestWindow(UI.whenWord(part, false), '06.00', '08.00', 2, 1), 'Pagi ini, 06.00–08.00');
+    assert.doesNotMatch(UI.bestWindow(UI.whenWord(part, true), '06.00', '08.00', 2, 1), /siang/i);
+  });
+  it('picks the afternoon word for a 13:00 window', () => {
+    assert.equal(dayPartOf(13), 'siang');
   });
 });
 

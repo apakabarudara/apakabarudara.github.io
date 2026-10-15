@@ -234,6 +234,60 @@ export const hourBands = hours => hours.map(h => bandForPm25(h.pm25));
 /** Lowest and highest band in a list of bands. */
 export const levelRange = bands => ({ min: Math.min(...bands), max: Math.max(...bands) });
 
+// Day-part boundaries in the viewer's local hours: Pagi 05–11, Siang 11–15, Sore 15–18, Malam 18–05.
+export const DAY_PART_STARTS = { pagi: 5, siang: 11, sore: 15, malam: 18 };
+
+/** 'pagi' | 'siang' | 'sore' | 'malam' for a local hour (0–23). */
+export function dayPartOf(hour) {
+  if (hour >= DAY_PART_STARTS.malam || hour < DAY_PART_STARTS.pagi) return 'malam';
+  if (hour >= DAY_PART_STARTS.sore) return 'sore';
+  return hour >= DAY_PART_STARTS.siang ? 'siang' : 'pagi';
+}
+
+/** Index of the hour that contains `now`, or -1 when the strip does not cover it. */
+export const nowIndex = (hours, now) => hours.findIndex(h => Date.parse(h.time) <= now.getTime() && now.getTime() < Date.parse(h.time) + 3600e3);
+
+/**
+ * Cuts the strip into chronological day-part segments (a new one whenever the part changes), each with its local range,
+ * whether it starts on a later local day than `now` (`tomorrow`) and whether it holds the current hour.
+ * A segment's band is the WORST band of its hours: a guide to the strip, not a 24-hour mean (the daily level still
+ * comes from pm25_model.band).
+ */
+export function daySegments(hours, bands, now) {
+  const segments = [];
+  const today = localDate(now);
+  const current = nowIndex(hours, now);
+  hours.forEach((h, i) => {
+    const part = dayPartOf(new Date(h.time).getHours());
+    const last = segments[segments.length - 1];
+    if (last && last.part === part) {
+      last.to = i + 1;
+      last.band = Math.max(last.band, bands[i]);
+    } else {
+      segments.push({ part, from: i, to: i + 1, band: bands[i], tomorrow: localDate(new Date(h.time)) !== today, now: false });
+    }
+  });
+  for (const s of segments) {
+    s.start = hours[s.from].time;
+    s.end = new Date(Date.parse(hours[s.to - 1].time) + 3600e3).toISOString();
+    s.now = current >= s.from && current < s.to;
+  }
+  return segments;
+}
+
+/** True when every segment has the same band (or there is at most one): no hour is worth picking over another. */
+export const isFlatDay = segments => segments.every(s => s.band === segments[0].band);
+
+/** Segment indexes tagged: `best` holds the window's first hour (never set when there is no window), `worst` the first
+ * segment at least 2 bands above the lowest one. */
+export function segmentTags(segments, win) {
+  const lowest = Math.min(...segments.map(s => s.band));
+  const highest = Math.max(...segments.map(s => s.band));
+  const best = win ? segments.findIndex(s => win.indexes[0] >= s.from && win.indexes[0] < s.to) : -1;
+  const worst = highest >= lowest + 2 ? segments.findIndex(s => s.band === highest) : -1;
+  return { best, worst: worst === best ? -1 : worst };
+}
+
 /** 'today' or 'tomorrow' for an hour inside the 24-hour strip, by the viewer's local dates. */
 export const relativeDay = (iso, now) => (localDate(new Date(iso)) === localDate(now) ? 'today' : 'tomorrow');
 

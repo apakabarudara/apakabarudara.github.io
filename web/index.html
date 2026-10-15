@@ -45,6 +45,10 @@ addEventListener('error', e => {
   <symbol id="i-share" viewBox="0 0 24 24"><path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M8.7 10.7l6.6 -3.4"/><path d="M8.7 13.3l6.6 3.4"/></symbol>
   <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M8.5 4l-5 2.8 1.9 3.6 2.1-1V20h9V9.4l2.1 1 1.9-3.6-5-2.8c-.6 1.3-2 2.2-3.5 2.2s-2.9-.9-3.5-2.2z"/></symbol>
   <symbol id="i-window" viewBox="0 0 24 24"><rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M12 3.5v17M4.5 12h15"/></symbol>
+  <symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M3 18.5h18M7 18.5a5 5 0 0 1 10 0M12 6.5v3M4.8 11.3l1.8 1.8M19.2 11.3l-1.8 1.8M9.5 5.5L12 3l2.5 2.5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></symbol>
+  <symbol id="i-sunset" viewBox="0 0 24 24"><path d="M3 18.5h18M7 18.5a5 5 0 0 1 10 0M12 6.5v3M4.8 11.3l1.8 1.8M19.2 11.3l-1.8 1.8M9.5 4.5L12 7l2.5-2.5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z"/></symbol>
   <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5c3.2 4 5.5 6.8 5.5 10a5.5 5.5 0 0 1 -11 0c0 -3.2 2.3 -6 5.5 -10z"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></symbol>
@@ -111,13 +115,9 @@ addEventListener('error', e => {
         <div class="sk-card sk-city">
           <span class="sk sk-title"></span>
           <span class="sk sk-line"></span>
-          <span class="sk sk-line"></span>
-          <span class="sk sk-line"></span>
-          <span class="sk sk-line"></span>
-          <span class="sk sk-line"></span>
-          <span class="sk-strip"><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i></span>
-          <span class="sk sk-line"></span>
-          <span class="sk sk-line"></span>
+          <span class="sk-acts"><i class="sk"></i><i class="sk"></i></span>
+          <span class="sk sk-flat"></span>
+          <span class="sk sk-line sk-sum"></span>
         </div>
         <div class="sk-card sk-city">
           <span class="sk sk-title"></span>
@@ -195,11 +195,19 @@ addEventListener('error', e => {
 
         <ion-card id="today" class="panel" aria-labelledby="todayTitle">
           <h2 id="todayTitle"></h2>
-          <p id="activities" class="home-line"></p>
+          <p class="sub" data-copy="todaySub"></p>
           <p id="best" class="best"></p>
-          <div id="strip" class="strip" role="img"></div>
-          <div id="ticks" class="ticks" aria-hidden="true"></div>
-          <p id="stripLegend" class="legend"></p>
+          <ol id="parts" class="parts"></ol>
+          <p id="flat" class="flat" hidden></p>
+          <ul id="activities" class="activities"></ul>
+          <p id="activitiesNote" class="legend"></p>
+          <details id="hours" class="hours">
+            <summary id="hoursSummary" data-copy="hoursSummary"></summary>
+            <div id="strip" class="strip" role="group"></div>
+            <div id="ticks" class="ticks" aria-hidden="true"></div>
+            <p id="hourNote" class="hour-note" aria-live="polite"></p>
+            <p id="stripLegend" class="legend"></p>
+          </details>
         </ion-card>
 
         <ion-card id="outlook" class="panel" aria-labelledby="outlookTitle">
