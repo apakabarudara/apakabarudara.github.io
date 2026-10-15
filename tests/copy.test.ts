@@ -298,7 +298,7 @@ describe('estimates and suggestions', () => {
   it('keeps the emergency number in the disclaimer and labels the source fold', () => {
     assert.ok(UI.footerDisclaimer.includes(EMERGENCY_NUMBER));
     assert.equal(UI.footerDisclaimer.split(EMERGENCY_NUMBER).length, 2);
-    for (const line of [UI.creditsTitle, UI.footerDisclaimer]) assert.doesNotMatch(line, /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i, line);
+    for (const line of [UI.creditsTitle, UI.footerDisclaimer, UI.moreLink, UI.featuresTitle, UI.moreWhyDesc, UI.moreCalendarDesc]) assert.doesNotMatch(line, /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i, line);
   });
 
   it('never uses "boleh", "parah", "pasti", "akurat" or "aman" in user-facing copy', () => {

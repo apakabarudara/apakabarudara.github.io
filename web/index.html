@@ -275,20 +275,20 @@ addEventListener('error', e => {
       <footer class="footer">
         <p id="disclaimer" class="disclaimer" data-copy="footerDisclaimer"></p>
         <div class="fine-list">
-          <details class="fine">
-            <summary data-copy="creditsTitle"></summary>
+          <div class="fine-row">
+            <button id="methodLink" class="fine-link" type="button" data-copy="methodLink"></button>
+            <button id="privacyBtn" class="fine-link" type="button" aria-expanded="false" aria-controls="privacyPanel" data-copy="privacyTitle"></button>
+            <button id="creditsBtn" class="fine-link" type="button" aria-expanded="false" aria-controls="creditsPanel" data-copy="creditsTitle"></button>
+          </div>
+          <div id="creditsPanel" class="fine-panel" hidden>
             <p><a href="https://open-meteo.com/" target="_blank" rel="noopener" data-copy="creditOpenMeteo"></a> <span data-copy="creditOpenMeteoLicence"></span> · <span id="camsCredit"></span> · <a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noopener" data-copy="creditFirms"></a> · <a href="https://worldview.earthdata.nasa.gov/" target="_blank" rel="noopener" data-copy="creditGibs"></a> · <span data-copy="creditIspu"></span></p>
-          </details>
-          <details class="fine">
-            <summary data-copy="privacyTitle"></summary>
-            <p data-copy="privacy"></p>
-          </details>
-          <button id="methodLink" class="fine-link" type="button" data-copy="methodLink"></button>
-          <button id="hazeToggle" class="fine-link" type="button" aria-pressed="true"></button>
-          <button id="calendarOpen" class="fine-link" type="button" data-copy="calendarLink"></button>
-          <button id="whyFooter" class="fine-link" type="button" data-copy="whyLink"></button>
-          <span id="whyNote" class="note" role="status"></span>
-          <span id="calendarNote" class="note" role="status"></span>
+          </div>
+          <div id="privacyPanel" class="fine-panel" hidden><p data-copy="privacy"></p></div>
+          <div class="fine-row">
+            <button id="moreOpen" class="fine-link" type="button"><span data-copy="moreLink"></span><span aria-hidden="true">&nbsp;›</span></button>
+            <button id="hazeToggle" class="fine-link" type="button" aria-pressed="true"></button>
+          </div>
+          <span id="footNote" class="note" role="status"></span>
         </div>
         <p class="credit"><span data-copy-credit="0"></span><a href="https://github.com/khihadysucahyo" target="_blank" rel="noopener" data-copy-credit="1"></a><span data-copy-credit="2"></span><a href="https://github.com/apakabarudara/apakabarudara.github.io" target="_blank" rel="noopener" data-copy-credit="3"></a></p>
       </footer>
@@ -380,6 +380,16 @@ addEventListener('error', e => {
         <ion-button id="kidsClose" fill="clear"><span data-copy="close"></span></ion-button>
       </div>
       <div id="kidsBody"></div>
+    </div>
+  </ion-modal>
+  <ion-modal id="moreSheet" class="sheet" aria-labelledby="moreSheetTitle">
+    <div class="sheet-body">
+      <div class="sheet-head">
+        <h2 id="moreSheetTitle" data-copy="featuresTitle"></h2>
+        <ion-button id="moreClose" fill="clear"><span data-copy="close"></span></ion-button>
+      </div>
+      <button id="whyFooter" class="more-row" type="button"><b data-copy="whyLink"></b><span data-copy="moreWhyDesc"></span></button>
+      <button id="calendarOpen" class="more-row" type="button"><b data-copy="calendarLink"></b><span data-copy="moreCalendarDesc"></span></button>
     </div>
   </ion-modal>
   <ion-modal id="whySheet" class="sheet" aria-labelledby="whySheetTitle">
