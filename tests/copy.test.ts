@@ -400,3 +400,13 @@ describe('UI', () => {
     assert.match(UI.creditCams(2026), /Copernicus Atmosphere Monitoring Service information 2026/);
   });
 });
+
+describe('share sheet copy', () => {
+  const BANNED = /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i;
+  it('has no banned word and no leftover Story button string', () => {
+    const lines = [UI.shareSheetTitle, UI.shareSheetChoices, UI.shareSheetPreviewAlt('Palembang', 'Baik'), UI.shareSheetWa, UI.shareSheetSystem, UI.shareSheetSave, UI.shareSheetCopy];
+    for (const line of lines) assert.doesNotMatch(line, BANNED, line);
+    assert.ok(!('storyButton' in UI));
+    assert.equal(UI.shareSheetTitle, 'Bagikan kabar udara');
+  });
+});

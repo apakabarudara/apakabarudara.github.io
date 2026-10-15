@@ -15,7 +15,7 @@ Halaman kecil yang memberi gambaran asap dan kualitas udara di 13 kota di Sumatr
 - Level udara dengan skala 5 tingkat
 - "Besok gimana?" dan grafik per jam
 - Peta satelit NASA yang bisa digeser, lengkap dengan titik panas dan "di sekitarmu" (ketuk peta)
-- Bagikan ke grup, atau ke Story Instagram lewat kartu gambar
+- Satu tombol Bagikan: pratinjau kartu gambar, WhatsApp, bagikan lewat aplikasi lain, simpan gambar (untuk Story Instagram), atau salin link
 - Pantau sampai 3 kota
 - Bisa dipasang di layar utama dan tetap terbuka tanpa internet (dengan data terakhir)
 
