@@ -272,12 +272,13 @@ function todayCard(card, level, windowText) {
   const children = [el('span', 'label', def.label)];
   const quoted = card.id === 'exercise' || card.id === 'outdoor' || card.id === 'kidsHigh';
   if (quoted) {
-    children.push(el('span', 'lead', UI.ispuLead), el('span', 'quote', OFFICIAL_ISPU[level][card.variant]), el('span', 'tag', UI.ispuTag));
+    children[0] = el('span', 'label', `${UI.ispuBadge} · ${def.label}`);
+    children.push(el('span', 'quote', el('span', 'lead', UI.ispuLead), ` ${OFFICIAL_ISPU[level][card.variant]}`), el('span', 'tag', UI.ispuTag));
   } else {
     children.push(el('span', 'status', typeof def.text === 'string' ? def.text : def.text[card.variant]));
     if (card.window) children.push(el('span', 'when', windowText));
   }
-  const item = el('li', quoted && level >= 3 ? 'activity wide' : 'activity', icon(def.icon), el('span', 'text', ...children));
+  const item = el('li', quoted ? 'activity official' : 'activity', icon(def.icon), el('span', 'text', ...children));
   item.dataset.level = String(level);
   return item;
 }
@@ -297,8 +298,9 @@ function renderToday(loc, level) {
   // The cards show a window only when the headline above does (levels 1–3, not a flat day).
   const hasWindow = Boolean(win) && level <= 3 && hours.length > 0 && !isFlatDay(segments);
   $('activities').replaceChildren(...todayCards(level, LEVELS[level].activities, rain, WET_DAY_MM, hasWindow).map(card => todayCard(card, level, UI.cardWindow(from, to))));
-  const group = level <= 2 ? 'light' : level === 3 ? 'gentle' : 'quiet';
-  $('encourage').textContent = dailyQuip(ENCOURAGE[group], localDate(new Date()));
+  // Levels 1–2: the headline quip already encourages, so no second line here.
+  $('encourage').hidden = level <= 2;
+  $('encourage').textContent = level <= 2 ? '' : dailyQuip(ENCOURAGE[level === 3 ? 'gentle' : 'quiet'], localDate(new Date()));
   for (const id of ['best', 'parts', 'flat', 'hours']) $(id).hidden = hours.length === 0;
   if (hours.length === 0) return;
 

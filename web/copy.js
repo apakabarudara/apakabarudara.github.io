@@ -90,7 +90,6 @@ const WINDOWS = ACTIVITIES[1];
  */
 export const TODAY_CARDS = {
   terrace: { icon: 'sun', label: 'Ngopi di teras', text: 'Teras lagi baik hati. Kopi dulu?' },
-  sky: { icon: 'image', label: 'Foto langit', text: { 1: 'Langitnya bersih. Sayang kalau tidak difoto.', 2: 'Langitnya masih cerah. Satu foto, yuk?' } },
   laundry: {
     icon: 'shirt',
     label: LAUNDRY.label,
@@ -102,9 +101,8 @@ export const TODAY_CARDS = {
   kidsHigh: { icon: 'pin', label: 'Anak di luar' }
 };
 
-/** One line under the cards, one per day (see dailyQuip). light: levels 1–2, gentle: level 3, quiet: levels 4–5 (no "kamu", no jokes). */
+/** One line under the cards, one per day (see dailyQuip). Levels 1–2 have none (the card quip already says it). gentle: level 3, quiet: levels 4–5 (no "kamu", no jokes). */
 export const ENCOURAGE = {
-  light: ['Hari bagus. Semangat ya!', 'Udaranya lagi ramah. Nikmati harimu ya.', 'Semoga harimu ringan dan menyenangkan.'],
   gentle: ['Tetap semangat, kita pantau bareng.', 'Pelan-pelan saja hari ini, kita lihat sama-sama.', 'Kita terus pantau, sama-sama.'],
   quiet: ['Hari yang berat. Pelan-pelan saja, kita lewati bareng.', 'Kita lewati hari ini bareng, satu jam demi satu jam.', 'Turut prihatin. Kita di sini, bareng-bareng.']
 };
@@ -220,7 +218,8 @@ export const UI = {
   tagWorst: 'Paling tebal',
   flatDay: levelName => `Rata sepanjang 24 jam: ${levelName}. Tidak ada jam yang jauh lebih baik.`,
   cardWindow: (from, to) => `paling pas ${from}–${to}`,
-  ispuLead: 'Kita ikuti panduan resmi ya:',
+  ispuBadge: 'Panduan resmi',
+  ispuLead: 'Menurut ISPU:',
   ispuTag: 'ISPU, KLHK',
   hoursSummary: 'Lihat per jam',
   hourNote: (time, name, tomorrow) => `${tomorrow ? 'besok ' : ''}${time} · ${name}`,
