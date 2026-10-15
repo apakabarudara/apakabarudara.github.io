@@ -291,12 +291,28 @@ describe('estimates and suggestions', () => {
   });
 });
 
+describe('answer card meaning', () => {
+  it('names the 24-hour span and takes the scale ends from LEVELS', () => {
+    assert.match(UI.eyebrow, /24 jam terakhir/);
+    assert.equal(LEVELS[1].name, 'Baik');
+    assert.equal(LEVELS[5].name, 'Berbahaya');
+    const html = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8');
+    assert.doesNotMatch(html, />(Baik|Berbahaya)</);
+    for (const level of [1, 2]) assert.doesNotMatch(OFFICIAL_ISPU[level].description, /\b(akurat|valid|pasti|gratis|boleh|harus|aman|kamu)\b/i);
+  });
+  it('shows the ISPU description only at levels 1-2 and never duplicates it as a literal in app code', () => {
+    const app = readFileSync(new URL('../web/app.js', import.meta.url), 'utf8');
+    assert.match(app, /\$\('meaning'\)\.hidden = level > 2/);
+    for (const level of [1, 2]) assert.ok(!app.includes(OFFICIAL_ISPU[level].description));
+  });
+});
+
 describe('hedge first', () => {
   it('starts the answer-card level text, the story level line and the section titles with "Perkiraan"', () => {
     for (const level of [1, 2, 3, 4, 5]) {
       assert.match(STORY.levelName(LEVELS[level].name), /^Perkiraan: /);
     }
-    assert.equal(UI.eyebrow, 'Perkiraan hari ini');
+    assert.equal(UI.eyebrow, 'Perkiraan 24 jam terakhir');
     assert.equal(UI.overviewTitle, 'Perkiraan asap hari ini');
     assert.match(UI.outlookSub, /^Perkiraan beberapa hari ke depan\./);
     assert.equal(STORY.stamp('Rabu 10.00'), 'Diperbarui Rabu 10.00');

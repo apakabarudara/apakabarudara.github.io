@@ -176,6 +176,11 @@ function renderAnswer(loc, level) {
   const quip = quipFor(level);
   $('quip').textContent = quip ?? '';
   $('quip').hidden = !quip;
+  // Levels 3–5 already carry the official guidance below; 1–2 get the verbatim category description.
+  $('meaningText').textContent = official.description;
+  $('meaning').hidden = level > 2;
+  $('scaleLo').textContent = LEVELS[1].name;
+  $('scaleHi').textContent = LEVELS[5].name;
   const before = improvedFrom(readSeen()[loc.id]?.level, level);
   $('better').textContent = before ? UI.betterSince(LEVELS[before].name) : '';
   $('better').hidden = !before;

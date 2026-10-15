@@ -128,7 +128,7 @@ export const UI = {
   loadingHeadline: 'Mengecek udara…',
   brand: 'Apa Kabar Udara',
   tagline: 'Perkiraan asap & kualitas udara hari ini',
-  eyebrow: 'Perkiraan hari ini',
+  eyebrow: 'Perkiraan 24 jam terakhir',
   beta: 'BETA',
   solidarity: 'Turut prihatin untuk warga yang terdampak asap.',
   solidarityClose: 'Tutup untuk hari ini',
