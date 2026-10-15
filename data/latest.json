@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T19:01:51.960Z",
+  "generated_at": "2026-10-15T19:04:01.607Z",
   "locations": [
     {
       "id": "pekanbaru",
@@ -22,7 +22,7 @@
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Timur laut",
       "outlook": [
@@ -171,7 +171,7 @@
         "count": 1,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Timur laut",
       "outlook": [
@@ -320,7 +320,7 @@
         "count": 251,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -466,10 +466,10 @@
         "updated_at": "2026-10-15T19:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 656,
+        "count": 319,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -618,7 +618,7 @@
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Timur laut",
       "outlook": [
@@ -767,7 +767,7 @@
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Utara",
       "outlook": [
@@ -916,7 +916,7 @@
         "count": 354,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -1065,7 +1065,7 @@
         "count": 129,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Tenggara",
       "outlook": [
@@ -1214,7 +1214,7 @@
         "count": 344,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -1363,7 +1363,7 @@
         "count": 201,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Timur",
       "outlook": [
@@ -1512,7 +1512,7 @@
         "count": 89,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Barat",
       "outlook": [
@@ -1661,7 +1661,7 @@
         "count": 65,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Selatan",
       "outlook": [
@@ -1810,7 +1810,7 @@
         "count": 22,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Barat",
       "outlook": [
@@ -1959,7 +1959,7 @@
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-15T19:01:51.960Z"
+        "updated_at": "2026-10-15T19:04:01.607Z"
       },
       "wind_dir": "Timur",
       "outlook": [
