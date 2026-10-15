@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import { LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 import {
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
-  icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom, whatsappUrl, orderShareActions
+  icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom, whatsappUrl, orderShareActions, trend, glanceChips
 } from '../web/logic.js';
 
 const NOW = new Date('2026-10-14T06:00:00Z');
@@ -577,5 +577,52 @@ describe('orderShareActions', () => {
   it('puts the last used action first and keeps the others in order', () => {
     assert.deepEqual(orderShareActions('save'), ['save', 'wa', 'system', 'copy']);
     assert.deepEqual(orderShareActions('copy'), ['copy', 'wa', 'system', 'save']);
+  });
+});
+
+describe('trend', () => {
+  const hrs = (vals: number[]) => vals.map((pm25, i) => ({ time: `2026-10-14T${String(i).padStart(2, '0')}:00:00Z`, pm25 }));
+  const flat = (a: number, b: number) => hrs([a, a, a, b, b, b, b, b, b]);
+  it('says better, worse or steady', () => {
+    assert.equal(trend(flat(60, 40)), 'better');
+    assert.equal(trend(flat(40, 60)), 'worse');
+    assert.equal(trend(flat(40, 42)), 'steady');
+  });
+  it('needs both 15% and 5 µg/m3 (dead band)', () => {
+    assert.equal(trend(flat(20, 16)), 'steady'); // 20%, but only 4 µg/m3
+    assert.equal(trend(flat(100, 90)), 'steady'); // 10 µg/m3, but only 10%
+    assert.equal(trend(flat(20, 15)), 'better'); // exactly 25%, 5 µg/m3
+    assert.equal(trend(flat(100, 85)), 'better'); // exactly 15%
+    assert.equal(trend(flat(100, 115)), 'worse');
+  });
+  it('is null for short or unreadable input and ignores hours past the ninth', () => {
+    assert.equal(trend(hrs([1, 2, 3, 4, 5, 6, 7, 8])), null);
+    assert.equal(trend(undefined), null);
+    assert.equal(trend(hrs([60, 60, 60, NaN, 40, 40, 40, 40, 40])), null);
+    assert.equal(trend(hrs([40, 40, 40, 60, 60, 60, 60, 60, 60, 1, 1, 1, 1])), 'worse');
+  });
+});
+
+describe('glanceChips', () => {
+  const base = { nearestHotspot: { km: 12.4, dir: 'Selatan' }, bestWindow: { when: 'Besok pagi', from: '06.00' }, rainMm: 0, canOpenMap: true };
+  it('orders hotspot then best window, both tappable', () => {
+    const chips = glanceChips(base);
+    assert.deepEqual(chips.map(c => [c.kind, c.interactive]), [['hotspot', true], ['best', true]]);
+    assert.equal(chips[0].text, 'Titik panas terdekat 12 km ke selatan');
+    assert.equal(chips[1].text, 'Paling lega: besok pagi, 06.00');
+  });
+  it('uses the 100 km phrase and omits an unknown hotspot', () => {
+    assert.equal(glanceChips({ ...base, nearestHotspot: null })[0].text, 'Tidak ada titik panas dalam 100 km');
+    assert.deepEqual(glanceChips({ ...base, nearestHotspot: undefined }).map(c => c.kind), ['best']);
+  });
+  it('is static without a satellite photo', () => {
+    assert.equal(glanceChips({ ...base, canOpenMap: false })[0].interactive, false);
+  });
+  it('falls back to a static rain chip on wet days only', () => {
+    const wet = glanceChips({ ...base, bestWindow: null, rainMm: 4.2 });
+    assert.deepEqual(wet.map(c => c.kind), ['hotspot', 'rain']);
+    assert.equal(wet[1].text, 'Hujan hari ini sekitar 4 mm');
+    assert.equal(wet[1].interactive, false);
+    assert.deepEqual(glanceChips({ ...base, bestWindow: null, rainMm: 0.5 }).map(c => c.kind), ['hotspot']);
   });
 });

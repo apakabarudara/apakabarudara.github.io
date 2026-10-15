@@ -410,3 +410,15 @@ describe('share sheet copy', () => {
     assert.equal(UI.shareSheetTitle, 'Bagikan kabar udara');
   });
 });
+
+describe('glance copy', () => {
+  const lines = (): string[] => [...Object.values(UI.glanceTrend), UI.glanceLabel, UI.glanceHotspot(12, 'Selatan'), UI.glanceHotspotNone, UI.glanceBest('Besok pagi', '06.00'), UI.glanceRain(4)];
+  it('has no banned words, exclamations or "kamu"', () => {
+    for (const line of lines()) {
+      assert.doesNotMatch(line, /\b(akurat|valid|pasti|gratis|boleh|harus|aman|kamu)\b|!/i, line);
+    }
+  });
+  it('says nothing about the sky, weather or yesterday', () => {
+    for (const line of lines()) assert.doesNotMatch(line, /\b(langit|cerah|mendung|cuaca|kemarin|biru|awan)\b/i, line);
+  });
+});

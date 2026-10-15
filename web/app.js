@@ -1,8 +1,9 @@
 import './ionic.js';
+import { cleanPoints, compassName, FAR_KM, nearestHotspot } from './nearby.js';
 import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, LEVELS, OFFICIAL_ISPU, RAIN, STORY, TODAY_CARDS, UI } from './copy.js';
 import {
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
-  nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM
+  glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
@@ -197,6 +198,7 @@ function renderAnswer(loc, level) {
   $('factsBlock').hidden = level >= 4; // no jokes or trivia at levels 4–5
   $('more').hidden = level >= 4; // the card only holds the facts
   $('kids').hidden = level < 3; // the kids pack is for the days school may be closed
+  renderTrend(loc);
   renderSatThumb(loc);
 }
 
@@ -214,6 +216,8 @@ async function renderSatThumb(loc) {
   if (selected()?.id !== loc.id || $('city').hidden) return;
   if (!entry) {
     btn.hidden = true;
+    delete btn.dataset.date;
+    renderGlance(loc);
     return;
   }
   const src = `./sat/${loc.id}.jpg?d=${entry.date}`;
@@ -227,7 +231,69 @@ async function renderSatThumb(loc) {
   btn.dataset.alt = UI.satAlt(cityName(loc));
   btn.dataset.date = entry.date;
   btn.hidden = false;
+  renderGlance(loc);
 }
+
+// Trend line: a model guide from next_hours, quiet and neutral. Hidden without 9 hours.
+const TREND_PATHS = { better: 'M7 7l10 10M17 11v6h-6', worse: 'M7 17L17 7M11 7h6v6', steady: 'M5 12h14M15 8l4 4-4 4' };
+function renderTrend(loc) {
+  const t = trend(loc.next_hours);
+  $('trend').hidden = !t;
+  if (!t) return;
+  $('trendText').textContent = UI.glanceTrend[t];
+  $('trendPath').setAttribute('d', TREND_PATHS[t]);
+  $('trend').setAttribute('aria-label', UI.glanceTrendLabel(UI.glanceTrend[t]));
+}
+
+// "Sekilas" chips. The hotspot file is fetched once, lazily, and shared with the satellite sheet.
+let glanceWindow = null;
+let glanceRain = 0;
+let glanceHotspot; // undefined until known; {km, dir} | null (none within FAR_KM)
+let glanceHotspotId = null;
+function renderGlance(loc) {
+  const nearest = glanceHotspotId === loc.id ? glanceHotspot : undefined;
+  const chips = glanceChips({ nearestHotspot: nearest, bestWindow: glanceWindow, rainMm: glanceRain, canOpenMap: Boolean($('satThumb').dataset.date) && !$('satThumb').hidden });
+  const list = $('glance');
+  list.replaceChildren(...chips.map(chip => {
+    const li = el('li', null);
+    if (!chip.interactive) {
+      li.className = 'gchip';
+      li.textContent = chip.text;
+      return li;
+    }
+    const b = el('button', 'gchip', el('span', null, chip.text), icon('chevron'));
+    b.type = 'button';
+    b.dataset.chip = chip.kind;
+    li.append(b);
+    return li;
+  }));
+  list.hidden = chips.length === 0;
+  if (glanceHotspotId !== loc.id) loadGlanceHotspot(loc);
+}
+function loadGlanceHotspot(loc) {
+  glanceHotspotId = loc.id;
+  glanceHotspot = undefined;
+  const run = async () => {
+    const points = cleanPoints(await getHotspots());
+    if (!points || selected()?.id !== loc.id) return;
+    const near = nearestHotspot(points, loc.lat, loc.lon);
+    glanceHotspot = near && near.km <= FAR_KM ? { km: near.km, dir: compassName(near.bearing) } : null;
+    renderGlance(loc);
+  };
+  (window.requestIdleCallback ?? (fn => setTimeout(fn, 300)))(run);
+}
+$('glance').addEventListener('click', e => {
+  const kind = e.target.closest('button[data-chip]')?.dataset.chip;
+  if (kind === 'hotspot') {
+    count('sekilas-peta');
+    $('satThumb').click();
+  } else if (kind === 'best') {
+    count('sekilas-paling-lega');
+    const title = $('todayTitle');
+    title.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    title.focus({ preventScroll: true });
+  }
+});
 
 const PART_ICONS = { pagi: 'sunrise', siang: 'sun', sore: 'sunset', malam: 'moon' };
 const ACTIVITY_TONE = { ok: 1, caution: 3, no: 4 }; // status picks a level colour
@@ -303,6 +369,9 @@ function renderToday(loc, level) {
   for (const id of ['best', 'parts', 'flat', 'hours']) $(id).hidden = hours.length === 0;
   if (hours.length === 0) return;
 
+  glanceWindow = win && level <= 3 && !isFlatDay(segments) ? { when: UI.whenWord(UI.dayParts[dayPartOf(new Date(win.start).getHours())], relativeDay(win.start, now) === 'tomorrow'), from } : null;
+  glanceRain = rain;
+  renderGlance(loc);
   renderParts(segments, bands, win, level);
   $('best').textContent = !$('best').hidden && win ? UI.bestWindow(UI.whenWord(UI.dayParts[dayPartOf(new Date(win.start).getHours())], relativeDay(win.start, now) === 'tomorrow'), from, to, level, win.band) : '';
 
@@ -680,7 +749,7 @@ function renderWatch() {
   const chips = watchRow(watch, current).map(id => {
     const loc = report.locations.find(l => l.id === id);
     const level = bandOf(loc);
-    const chip = el('button', 'chip', el('span', 'c', cityName(loc)), el('span', 'n', LEVELS[level].name));
+    const chip = el('button', 'gchip', el('span', 'c', cityName(loc)), el('span', 'n', LEVELS[level].name));
     chip.type = 'button';
     chip.dataset.level = String(level);
     chip.setAttribute('aria-label', UI.watchChip(cityName(loc), level, LEVELS[level].name));
@@ -931,7 +1000,10 @@ function showPhoto(note) {
   $('satBigCaption').textContent = $('satThumb').dataset.caption;
 }
 // Optional extra: where the last 24 h of fires are. Anything but a good file means no "Di sekitarmu" card, quietly.
-const getHotspots = () => fetch('./data/hotspots.json', { cache: 'no-cache' }).then(res => (res.ok ? res.json() : null)).catch(() => null);
+let hotspotsOnce = null; // one fetch shared by the glance chip and the satellite sheet
+function getHotspots() {
+  return (hotspotsOnce ??= fetch('./data/hotspots.json', { cache: 'no-cache' }).then(res => (res.ok ? res.json() : null)).catch(() => null));
+}
 let satPoint = null; // the tapped or GPS point, for the report
 let satHotspots = null;
 function showNearby(lines, point) {

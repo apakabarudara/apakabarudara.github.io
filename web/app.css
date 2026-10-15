@@ -88,6 +88,15 @@ ion-card {
 .lvl { margin: 0; padding-right: 84px; font-size: var(--fs-sm); font-weight: var(--fw-display); color: var(--lv-label); }
 .headline { margin: var(--sp-1) 0 0; font-size: clamp(var(--fs-xl), 7.6vw, var(--fs-2xl)); font-weight: var(--fw-display); line-height: 1.12; letter-spacing: -.015em; }
 .quip { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); }
+.trend { display: flex; align-items: center; gap: 6px; margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--lv-ink); opacity: .8; }
+.trend .ic { width: 16px; height: 16px; }
+.trend[hidden], .glance[hidden] { display: none; }
+.glance { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-2); margin: var(--sp-2) 0 0; padding: 0; list-style: none; }
+.gchip { display: inline-flex; align-items: center; gap: 4px; padding: 0; font: inherit; font-size: var(--fs-xs); line-height: 1.35; color: var(--lv-ink); opacity: .8; }
+button.gchip { min-height: 44px; padding: 0 var(--sp-3); border: 1px solid color-mix(in srgb, var(--lv-ink) 22%, transparent); border-radius: var(--r-pill); background: none; opacity: 1; cursor: pointer; text-align: left; }
+button.gchip .ic { width: 16px; height: 16px; opacity: .7; }
+button.gchip:focus-visible { outline-color: var(--focus); }
+
 .eyebrow { font-weight: var(--fw-label); }
 .desc { margin: var(--sp-2) 0 0; font-size: var(--fs-xs); }
 .guide { margin: var(--sp-3) 0 0; padding: var(--sp-2) 0 0 var(--sp-3); border-left: 3px solid var(--lv-soft); color: var(--lv-ink); font-size: var(--fs-xs); }
@@ -277,6 +286,7 @@ html[data-boot="overview"] .sk-city, html:not([data-boot="overview"]) .sk-ov { d
 .sk-scale, .sk-btns, .sk-days { display: flex; gap: 4px; }
 .sk-scale i { width: 26px; height: 8px; border-radius: 4px; }
 .sk-line { height: 14px; width: 92%; }
+.sk-trend { height: 14px; width: 58%; }
 .sk-line:nth-child(even) { width: 64%; }
 .sk-guide { display: flex; flex-direction: column; gap: 17px; }
 .sk-guide i { height: 14px; width: 94%; }
@@ -511,3 +521,4 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .share-act[hidden] { display: none; }
 .share-act .ic { width: 22px; height: 22px; color: var(--brand); }
 #shareSheet .note { text-align: center; }
+#todayTitle { scroll-margin-top: 72px; }
