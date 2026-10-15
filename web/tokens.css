@@ -48,6 +48,13 @@
   --l5-dot: #FFB4A2;
   /* Hourly strip bars: each at least 3:1 on --surface (WCAG 1.4.11), unlike the solids, which are decorative. */
   --l1-bar: #22A06B; --l2-bar: #3D7BF2; --l3-bar: #B87A00; --l4-bar: #E5484D; --l5-bar: #2A2230;
+
+  /* Suasana (ambient haze): an artistic warm veil that follows the level, never a claim about the sky. Per level: sky tint, orb colour, and the
+     strongest alpha of the veil, orb and each of the two fog layers. tests/haze.test.ts blends them over --bg and checks text contrast. */
+  --hz2-tint: #F0B35A; --hz2-orb: #F0B35A; --hz2-veil: .10; --hz2-orb-a: 0; --hz2-fog-a: 0;
+  --hz3-tint: #EDA23F; --hz3-orb: #F5B94F; --hz3-veil: .16; --hz3-orb-a: .24; --hz3-fog-a: 0;
+  --hz4-tint: #E09A55; --hz4-orb: #E58A45; --hz4-veil: .15; --hz4-orb-a: .14; --hz4-fog-a: .07;
+  --hz5-tint: #D08850; --hz5-orb: #DB7440; --hz5-veil: .16; --hz5-orb-a: .11; --hz5-fog-a: .06;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -80,6 +87,11 @@
     --l5-surface: #0B080E; --l5-ink: #FFF3EC; --l5-label: #FFB4A2; --l5-soft: #2A2230; --l5-soft-ink: #FFD9CF;
     --l5-btn: #FFF3EC; --l5-btn-ink: #0B080E; --l5-shadow: rgba(0, 0, 0, .6); --l5-border: #3A3044;
     --l1-bar: #5FD39A; --l2-bar: #8DB4FF; --l3-bar: #F5C542; --l4-bar: #FF8A8E; --l5-bar: #FFB4A2;
+
+    --hz2-tint: #A8661F; --hz2-orb: #A8661F; --hz2-veil: .12; --hz2-orb-a: 0; --hz2-fog-a: 0;
+    --hz3-tint: #9A5A22; --hz3-orb: #B8742C; --hz3-veil: .20; --hz3-orb-a: .24; --hz3-fog-a: 0;
+    --hz4-tint: #8A4A1F; --hz4-orb: #A5502A; --hz4-veil: .26; --hz4-orb-a: .22; --hz4-fog-a: .14;
+    --hz5-tint: #7A3E1B; --hz5-orb: #8F4126; --hz5-veil: .30; --hz5-orb-a: .20; --hz5-fog-a: .16;
   }
 }
 
@@ -94,3 +106,9 @@
 [data-level="3"] { --lv-surface: var(--l3-surface); --lv-ink: var(--l3-ink); --lv-label: var(--l3-label); --lv-soft: var(--l3-soft); --lv-soft-ink: var(--l3-soft-ink); --lv-btn: var(--l3-btn); --lv-btn-ink: var(--l3-btn-ink); --lv-dot: var(--l3-solid); --lv-mascot: var(--l3-mascot); --lv-eye: var(--l3-eye); --lv-shadow: var(--l3-shadow); --lv-border: var(--l3-border); --lv-bar: var(--l3-bar); }
 [data-level="4"] { --lv-surface: var(--l4-surface); --lv-ink: var(--l4-ink); --lv-label: var(--l4-label); --lv-soft: var(--l4-soft); --lv-soft-ink: var(--l4-soft-ink); --lv-btn: var(--l4-btn); --lv-btn-ink: var(--l4-btn-ink); --lv-dot: var(--l4-solid); --lv-mascot: var(--l4-mascot); --lv-eye: var(--l4-eye); --lv-shadow: var(--l4-shadow); --lv-border: var(--l4-border); --lv-bar: var(--l4-bar); }
 [data-level="5"] { --lv-surface: var(--l5-surface); --lv-ink: var(--l5-ink); --lv-label: var(--l5-label); --lv-soft: var(--l5-soft); --lv-soft-ink: var(--l5-soft-ink); --lv-btn: var(--l5-btn); --lv-btn-ink: var(--l5-btn-ink); --lv-dot: var(--l5-dot); --lv-mascot: var(--l5-mascot); --lv-eye: var(--l5-eye); --lv-shadow: var(--l5-shadow); --lv-border: var(--l5-border); --lv-bar: var(--l5-bar); }
+
+/* Suasana roles: html[data-haze] (2..5) picks one level's haze; level 1, the overview and loading draw nothing. */
+html[data-haze="2"] { --hz-tint: var(--hz2-tint); --hz-orb: var(--hz2-orb); --hz-veil: var(--hz2-veil); --hz-orb-a: var(--hz2-orb-a); --hz-fog-a: var(--hz2-fog-a); }
+html[data-haze="3"] { --hz-tint: var(--hz3-tint); --hz-orb: var(--hz3-orb); --hz-veil: var(--hz3-veil); --hz-orb-a: var(--hz3-orb-a); --hz-fog-a: var(--hz3-fog-a); }
+html[data-haze="4"] { --hz-tint: var(--hz4-tint); --hz-orb: var(--hz4-orb); --hz-veil: var(--hz4-veil); --hz-orb-a: var(--hz4-orb-a); --hz-fog-a: var(--hz4-fog-a); }
+html[data-haze="5"] { --hz-tint: var(--hz5-tint); --hz-orb: var(--hz5-orb); --hz-veil: var(--hz5-veil); --hz-orb-a: var(--hz5-orb-a); --hz-fog-a: var(--hz5-fog-a); }

@@ -182,6 +182,10 @@ export const UI = {
 
   methodLink: 'Metode & sumber',
   calendarLink: 'Kalender cetak',
+  hazeLabel: 'Suasana latar',
+  hazeOn: 'nyala',
+  hazeOff: 'mati',
+  hazeAbout: 'Warna latar mengikuti level perkiraan. Bisa dimatikan di bagian bawah halaman.',
   calendarFail: 'Kalender belum bisa dibuka. Coba lagi sebentar lagi.',
   methodTitle: 'Metode & sumber',
   methodSourcesTitle: 'Dari mana datanya',

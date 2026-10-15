@@ -54,7 +54,35 @@
 [hidden] { display: none !important; }
 /* App-like: page zoom is locked on purpose (owner decision). Low-vision users get an in-app text-size option later instead. The map keeps its own gestures (.sat-map sets touch-action: none). */
 html, body { touch-action: pan-x pan-y; }
+html, body { background: var(--bg); }
 body { font-weight: var(--fw-body); }
+/* Suasana: a fixed, decorative haze behind everything. The veil and orb are static; level 4–5 add two fog layers that only move by transform.
+   Everything fades to the normal page colour by 55% of the viewport height, so loose text keeps its contrast (tests/haze.test.ts). */
+ion-content { --background: transparent; }
+ion-toolbar { --background: transparent; }
+#haze {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none; contain: strict;
+  background:
+    radial-gradient(ellipse 80% 42% at 82% 0%, color-mix(in srgb, var(--hz-orb, transparent) calc(var(--hz-orb-a, 0) * 100%), transparent), transparent),
+    linear-gradient(to bottom, color-mix(in srgb, var(--hz-tint, transparent) calc(var(--hz-veil, 0) * 100%), transparent), transparent 55%);
+  opacity: 0; transition: opacity 1.2s ease;
+}
+html[data-haze="2"] #haze, html[data-haze="3"] #haze, html[data-haze="4"] #haze, html[data-haze="5"] #haze { opacity: 1; }
+#haze::before, #haze::after { content: ""; position: absolute; top: 0; left: -20%; width: 140%; height: 55%; will-change: transform; display: none; }
+html[data-haze="4"] #haze::before, html[data-haze="4"] #haze::after, html[data-haze="5"] #haze::before, html[data-haze="5"] #haze::after { display: block; }
+#haze::before {
+  background: radial-gradient(ellipse 45% 55% at 30% 30%, color-mix(in srgb, var(--hz-tint) calc(var(--hz-fog-a) * 100%), transparent), transparent);
+  animation: haze-drift-a 75s ease-in-out infinite alternate;
+}
+#haze::after {
+  background: radial-gradient(ellipse 40% 50% at 72% 45%, color-mix(in srgb, var(--hz-tint) calc(var(--hz-fog-a) * 100%), transparent), transparent);
+  animation: haze-drift-b 90s ease-in-out infinite alternate;
+}
+#haze.haze-paused::before, #haze.haze-paused::after { animation-play-state: paused; }
+@keyframes haze-drift-a { from { transform: translate3d(-6%, 0, 0); } to { transform: translate3d(8%, 3%, 0); } }
+@keyframes haze-drift-b { from { transform: translate3d(7%, 2%, 0); } to { transform: translate3d(-8%, -2%, 0); } }
+@media (prefers-reduced-motion: reduce) { #haze::before, #haze::after { animation: none; } #haze { transition: none; } }
+@media print { #haze { display: none; } }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; }

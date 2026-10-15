@@ -397,3 +397,12 @@ export function glanceChips({ nearestHotspot, bestWindow, rainMm, canOpenMap }) 
   else if (Number.isFinite(rainMm) && rainMm >= WET_DAY_MM) chips.push({ kind: 'rain', text: UI.glanceRain(Math.round(rainMm)), interactive: false });
   return chips;
 }
+
+/** Suasana: the haze level for an answer. Levels 1, nothing and junk draw no haze (0); the rest map to 2..5. */
+export const hazeLevel = level => (Number.isInteger(level) && level >= 2 ? Math.min(level, 5) : 0);
+
+/** Suasana is on unless the person turned it off; with no choice stored it follows the data-saver setting. */
+export const hazeEnabled = (stored, saveData) => (stored === '1' ? true : stored === '0' ? false : !saveData);
+
+/** The string to remember for the switch. */
+export const hazeStored = on => (on ? '1' : '0');
