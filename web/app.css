@@ -247,6 +247,7 @@ ion-badge.lv { --background: var(--lv-soft); --color: var(--lv-soft-ink); --padd
 ion-modal.sheet { --height: auto; --background: var(--surface); --border-radius: var(--r-card); --backdrop-opacity: .45; }
 .sheet-body { max-height: 85vh; overflow-y: auto; padding: var(--sp-3) var(--sp-panel) calc(var(--sp-panel) + env(safe-area-inset-bottom, 0px)); color: var(--ink); font-size: var(--fs-sm); line-height: 1.5; }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); }
+.sheet-head ion-button { min-height: 44px; }
 .sheet-head h2 { margin: 0; font-size: var(--fs-lg); font-weight: var(--fw-display); }
 #aboutClose { height: 44px; font-size: var(--fs-sm); --padding-start: var(--sp-2); --padding-end: var(--sp-2); }
 .method h3 { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); font-weight: var(--fw-label); }

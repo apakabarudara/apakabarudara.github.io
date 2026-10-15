@@ -21,7 +21,7 @@ const ALL = '__all';
 const REFRESH_MS = 15 * 60e3;
 const BEST = { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() };
 const TICK_EVERY = 6;
-const TICK_CLEAR = 5; // hours a regular tick label keeps from the "Sekarang" label
+const TICK_CLEAR = 7; // hours a regular tick label keeps from the "Sekarang" label
 
 const num = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 });
 const clock = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
