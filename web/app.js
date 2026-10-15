@@ -3,7 +3,8 @@ import { cleanPoints, compassName, FAR_KM, nearestHotspot } from './nearby.js';
 import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, GLOSSARY, LEVELS, OFFICIAL_ISPU, RAIN, STORY, TODAY_CARDS, UI } from './copy.js';
 import {
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
-  glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, followsOtherIndex, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, WATCH_MAX, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM
+  glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, followsOtherIndex, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, WATCH_MAX, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM,
+  hazeEnabled, hazeLevel, hazeStored,
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
@@ -84,6 +85,10 @@ const store = {
 // Counted once per page load; the install control waits for the second visit.
 const visits = Number(store.read(VISITS_KEY) ?? 0) + 1;
 store.write(VISITS_KEY, String(visits));
+// Suasana: the ambient haze. Device-only choice; with no choice yet it stays off for people on data saver.
+const HAZE_KEY = 'akud-haze';
+let hazeOn = hazeEnabled(store.read(HAZE_KEY), navigator.connection?.saveData === true);
+const setHaze = level => { document.documentElement.dataset.haze = String(hazeLevel(level)); };
 const readSeen = () => { try { return JSON.parse(store.read(SEEN_KEY) ?? '{}') ?? {}; } catch { return {}; } };
 const readWatch = () => { try { return JSON.parse(store.read(WATCH_KEY) ?? '[]'); } catch { return []; } };
 
@@ -100,6 +105,7 @@ const bandOf = loc => (preview && preview.city === loc.id ? preview.level : loc.
 
 /** Shows one of: 'message' (loading, failed, expired), 'overview', 'city'. */
 function show(view) {
+  if (view !== 'city') setHaze(0); // overview, loading and problems: no haze
   $('message').hidden = view !== 'message';
   $('overview').hidden = view !== 'overview';
   $('city').hidden = view !== 'city';
@@ -165,6 +171,7 @@ const quipFor = level => dailyQuip(LEVELS[level].quips, localDate(new Date()));
 function renderAnswer(loc, level) {
   const copy = LEVELS[level];
   $('answer').dataset.level = String(level);
+  setHaze(level);
   $('shareBlock').classList.toggle('urgent', level >= 4);
   $('levelName').textContent = copy.name;
   $('scale').setAttribute('aria-label', UI.scaleLabel(level));
@@ -1036,7 +1043,21 @@ $('refresher').addEventListener('ionRefresh', async e => {
   await load();
   e.target.complete();
 });
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') load(); });
+document.addEventListener('visibilitychange', () => {
+  $('haze').classList.toggle('haze-paused', document.visibilityState !== 'visible');
+  if (document.visibilityState === 'visible') load();
+});
+const paintHazeSwitch = () => {
+  $('haze').hidden = !hazeOn;
+  $('hazeToggle').setAttribute('aria-pressed', String(hazeOn));
+  $('hazeToggle').textContent = `${UI.hazeLabel}: ${hazeOn ? UI.hazeOn : UI.hazeOff}`;
+};
+$('hazeToggle').addEventListener('click', () => {
+  hazeOn = !hazeOn;
+  store.write(HAZE_KEY, hazeStored(hazeOn));
+  paintHazeSwitch();
+});
+paintHazeSwitch();
 setInterval(load, REFRESH_MS);
 
 try { sessionStorage.removeItem('bng-reloaded'); } catch { /* storage blocked: the guard in index.html then cannot loop either */ }

@@ -467,3 +467,9 @@ describe('glossary ("Istilah")', () => {
     }
   });
 });
+
+describe('Suasana copy', () => {
+  it('has no banned word', () => {
+    for (const line of [UI.hazeLabel, UI.hazeOn, UI.hazeOff, UI.hazeAbout]) assert.doesNotMatch(line, /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i, line);
+  });
+});

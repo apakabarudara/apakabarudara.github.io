@@ -656,3 +656,20 @@ describe('glanceChips', () => {
     assert.deepEqual(glanceChips({ ...base, bestWindow: null, rainMm: 0.5 }).map(c => c.kind), ['hotspot']);
   });
 });
+
+describe('Suasana helpers', () => {
+  it('maps a level to a haze level, none for level 1 and junk', async () => {
+    const { hazeLevel } = await import('../web/logic.js');
+    assert.deepEqual([undefined, null, 0, 1, 2, 3, 4, 5, 9].map(hazeLevel), [0, 0, 0, 0, 2, 3, 4, 5, 5]);
+  });
+  it('lets a stored choice win and otherwise follows data saver', async () => {
+    const { hazeEnabled, hazeStored } = await import('../web/logic.js');
+    assert.equal(hazeEnabled(null, false), true);
+    assert.equal(hazeEnabled(null, true), false);
+    assert.equal(hazeEnabled('1', true), true);
+    assert.equal(hazeEnabled('0', false), false);
+    assert.equal(hazeEnabled('junk', false), true);
+    assert.deepEqual([true, false].map(hazeStored), ['1', '0']);
+    assert.equal(hazeEnabled(hazeStored(false), false), false);
+  });
+});

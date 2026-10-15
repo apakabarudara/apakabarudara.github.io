@@ -68,6 +68,7 @@ addEventListener('error', e => {
     <p>Halaman ini butuh JavaScript untuk menampilkan perkiraan kotamu.</p>
   </main>
 </noscript>
+<div id="haze" aria-hidden="true"></div>
 <ion-app>
   <ion-header class="ion-no-border">
     <ion-toolbar>
@@ -277,6 +278,7 @@ addEventListener('error', e => {
             <p data-copy="privacy"></p>
           </details>
           <button id="methodLink" class="fine-link" type="button" data-copy="methodLink"></button>
+          <button id="hazeToggle" class="fine-link" type="button" aria-pressed="true"></button>
           <button id="calendarOpen" class="fine-link" type="button" data-copy="calendarLink"></button>
           <span id="calendarNote" class="note" role="status"></span>
         </div>
@@ -294,6 +296,7 @@ addEventListener('error', e => {
       <p id="aboutDesc" class="small"></p>
       <div id="explain" class="explain"></div>
       <p class="small" data-copy="guideCaution"></p>
+      <p class="small" data-copy="hazeAbout"></p>
       <div id="glossary" class="glossary"><p class="small"><b data-copy="glossaryTitle"></b></p></div>
       <div class="sources">
         <p class="small"><b data-copy="sourcesTitle"></b></p>
