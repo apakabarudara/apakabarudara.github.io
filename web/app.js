@@ -258,10 +258,11 @@ function renderParts(segments, bands, win, level) {
     return;
   }
   $('parts').replaceChildren(...segments.map((seg, i) => {
-    const tagText = [seg.now ? UI.tagNow : '', i === tags.best ? UI.tagBest : '', i === tags.worst ? UI.tagWorst : ''].filter(Boolean);
+    const tagText = [seg.now ? UI.tagNow : '', i === tags.worst ? UI.tagWorst : ''].filter(Boolean);
     const text = el('span', 'text', el('span', 'name', UI.partName(UI.dayParts[seg.part], seg.tomorrow)), ...tagText.map(t => el('span', 'tag', t)), el('span', 'range', UI.partRange(hm.format(new Date(seg.start)), hm.format(new Date(seg.end)))));
     const item = el('li', i === tags.best ? 'part is-best' : 'part', icon(PART_ICONS[seg.part]), text, el('span', 'lvl-name', LEVELS[seg.band].name), kapasFace());
     item.dataset.level = String(seg.band);
+    if (i === tags.best) item.title = UI.legendBest;
     return item;
   }));
 }
@@ -276,6 +277,8 @@ function renderToday(loc, level) {
     return item;
   }));
 
+  $('activitiesNote').textContent = UI.activitiesNote(LEVELS[level].name);
+
   const hours = Array.isArray(loc.next_hours) ? loc.next_hours : [];
   const now = new Date();
   const win = hours.length > 0 ? bestWindow(hours, BEST) : null;
@@ -288,7 +291,7 @@ function renderToday(loc, level) {
 
   const segments = daySegments(hours, bands, now);
   renderParts(segments, bands, win, level);
-  $('best').textContent = !$('best').hidden && win ? UI.bestWindow(UI.dayWord[relativeDay(win.start, now)], UI.dayParts[dayPartOf(new Date(win.start).getHours())].toLowerCase(), from, to, level, win.band) : '';
+  $('best').textContent = !$('best').hidden && win ? UI.bestWindow(UI.whenWord(UI.dayParts[dayPartOf(new Date(win.start).getHours())], relativeDay(win.start, now) === 'tomorrow'), from, to, level, win.band) : '';
 
   const peak = Math.max(...hours.map(h => h.pm25), 1);
   const best = new Set(level <= 3 && !isFlatDay(segments) ? win?.indexes ?? [] : []);

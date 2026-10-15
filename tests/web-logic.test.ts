@@ -346,9 +346,10 @@ describe('best window wording', () => {
     const morning = strip(5, i => (i === 1 || i === 2 ? 5 : 80), 14);
     const win = bestWindow(morning, opts)!;
     assert.equal(new Date(win.start).getHours(), 6);
-    const word = UI.dayParts[dayPartOf(new Date(win.start).getHours())].toLowerCase();
-    assert.equal(word, 'pagi');
-    assert.doesNotMatch(UI.bestWindow('hari ini', word, '06.00', '08.00', 2, 1), /siang/);
+    const part = UI.dayParts[dayPartOf(new Date(win.start).getHours())];
+    assert.equal(part, 'Pagi');
+    assert.equal(UI.bestWindow(UI.whenWord(part, false), '06.00', '08.00', 2, 1), 'Pagi ini, 06.00–08.00');
+    assert.doesNotMatch(UI.bestWindow(UI.whenWord(part, true), '06.00', '08.00', 2, 1), /siang/i);
   });
   it('picks the afternoon word for a 13:00 window', () => {
     assert.equal(dayPartOf(13), 'siang');

@@ -302,13 +302,15 @@ describe('UI', () => {
   });
 
   it('words the batch 3 P0 lines as agreed', () => {
-    assert.equal(UI.bestWindow('besok', 'pagi', '06.00', '08.00', 3, 3), 'Paling lega: besok pagi, 06.00–08.00 (perkiraan: masih Tidak Sehat)');
-    assert.equal(UI.bestWindow('besok', 'siang', '11.00', '13.00', 3, 2), 'Paling lega: besok siang, 11.00–13.00');
-    assert.equal(UI.bestWindow('hari ini', 'sore', '16.00', '18.00', 2, 3), 'Paling lega: hari ini sore, 16.00–18.00');
-    assert.equal(UI.bestWindow('hari ini', 'siang', '13.00', '15.00', 1, 1), 'Paling lega: hari ini siang, 13.00–15.00');
-    assert.equal(UI.flatDay('Sedang'), 'Hari ini rata: Sedang sepanjang hari. Tidak ada jam yang jauh lebih baik.');
+    assert.equal(UI.bestWindow(UI.whenWord('Pagi', true), '06.00', '08.00', 3, 3), 'Besok pagi, 06.00–08.00 · masih Tidak Sehat');
+    assert.equal(UI.bestWindow(UI.whenWord('Siang', true), '11.00', '13.00', 3, 2), 'Besok siang, 11.00–13.00');
+    assert.equal(UI.bestWindow(UI.whenWord('Sore', false), '16.00', '18.00', 2, 3), 'Sore ini, 16.00–18.00');
+    assert.equal(UI.bestWindow(UI.whenWord('Malam', false), '19.00', '21.00', 1, 1), 'Malam ini, 19.00–21.00');
+    assert.equal(UI.flatDay('Sedang'), 'Rata sepanjang 24 jam: Sedang. Tidak ada jam yang jauh lebih baik.');
+    assert.equal(UI.activitiesNote('Sedang'), 'Menurut level hari ini: Sedang');
     assert.equal(UI.hourNote('14.00', 'Sedang', false), '14.00 · Sedang');
-    assert.equal(UI.partName('Pagi', true), 'Pagi besok');
+    assert.equal(UI.partName('Pagi', true), 'Besok pagi');
+    assert.equal(UI.partName('Malam', false), 'Malam');
     assert.match(UI.explain(10)[0], /^Level ini perkiraan komputer dari data satelit dan cuaca/);
     assert.match(UI.footerDisclaimer, /^Level dan angka di sini perkiraan, bukan hasil alat ukur\./);
     assert.equal(UI.stripLegend('Sedang', 'Sedang'), 'Semua jam diperkirakan Sedang. Makin tinggi batang, makin tebal asap.');

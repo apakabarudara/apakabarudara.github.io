@@ -281,7 +281,7 @@ html[data-boot="overview"] .sk-city, html:not([data-boot="overview"]) .sk-ov { d
 .sk-title { width: 58%; height: 22px; }
 .sk-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); }
 .sk-acts i { height: 64px; border-radius: var(--r-btn); }
-.sk-flat { height: 98px; border-radius: var(--r-btn); }
+.sk-flat { height: 121px; border-radius: var(--r-btn); }
 .sk-sum { height: 44px; width: 36%; }
 .sk-days { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-2); }
 .sk-days i { height: 118px; border-radius: var(--r-btn); }

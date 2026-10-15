@@ -180,24 +180,24 @@ export const UI = {
   remindDone: 'Pengingat 07.00 selama 30 hari dibuat. Buka berkasnya untuk menambahkannya ke Kalender.',
   todayTitle: 'Kapan udara paling lega?',
   todaySub: '24 jam ke depan',
-  // From level 3 the window can still be smoky: say its own estimated band so it never reads as a nudge outdoors.
-  bestWindow: (dayWord, part, from, to, level, windowBand) => {
-    const line = `Paling lega: ${dayWord} ${part}, ${from}–${to}`;
-    return level >= 3 && windowBand >= 3 ? `${line} (perkiraan: masih ${LEVELS[windowBand].name})` : line;
+  // The headline answers the title. From level 3 the window can still be smoky: say its own estimated band so it never reads as a nudge outdoors.
+  bestWindow: (when, from, to, level, windowBand) => {
+    const line = `${when}, ${from}–${to}`;
+    return level >= 3 && windowBand >= 3 ? `${line} · masih ${LEVELS[windowBand].name}` : line;
   },
   dayParts: { pagi: 'Pagi', siang: 'Siang', sore: 'Sore', malam: 'Malam' },
-  partName: (name, tomorrow) => (tomorrow ? `${name} besok` : name),
+  partName: (name, tomorrow) => (tomorrow ? `Besok ${name.toLowerCase()}` : name),
+  whenWord: (name, tomorrow) => (tomorrow ? `Besok ${name.toLowerCase()}` : `${name} ini`),
   partRange: (from, to) => `${from}–${to}`,
   tagNow: 'Sekarang',
-  tagBest: 'Paling lega',
   tagWorst: 'Paling tebal',
-  flatDay: levelName => `Hari ini rata: ${levelName} sepanjang hari. Tidak ada jam yang jauh lebih baik.`,
+  flatDay: levelName => `Rata sepanjang 24 jam: ${levelName}. Tidak ada jam yang jauh lebih baik.`,
+  activitiesNote: levelName => `Menurut level hari ini: ${levelName}`,
   hoursSummary: 'Lihat per jam',
   hourNote: (time, name, tomorrow) => `${tomorrow ? 'besok ' : ''}${time} · ${name}`,
-  legendBest: 'Paling lega',
+  legendBest: 'paling lega',
   // First line of every shared text says "perkiraan": forwarded without context, a claim reads as a hoax unless it says it is an estimate.
   shareFallback: title => `${title}\nBukan angka resmi.`,
-  dayWord: { today: 'hari ini', tomorrow: 'besok' },
   stripLabel: (range, window) => `Asap per jam, 24 jam ke depan, ${range}.${window}`,
   stripRange: (low, high) => (low === high ? `semuanya ${low}` : `dari ${low} sampai ${high}`),
   stripBest: (from, to) => ` Paling tipis ${from}–${to}.`,
