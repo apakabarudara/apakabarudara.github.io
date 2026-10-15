@@ -52,6 +52,8 @@
 }
 
 [hidden] { display: none !important; }
+/* Pinch-zoom stays on (WCAG 1.4.4, low-vision users); manipulation only drops double-tap zoom and the tap delay. */
+html, body { touch-action: manipulation; }
 body { font-weight: var(--fw-body); }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
@@ -96,6 +98,8 @@ ion-card {
 button.gchip { min-height: 44px; padding: 0 var(--sp-3); border: 1px solid color-mix(in srgb, var(--lv-ink) 22%, transparent); border-radius: var(--r-pill); background: none; opacity: 1; cursor: pointer; text-align: left; }
 button.gchip .ic { width: 16px; height: 16px; opacity: .7; }
 button.gchip:focus-visible { outline-color: var(--focus); }
+/* Watch chips sit on the neutral page, not on a level card: neutral ink and surface for every level (level 5's tokens are for its dark card); the level shows only in the mini scale. */
+.watch button.gchip { color: var(--ink); background: var(--surface); border-color: var(--line); }
 
 .eyebrow { font-weight: var(--fw-label); }
 .desc { margin: var(--sp-2) 0 0; font-size: var(--fs-xs); }
@@ -427,6 +431,7 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .mini-scale i:nth-child(5) { --c: var(--seg5); }
 .mini-scale i.on { height: 14px; opacity: 1; }
 [data-level="5"] .mini-scale i.on { --c: var(--l5-dot); }
+.watch .mini-scale i.on { --c: var(--lv-bar); } /* bar tokens clear 3:1 on the neutral surface in both themes */
 .watch-add { position: relative; flex: none; width: 44px; height: 44px; padding: 0; border: 1.5px dashed var(--brand); border-radius: 50%; background: transparent; color: var(--brand); cursor: pointer; }
 .watch-add.labeled { width: auto; padding: 0 var(--sp-4); border-radius: var(--r-pill); font: inherit; font-size: var(--fs-sm); font-weight: var(--fw-strong); }
 .watch-add.labeled::before, .watch-add.labeled::after { content: none; }
@@ -468,7 +473,7 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .report-lead { margin: var(--sp-3) 0 0; }
 .report-caution { margin: var(--sp-2) 0 0; font-weight: var(--fw-label); }
 .report-h { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); font-weight: var(--fw-label); }
-.report-text { box-sizing: border-box; display: block; width: 100%; margin: var(--sp-1) 0 0; padding: var(--sp-3); border: 1.5px solid var(--line); border-radius: var(--r-sm); background: var(--bg); color: var(--ink); font: inherit; font-size: var(--fs-sm); line-height: 1.5; resize: vertical; }
+.report-text { box-sizing: border-box; display: block; width: 100%; margin: var(--sp-1) 0 0; padding: var(--sp-3); border: 1.5px solid var(--line); border-radius: var(--r-sm); background: var(--bg); color: var(--ink); font: inherit; font-size: 16px; /* under 16px iOS zooms the page on focus */ line-height: 1.5; resize: vertical; }
 .report-text:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .report-contacts { margin: var(--sp-1) 0 0; padding: 0; list-style: none; }
 .report-contacts li + li { margin-top: var(--sp-2); }
