@@ -336,7 +336,7 @@ function renderParts(segments, bands, win, level) {
   }
   $('parts').replaceChildren(...segments.map((seg, i) => {
     const tagText = [seg.now ? UI.tagNow : '', i === tags.worst ? UI.tagWorst : ''].filter(Boolean);
-    const text = el('span', 'text', el('span', 'name', UI.partName(UI.dayParts[seg.part], seg.tomorrow)), ...tagText.map(t => el('span', 'tag', t)), el('span', 'range', UI.partRange(hm.format(new Date(seg.start)), hm.format(new Date(seg.end)))));
+    const text = el('span', 'text', el('span', 'name', UI.partName(UI.dayParts[seg.part], seg.tomorrow)), el('span', 'meta', el('span', 'range', UI.partRange(hm.format(new Date(seg.start)), hm.format(new Date(seg.end)))), ...tagText.map(t => el('span', 'tag', t))));
     const item = el('li', i === tags.best ? 'part is-best' : 'part', icon(PART_ICONS[seg.part]), text, el('span', 'lvl-name', LEVELS[seg.band].name), kapasFace());
     item.dataset.level = String(seg.band);
     if (i === tags.best) item.title = UI.legendBest;
