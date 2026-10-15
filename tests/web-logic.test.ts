@@ -95,12 +95,13 @@ describe('todayCards', () => {
   it('picks the cards by level', () => {
     assert.deepEqual(ids(1).map(c => c.id), ['terrace', 'laundry', 'exercise']);
     assert.deepEqual(ids(2).map(c => c.id), ['terrace', 'laundry', 'exercise']);
-    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.id), ['windows', 'laundry', 'outdoor']); // window card first
-    assert.deepEqual(ids(4, 'no', 'no').map(c => c.id), ['windows', 'laundry', 'kidsHigh']);
-    assert.deepEqual(ids(5, 'no', 'no').map(c => c.id), ['windows', 'laundry', 'kidsHigh']);
+    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.id), ['windows', 'laundry']); // window card first
+    assert.deepEqual(ids(3).map(c => c.id), ['laundry', 'windows']);
+    assert.deepEqual(ids(4, 'no', 'no').map(c => c.id), ['windows', 'laundry']);
+    assert.deepEqual(ids(5, 'no', 'no').map(c => c.id), ['windows', 'laundry']);
   });
   it('shows three cards at most at every level and puts the window card first', () => {
-    for (let level = 1; level <= 5; level++) assert.equal(ids(level).length, 3);
+    for (let level = 1; level <= 5; level++) assert.equal(ids(level).length, level <= 2 ? 3 : 2);
     assert.equal(ids(3, 'ok', 'no').at(0)?.id, 'laundry');
     assert.equal(ids(3, 'no', 'caution').at(0)?.id, 'windows');
   });
@@ -114,13 +115,12 @@ describe('todayCards', () => {
   it('shows the best window only where it helps, never on ISPU quotes', () => {
     assert.deepEqual(ids(1).map(c => c.window), [true, true, false]);
     assert.deepEqual(ids(1, 'ok', 'ok', 5).map(c => c.window), [true, false, false]);
-    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.window), [true, false, false]);
-    assert.deepEqual(ids(4, 'no', 'no').map(c => c.window), [false, false, false]);
+    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.window), [true, false]);
+    assert.deepEqual(ids(4, 'no', 'no').map(c => c.window), [false, false]);
     assert.ok(ids(1, 'ok', 'ok', 0, false).every(c => !c.window));
   });
-  it('quotes the general sentence for exercise and level 3 outdoor, the sensitive one only for kids at levels 4–5', () => {
-    assert.equal(ids(3, 'no', 'caution').find(c => c.id === 'outdoor')?.variant, 'everyone');
-    assert.equal(ids(4, 'no', 'no').find(c => c.id === 'kidsHigh')?.variant, 'sensitive');
+  it('quotes ISPU on a card only at levels 1–2 (exercise); levels 3–5 show it once, in the guide block', () => {
+    for (let level = 3; level <= 5; level++) assert.ok(ids(level).every(c => c.id === 'laundry' || c.id === 'windows'), String(level));
     assert.equal(ids(1).find(c => c.id === 'exercise')?.variant, 'everyone');
   });
 });

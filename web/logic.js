@@ -68,8 +68,8 @@ export function bestWindow(hours, { span, fromHour, toHour, localHour }) {
 
 /**
  * The cards under "Kapan udara paling lega?" for the day's level: [{ id, variant, window }]. `window` says the card may show the best window.
- * Laundry: rain wins, then smoke (level 3+), else clear. Windows keep the level's own status. Three cards at most, window card first. ISPU cards (exercise, outdoor, kidsHigh) quote
- * the `variant` field of OFFICIAL_ISPU; only kidsHigh (levels 4–5, restrictive wording) takes the sensitive-group sentence. No window on smoky or rainy laundry, closed windows or ISPU quotes.
+ * Laundry: rain wins, then smoke (level 3+), else clear. Windows keep the level's own status. Three cards at most, window card first. Only levels 1–2 carry an ISPU quote card (exercise, the
+ * `everyone` sentence of OFFICIAL_ISPU); from level 3 the answer card's guide block already shows both official sentences, so the cards stay ours (two). No window on smoky or rainy laundry, closed windows or ISPU quotes.
  */
 export function todayCards(level, levelActivities, rainMm, wetDayMm, hasWindow) {
   const laundry = rainMm >= wetDayMm ? 'rain' : levelActivities.laundry === 'ok' ? 'clear' : 'smoke';
@@ -79,8 +79,7 @@ export function todayCards(level, levelActivities, rainMm, wetDayMm, hasWindow) 
   // Three cards at most; the card that shows the best window goes first (stable sort keeps the level's own order otherwise).
   const first = (cards) => [...cards].sort((a, b) => Number(b.window) - Number(a.window));
   if (level <= 2) return first([{ id: 'terrace', variant: null, window: hasWindow }, laundryCard, exercise]);
-  if (level === 3) return first([laundryCard, windowsCard, { id: 'outdoor', variant: 'everyone', window: false }]);
-  return first([windowsCard, laundryCard, { id: 'kidsHigh', variant: 'sensitive', window: false }]);
+  return first(level === 3 ? [laundryCard, windowsCard] : [windowsCard, laundryCard]);
 }
 
 // 1 mm: the usual wet-day threshold. 50 mm: BMKG's "hujan lebat" daily band starts here.

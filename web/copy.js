@@ -86,7 +86,7 @@ const WINDOWS = ACTIVITIES[1];
 
 /**
  * The adaptive cards under "Kapan udara paling lega?" (which ones: todayCards in logic.js). Friend voice: playful only at levels 1–2.
- * Health-adjacent cards carry no wording of ours: they show the verbatim OFFICIAL_ISPU sentence under a short lead-in and the ISPU tag.
+ * The health-adjacent card (levels 1–2) carries no wording of ours: they show the verbatim OFFICIAL_ISPU sentence under a short lead-in and the ISPU tag.
  */
 export const TODAY_CARDS = {
   terrace: { icon: 'sun', label: 'Ngopi di teras', text: 'Teras lagi baik hati. Kopi dulu?' },
@@ -96,9 +96,7 @@ export const TODAY_CARDS = {
     text: { rain: 'Hujan hari ini, jemur di dalam saja', smoke: LAUNDRY.notes.no, clear: 'Jemuran senang hari ini' }
   },
   windows: { icon: 'window', label: WINDOWS.label, text: WINDOWS.notes },
-  exercise: { icon: 'pin', label: 'Olahraga di luar' },
-  outdoor: { icon: 'pin', label: 'Aktivitas di luar' },
-  kidsHigh: { icon: 'pin', label: 'Anak di luar' }
+  exercise: { icon: 'pin', label: 'Olahraga di luar' }
 };
 
 /** One line under the cards, one per day (see dailyQuip). Levels 1–2 have none (the card quip already says it). gentle: level 3, quiet: levels 4–5 (no "kamu", no jokes). */

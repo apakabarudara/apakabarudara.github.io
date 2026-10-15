@@ -346,7 +346,7 @@ function renderParts(segments, bands, win, level) {
 function todayCard(card, level, windowText) {
   const def = TODAY_CARDS[card.id];
   const children = [el('span', 'label', def.label)];
-  const quoted = card.id === 'exercise' || card.id === 'outdoor' || card.id === 'kidsHigh';
+  const quoted = card.id === 'exercise';
   if (quoted) {
     children[0] = el('span', 'label', `${UI.ispuBadge} · ${def.label}`);
     children.push(el('span', 'quote', el('span', 'lead', UI.ispuLead), ` ${OFFICIAL_ISPU[level][card.variant]}`), el('span', 'tag', UI.ispuTag));

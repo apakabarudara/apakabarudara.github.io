@@ -166,7 +166,7 @@ describe('today cards', () => {
     assert.ok(!('sky' in TODAY_CARDS));
   });
   it('shows three cards at most at every level', () => {
-    for (let level = 1; level <= 5; level++) assert.ok(todayCards(level, LEVELS[level as 1].activities, 0, 1, true).length <= 3);
+    for (let level = 1; level <= 5; level++) assert.ok(todayCards(level, LEVELS[level as 1].activities, 0, 1, true).length <= (level <= 2 ? 3 : 2));
   });
   it('keeps jokes and exclamations out of the quiet group', () => {
     for (const line of ENCOURAGE.quiet) assert.doesNotMatch(line, /!/, line);
@@ -174,15 +174,20 @@ describe('today cards', () => {
   it('never surfaces a permissive ISPU sentence on any card at any level', () => {
     for (let level = 1; level <= 5; level++) {
       for (const card of todayCards(level, LEVELS[level as 1].activities, 0, 1, true)) {
-        if (!(card.id in TODAY_CARDS) || !['exercise', 'outdoor', 'kidsHigh'].includes(card.id)) continue;
+        if (card.id !== 'exercise') continue;
         const sentence = OFFICIAL_ISPU[level as 1][card.variant as 'everyone' | 'sensitive'];
         assert.ok(sentence, `${level} ${card.id}`);
         assert.doesNotMatch(sentence as string, /^Boleh\b|\bboleh\b/i, `${level} ${card.id}`);
       }
     }
   });
+  it('lists "Setiap orang" before "Kelompok sensitif" in the guide block, and no card quotes ISPU at levels 3–5', () => {
+    const html = readFileSync(new URL('../web/index.html', import.meta.url), 'utf8');
+    assert.ok(html.indexOf('id="guideEveryone"') > 0 && html.indexOf('id="guideEveryone"') < html.indexOf('id="guideSensitive"'));
+    for (let level = 3; level <= 5; level++) assert.ok(todayCards(level, LEVELS[level as 1].activities, 0, 1, true).every(c => !(c.id in { exercise: 1 })));
+  });
   it('holds no ISPU text of its own: quote cards carry only a label, and the lead-in is not a guidance sentence', () => {
-    for (const id of ['exercise', 'outdoor', 'kidsHigh'] as const) assert.deepEqual(Object.keys(TODAY_CARDS[id]).sort(), ['icon', 'label']);
+    for (const id of ['exercise'] as const) assert.deepEqual(Object.keys(TODAY_CARDS[id]).sort(), ['icon', 'label']);
     const official = Object.values(OFFICIAL_ISPU).flatMap(o => [o.description, o.everyone, o.sensitive]);
     for (const line of strings(TODAY_CARDS)) assert.ok(!official.includes(line), line);
     assert.equal(UI.ispuTag, 'ISPU, KLHK');
