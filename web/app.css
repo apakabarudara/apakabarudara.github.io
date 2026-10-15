@@ -441,6 +441,7 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .scale i.on { height: 14px; border-radius: 7px; opacity: 1; }
 [data-level="5"] .scale i.on { --c: var(--l5-dot); } /* level 5's solid colour would vanish on its dark card */
 .improve { margin: var(--sp-3) 0 0; font-size: var(--fs-sm); font-weight: var(--fw-strong); color: var(--lv-label); }
+.rain-line { margin-top: var(--sp-2); font-size: var(--fs-xs); font-weight: normal; opacity: .85; }
 
 /* Install control: quiet, dismissible */
 .install { display: flex; align-items: center; justify-content: center; gap: var(--sp-1); }

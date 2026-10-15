@@ -155,6 +155,20 @@ export function improvement(outlook, today, level) {
   return better ? { date: better.date } : { days: days.length };
 }
 
+/** First outlook day from today on with at least thresholdMm of rain, mm rounded to a whole number (never below 1). */
+export function firstWetDay(outlook, today, thresholdMm) {
+  const day = (outlook ?? []).find(d => d.date >= today && d.rain_mm >= thresholdMm);
+  return day ? { date: day.date, mm: Math.max(1, Math.round(day.rain_mm)) } : null;
+}
+
+/** The "first expected rain" line parts for levels 3–5: a wet day, or the number of outlook days checked. Null when there is nothing to say. */
+export function rainOutlook(outlook, today, thresholdMm, level) {
+  if (level < 3) return null;
+  const days = (outlook ?? []).filter(d => d.date >= today).length;
+  if (days === 0) return null;
+  return firstWetDay(outlook, today, thresholdMm) ?? { days };
+}
+
 export const WATCH_MAX = 3;
 
 /**

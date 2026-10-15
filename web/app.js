@@ -2,7 +2,7 @@ import './ionic.js';
 import { cleanPoints, compassName, FAR_KM, nearestHotspot } from './nearby.js';
 import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, GLOSSARY, LEVELS, OFFICIAL_ISPU, RAIN, STORY, TODAY_CARDS, UI } from './copy.js';
 import {
-  ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
+  ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, rainOutlook, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
   glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, followsOtherIndex, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, WATCH_MAX, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM,
   hazeEnabled, hazeLevel, hazeStored,
 } from './logic.js';
@@ -166,6 +166,18 @@ function improveText(loc, level) {
   return 'date' in found ? UI.improveOn(weekdayLong.format(dateOf(found.date))) : UI.improveNone(found.days);
 }
 
+/** "Hujan pertama" line for levels 3–5, only while the improvement line shows; null otherwise. */
+function rainText(loc, level) {
+  if (!improveText(loc, level)) return null;
+  const today = localDate(new Date());
+  const found = rainOutlook(loc.outlook, today, WET_DAY_MM, level);
+  if (!found) return null;
+  if (!('date' in found)) return UI.rainNone(found.days);
+  const name = weekdayLong.format(dateOf(found.date));
+  const when = found.date === today ? UI.rainToday : found.date === localDate(new Date(Date.now() + 864e5)) ? UI.rainTomorrow : name[0].toUpperCase() + name.slice(1);
+  return UI.rainFirst(when, found.mm);
+}
+
 const quipFor = level => dailyQuip(LEVELS[level].quips, localDate(new Date()));
 
 function renderAnswer(loc, level) {
@@ -179,6 +191,9 @@ function renderAnswer(loc, level) {
   const better = improveText(loc, level);
   $('improve').textContent = better ?? '';
   $('improve').hidden = !better;
+  const rain = rainText(loc, level);
+  $('rainLine').textContent = rain ?? '';
+  $('rain').hidden = !rain;
   const official = OFFICIAL_ISPU[level];
   $('aboutDesc').textContent = official.description;
   const quip = quipFor(level);
