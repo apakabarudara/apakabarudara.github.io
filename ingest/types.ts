@@ -74,3 +74,14 @@ export interface HotspotsFile {
   /** [lat, lon] at 3 decimals (about 110 m), unique, sorted. */
   points: [number, number][];
 }
+
+/** One city-day: [mean PM2.5 at 1 decimal, ISPU band, max hotspots_24h count seen that day]. The first two are null until the day is complete; the count is null when no run saw the day. */
+export type HistoryDay = [number | null, Band | null, number | null];
+
+/** data/history.json: compact daily record per city, kept on the `data` branch. Day keys are calendar days in UTC+7. */
+export interface History {
+  version: 1;
+  generated_at: string;
+  tz: string;
+  days: Record<string, Record<string, HistoryDay>>;
+}
