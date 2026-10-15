@@ -195,6 +195,8 @@ ion-badge.lv { --background: var(--lv-soft); --color: var(--lv-soft-ink); --padd
   .part .mascot-art { grid-column: 3; grid-row: 1 / span 2; }
 }
 .part.is-best { box-shadow: inset 0 0 0 2px var(--lv-label); }
+/* Same height for every capsule (tags and the best-window ring must not change it); narrow cards keep the auto height above. */
+@container (min-width: 301px) { .part { height: 56px; box-sizing: border-box; } }
 .part .mascot-art, .flat .mascot-art { flex: none; width: 28px; height: 26px; filter: none; }
 .part .mascot-art .eye, .flat .mascot-art .eye { animation: none; }
 .flat { display: flex; align-items: center; gap: var(--sp-3); margin: var(--sp-3) 0 0; padding: var(--sp-3); border-radius: var(--r-btn); background: var(--lv-soft); color: var(--lv-soft-ink); font-weight: var(--fw-strong); }
