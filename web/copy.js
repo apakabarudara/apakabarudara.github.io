@@ -151,6 +151,11 @@ export const UI = {
   worseSince: previous => `Perkiraannya memburuk sejak terakhir kamu cek (sebelumnya ${previous}).`,
   improveOn: weekday => `Diperkirakan mulai membaik ${weekday}.`,
   improveNone: days => `Perkiraan ${days} hari ke depan belum menunjukkan perbaikan.`,
+  rainFirst: (when, mm) => `Hujan pertama yang diperkirakan: ${when}, sekitar ${mm} mm. Ini perkiraan hujan, bukan jaminan asap berkurang.`,
+  rainNone: () => 'Belum ada hujan berarti dalam perkiraan beberapa hari ke depan.', // no day count: the improvement line above counts from tomorrow, this one from today
+  rainToday: 'hari ini',
+  rainTomorrow: 'besok',
+  rainLink: 'Prakiraan musim hujan resmi (BMKG)',
   guideTitle: 'Menurut ISPU, kalau levelnya memang begini:',
   guideTitleMeaning: 'Kata ISPU:',
   guideSensitive: 'Kelompok sensitif:',

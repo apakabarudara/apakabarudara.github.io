@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 import {
-  ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
+  ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, firstWetDay, rainOutlook, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
   icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, followsOtherIndex, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom, whatsappUrl, orderShareActions, trend, glanceChips
 } from '../web/logic.js';
 
@@ -671,5 +671,31 @@ describe('Suasana helpers', () => {
     assert.equal(hazeEnabled('junk', false), true);
     assert.deepEqual([true, false].map(hazeStored), ['1', '0']);
     assert.equal(hazeEnabled(hazeStored(false), false), false);
+  });
+});
+
+describe('firstWetDay / rainOutlook ("Hujan pertama")', () => {
+  const d = (date: string, rain_mm: number) => ({ date, band: 3, rain_mm });
+  const outlook = [d('2026-10-14', 0.2), d('2026-10-15', 0.4), d('2026-10-16', 8.4), d('2026-10-17', 20)];
+  it('finds the first wet day from today on, today included', () => {
+    assert.deepEqual(firstWetDay(outlook, '2026-10-14', 1), { date: '2026-10-16', mm: 8 });
+    assert.deepEqual(firstWetDay([d('2026-10-14', 3.2)], '2026-10-14', 1), { date: '2026-10-14', mm: 3 });
+    assert.deepEqual(firstWetDay(outlook, '2026-10-17', 1), { date: '2026-10-17', mm: 20 });
+  });
+  it('rounds mm to a whole number, never below 1', () => {
+    assert.deepEqual(firstWetDay([d('2026-10-14', 1)], '2026-10-14', 1), { date: '2026-10-14', mm: 1 });
+    assert.deepEqual(firstWetDay([d('2026-10-14', 0.6)], '2026-10-14', 0.5), { date: '2026-10-14', mm: 1 });
+  });
+  it('is null without a wet day or an outlook', () => {
+    assert.equal(firstWetDay([d('2026-10-14', 0.9)], '2026-10-14', 1), null);
+    assert.equal(firstWetDay([], '2026-10-14', 1), null);
+    assert.equal(firstWetDay(undefined, '2026-10-14', 1), null);
+  });
+  it('counts the days checked when dry, and says nothing at levels 1-2 or without days', () => {
+    assert.deepEqual(rainOutlook([d('2026-10-14', 0), d('2026-10-15', 0)], '2026-10-14', 1, 4), { days: 2 });
+    assert.deepEqual(rainOutlook(outlook, '2026-10-14', 1, 3), { date: '2026-10-16', mm: 8 });
+    assert.equal(rainOutlook(outlook, '2026-10-14', 1, 2), null);
+    assert.equal(rainOutlook([], '2026-10-14', 1, 4), null);
+    assert.equal(rainOutlook(undefined, '2026-10-14', 1, 4), null);
   });
 });

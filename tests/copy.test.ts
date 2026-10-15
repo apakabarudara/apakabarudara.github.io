@@ -473,3 +473,16 @@ describe('Suasana copy', () => {
     for (const line of [UI.hazeLabel, UI.hazeOn, UI.hazeOff, UI.hazeAbout]) assert.doesNotMatch(line, /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i, line);
   });
 });
+
+describe('first expected rain copy', () => {
+  const BAN = /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i;
+  it('words the sentences', () => {
+    assert.equal(UI.rainFirst(UI.rainToday, 1), 'Hujan pertama yang diperkirakan: hari ini, sekitar 1 mm. Ini perkiraan hujan, bukan jaminan asap berkurang.');
+    assert.match(UI.rainFirst(UI.rainTomorrow, 3), /: besok, sekitar 3 mm\./);
+    assert.match(UI.rainFirst('Jumat', 8), /: Jumat, sekitar 8 mm\./);
+    assert.equal(UI.rainNone(5), 'Belum ada hujan berarti dalam perkiraan beberapa hari ke depan.');
+  });
+  it('has no banned word', () => {
+    for (const line of [UI.rainFirst(UI.rainToday, 2), UI.rainFirst(UI.rainTomorrow, 2), UI.rainNone(4), UI.rainLink]) assert.doesNotMatch(line, BAN, line);
+  });
+});
