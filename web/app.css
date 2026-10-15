@@ -196,8 +196,9 @@ ion-badge.lv { --background: var(--lv-soft); --color: var(--lv-soft-ink); --padd
 .hours > summary::after { content: ""; width: 7px; height: 7px; margin: -3px 0 0 10px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .hours[open] > summary::after { margin-top: 3px; transform: rotate(-135deg); }
 .hours > summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: var(--r-sm); }
-/* Bars take their hour's level colour. "Now" is a mascot dot above its bar and the best window a brand underline (legend: "Paling lega"), so neither overrides the level. */
-.strip { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); align-items: end; gap: 3px; height: 72px; padding: 14px 0 7px; box-sizing: border-box; }
+.hours { --mascot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 64'%3E%3Cg fill='%236B4E71' stroke='%23fff' stroke-width='5' paint-order='stroke'%3E%3Cellipse cx='36' cy='42' rx='26' ry='17'/%3E%3Ccircle cx='24' cy='31' r='12'/%3E%3Ccircle cx='38' cy='24' r='14'/%3E%3Ccircle cx='52' cy='31' r='11'/%3E%3C/g%3E%3Ccircle cx='29' cy='40' r='4' fill='%23fff'/%3E%3Ccircle cx='43' cy='40' r='4' fill='%23fff'/%3E%3C/svg%3E"); }
+/* Bars take their hour's level colour. "Now" is a mascot dot above its bar and the best window a brand bracket under the baseline (legend: "Paling lega"), so neither overrides the level. */
+.strip { --gap: 3px; position: relative; display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); align-items: end; gap: var(--gap); height: 76px; padding: 14px 0 11px; box-sizing: border-box; }
 .strip button { position: relative; min-height: 0; padding: 0; border: 0; border-radius: 4px 4px 1px 1px; background: var(--line); cursor: pointer; }
 .strip button[data-bar="1"] { background: var(--l1-bar); }
 .strip button[data-bar="2"] { background: var(--l2-bar); }
@@ -205,13 +206,25 @@ ion-badge.lv { --background: var(--lv-soft); --color: var(--lv-soft-ink); --padd
 .strip button[data-bar="4"] { background: var(--l4-bar); }
 .strip button[data-bar="5"] { background: var(--l5-bar); }
 .strip button:focus-visible, .strip button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 1px; }
-.strip button.now::before { content: ""; position: absolute; left: 50%; top: -14px; width: 12px; height: 11px; margin-left: -6px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 64'%3E%3Cg fill='%236B4E71' stroke='%23fff' stroke-width='5' paint-order='stroke'%3E%3Cellipse cx='36' cy='42' rx='26' ry='17'/%3E%3Ccircle cx='24' cy='31' r='12'/%3E%3Ccircle cx='38' cy='24' r='14'/%3E%3Ccircle cx='52' cy='31' r='11'/%3E%3C/g%3E%3Ccircle cx='29' cy='40' r='4' fill='%23fff'/%3E%3Ccircle cx='43' cy='40' r='4' fill='%23fff'/%3E%3C/svg%3E") center / contain no-repeat; }
-.strip button.best { box-shadow: 0 3px 0 var(--surface), 0 6px 0 var(--brand); }
+.strip button.now::before { content: ""; position: absolute; left: 50%; top: -14px; width: 12px; height: 11px; margin-left: -6px; background: var(--mascot) center / contain no-repeat; }
+.strip .window { position: absolute; bottom: 1px; height: 3px; border-radius: 2px; background: var(--brand); left: calc((100% + var(--gap)) / 24 * var(--from)); width: calc((100% + var(--gap)) / 24 * var(--span) - var(--gap)); pointer-events: none; }
 .ticks { position: relative; height: 34px; font-size: var(--fs-xs); color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .ticks span { position: absolute; top: 0; padding: 6px 0 0 4px; white-space: nowrap; border-left: 1px solid var(--line); } /* stem under the bar, label to its right */
+.ticks span.now.end { transform: translateX(-100%); padding: 6px 4px 0 0; border-left: 0; border-right: 1px solid var(--ink); }
 .ticks span.now { color: var(--ink); font-weight: var(--fw-strong); border-left-color: var(--ink); }
 .hour-note { min-height: 22px; margin: 0; font-size: var(--fs-sm); font-weight: var(--fw-strong); }
-.sw { display: inline-block; width: 16px; height: 3px; margin-inline: 2px 4px; vertical-align: middle; background: var(--brand); }
+/* One line of keys; swatches copy the bar shape, the mascot and the bracket copy the marks. */
+.legend { display: flex; flex-wrap: wrap; gap: 2px var(--sp-3); line-height: 1.5; }
+.legend .key { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.legend .legend-scale { flex-basis: 100%; margin-top: 2px; }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px 3px 1px 1px; background: var(--line); }
+.sw[data-bar="1"] { background: var(--l1-bar); }
+.sw[data-bar="2"] { background: var(--l2-bar); }
+.sw[data-bar="3"] { background: var(--l3-bar); }
+.sw[data-bar="4"] { background: var(--l4-bar); }
+.sw[data-bar="5"] { background: var(--l5-bar); }
+.sw.now { width: 12px; background: var(--mascot) center / contain no-repeat; border-radius: 0; }
+.sw.window { width: 16px; height: 3px; border-radius: 2px; background: var(--brand); }
 /* 320–360px: tighter cards, tiles stack their icon, level buttons drop their decorative icon so text fits. */
 @media (max-width: 360px) {
   .panel, .hero { padding-inline: var(--sp-4); }

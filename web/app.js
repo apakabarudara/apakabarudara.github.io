@@ -2,7 +2,7 @@ import './ionic.js';
 import { cleanPoints, compassName, FAR_KM, nearestHotspot } from './nearby.js';
 import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, GLOSSARY, LEVELS, OFFICIAL_ISPU, RAIN, STORY, TODAY_CARDS, UI } from './copy.js';
 import {
-  ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
+  ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
   glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, WATCH_MAX, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM
 } from './logic.js';
 
@@ -21,6 +21,7 @@ const ALL = '__all';
 const REFRESH_MS = 15 * 60e3;
 const BEST = { span: 2, fromHour: 6, toHour: 21, localHour: iso => new Date(iso).getHours() };
 const TICK_EVERY = 6;
+const TICK_CLEAR = 5; // hours a regular tick label keeps from the "Sekarang" label
 
 const num = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 });
 const clock = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
@@ -400,21 +401,40 @@ function renderToday(loc, level) {
     bar.setAttribute('aria-label', `${time} · ${LEVELS[bands[i]].name}`);
     bar.setAttribute('aria-pressed', 'false');
     bar.addEventListener('click', () => {
-      for (const other of $('strip').children) other.setAttribute('aria-pressed', String(other === bar));
+      for (const other of $('strip').querySelectorAll('button')) other.setAttribute('aria-pressed', String(other === bar));
       note.textContent = UI.hourNote(time, LEVELS[bands[i]].name, relativeDay(h.time, new Date()) === 'tomorrow');
     });
     return bar;
   }));
   $('strip').setAttribute('aria-label', UI.stripLabel(UI.stripRange(LEVELS[range.min].name, LEVELS[range.max].name), win && level <= 3 ? UI.stripBest(from, to) : ''));
-  $('ticks').replaceChildren(...hours.flatMap((h, i) => {
-    if (i % TICK_EVERY !== 0) return [];
-    const tick = el('span', i === current ? 'now' : '', i === current ? UI.tagNow : hm.format(new Date(h.time)));
+  if (best.size) {
+    const first = Math.min(...best);
+    const mark = el('span', 'window');
+    mark.style.setProperty('--from', String(first));
+    mark.style.setProperty('--span', String(Math.max(...best) - first + 1));
+    $('strip').append(mark);
+  }
+  const tickAt = (i, text, cls) => {
+    const tick = el('span', cls, text);
     tick.style.left = `calc(${((i + 0.5) / hours.length) * 100}% )`;
-    return [tick];
-  }));
+    return tick;
+  };
+  $('ticks').replaceChildren(
+    ...tickIndexes(hours.length, TICK_EVERY, current, TICK_CLEAR).map(i => tickAt(i, hm.format(new Date(hours[i].time)), '')),
+    ...(current >= 0 ? [tickAt(current, UI.tagNow, ['now', current > hours.length - 4 ? 'end' : ''].join(' ').trim())] : [])
+  );
   const legend = $('stripLegend');
-  legend.replaceChildren(UI.stripLegend(LEVELS[range.min].name, LEVELS[range.max].name));
-  if (best.size) legend.append(' ', el('span', 'sw'), UI.legendBest);
+  const item = (swatch, text) => el('span', 'key', swatch, text);
+  legend.replaceChildren(
+    ...presentBands(bands).map(b => {
+      const sw = el('i', 'sw');
+      sw.dataset.bar = String(b);
+      return item(sw, LEVELS[b].name);
+    }),
+    ...(current >= 0 ? [item(el('i', 'sw now'), UI.tagNow)] : []),
+    ...(best.size ? [item(el('i', 'sw window'), UI.legendBest)] : []),
+    el('span', 'legend-scale', UI.stripScale)
+  );
   // Opens on its own only on a day that varies; a reader's own toggle survives the 15-minute refresh.
   const key = `${loc.id}:${range.max - range.min >= 2}`;
   if ($('hours').dataset.auto !== key) {

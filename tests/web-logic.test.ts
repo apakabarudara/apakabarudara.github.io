@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 import {
-  ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
+  ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
   icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom, whatsappUrl, orderShareActions, trend, glanceChips
 } from '../web/logic.js';
 
@@ -360,6 +360,14 @@ describe('daySegments', () => {
     const hours = strip(9, () => 10);
     assert.equal(nowIndex(hours, new Date(2026, 9, 14, 8)), -1);
     assert.ok(daySegments(hours, bandsOf(hours), new Date(2026, 9, 14, 8)).every(s => !s.now));
+  });
+
+  it('lists the levels present once, ascending, and keeps the regular ticks clear of the now label', () => {
+    assert.deepEqual(presentBands([3, 1, 3, 2, 1]), [1, 2, 3]);
+    assert.deepEqual(tickIndexes(24, 6, -1, 5), [0, 6, 12, 18]);
+    assert.deepEqual(tickIndexes(24, 6, 1, 5), [6, 12, 18]); // 0 is too close to the now label, 6 is 5 away and stays
+    assert.deepEqual(tickIndexes(24, 6, 12, 5), [0, 6, 12, 18]); // now on a tick: that tick is the now label
+    assert.deepEqual(tickIndexes(24, 6, 14, 5), [0, 6]);
   });
 
   it('detects a flat day and tags best and worst segments', () => {
