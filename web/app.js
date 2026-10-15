@@ -943,7 +943,7 @@ $('shareCopy').addEventListener('click', copyLink);
 $('factsNext').addEventListener('click', nextFact);
 
 // Bottom sheets that fit their content: "Apa ini?", the iOS install steps, "Pantau kota lain".
-for (const id of ['about', 'method', 'iosSheet', 'watchSheet', 'kidsSheet', 'calendarSheet']) {
+for (const id of ['about', 'method', 'iosSheet', 'watchSheet', 'kidsSheet', 'whySheet', 'calendarSheet']) {
   $(id).breakpoints = [0, 1];
   $(id).initialBreakpoint = 1;
 }
@@ -1008,6 +1008,28 @@ function printKids() {
 addEventListener('afterprint', () => document.body.classList.remove('kids-printing', 'cal-printing'));
 
 // "Kalender Kertas": its own chunk too. The chosen month is drawn in the sheet's thumbnail and, at print time, into #printArea.
+// "Di balik asap": sourced facts, its own chunk, built on first open.
+let whyReady = false;
+async function openWhy() {
+  count('di-balik-asap');
+  $('whyNote').textContent = '';
+  try {
+    if (!whyReady) {
+      const { renderWhy } = await import('./why.js');
+      const why = renderWhy();
+      $('whySheetTitle').textContent = why.title;
+      $('whyBody').innerHTML = why.html;
+      whyReady = true;
+    }
+    $('whySheet').present();
+  } catch {
+    $('whyNote').textContent = UI.whyFail;
+  }
+}
+$('whyOpen').addEventListener('click', openWhy);
+$('whyFooter').addEventListener('click', openWhy);
+$('whyClose').addEventListener('click', () => $('whySheet').dismiss());
+
 let calendar = null;
 let calendarMonth = null;
 const calendarCity = () => (selected() ? cityName(selected()) : '');

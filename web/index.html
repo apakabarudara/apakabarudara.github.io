@@ -257,6 +257,7 @@ addEventListener('error', e => {
               <div id="factsBlock">
                 <div class="facts-head"><h3 data-copy="factsTitle"></h3><ion-button id="factsNext" fill="clear" class="small-btn"><span data-copy="factsNext"></span></ion-button></div>
                 <p id="fact"></p>
+                <button id="whyOpen" class="fine-link why-open" type="button"><span data-copy="whyLink"></span><span class="why-arrow" aria-hidden="true">›</span></button>
               </div>
             </div>
           </ion-accordion>
@@ -284,6 +285,8 @@ addEventListener('error', e => {
           <button id="methodLink" class="fine-link" type="button" data-copy="methodLink"></button>
           <button id="hazeToggle" class="fine-link" type="button" aria-pressed="true"></button>
           <button id="calendarOpen" class="fine-link" type="button" data-copy="calendarLink"></button>
+          <button id="whyFooter" class="fine-link" type="button" data-copy="whyLink"></button>
+          <span id="whyNote" class="note" role="status"></span>
           <span id="calendarNote" class="note" role="status"></span>
         </div>
         <p class="credit"><span data-copy-credit="0"></span><a href="https://github.com/khihadysucahyo" target="_blank" rel="noopener" data-copy-credit="1"></a><span data-copy-credit="2"></span><a href="https://github.com/apakabarudara/apakabarudara.github.io" target="_blank" rel="noopener" data-copy-credit="3"></a></p>
@@ -376,6 +379,15 @@ addEventListener('error', e => {
         <ion-button id="kidsClose" fill="clear"><span data-copy="close"></span></ion-button>
       </div>
       <div id="kidsBody"></div>
+    </div>
+  </ion-modal>
+  <ion-modal id="whySheet" class="sheet" aria-labelledby="whySheetTitle">
+    <div class="sheet-body">
+      <div class="sheet-head">
+        <h2 id="whySheetTitle"></h2>
+        <ion-button id="whyClose" fill="clear"><span data-copy="close"></span></ion-button>
+      </div>
+      <div id="whyBody"></div>
     </div>
   </ion-modal>
   <ion-modal id="calendarSheet" class="sheet" aria-labelledby="calendarSheetTitle">

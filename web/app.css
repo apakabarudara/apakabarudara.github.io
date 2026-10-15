@@ -119,11 +119,11 @@ ion-card {
 .headline { margin: var(--sp-1) 0 0; font-size: clamp(var(--fs-xl), 7.6vw, var(--fs-2xl)); font-weight: var(--fw-display); line-height: 1.12; letter-spacing: -.015em; }
 .quip { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); }
 .scale-ends { display: flex; justify-content: space-between; width: 146px; margin-top: 2px; font-size: var(--fs-xs); font-weight: var(--fw-body, 400); line-height: 1.2; color: var(--lv-ink); opacity: .7; }
-.trend { display: flex; align-items: center; gap: 6px; margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--lv-ink); opacity: .8; }
+.trend { display: flex; align-items: center; gap: 6px; margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--lv-ink); }
 .trend .ic { width: 16px; height: 16px; }
 .trend[hidden], .glance[hidden] { display: none; }
 .glance { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-2); margin: var(--sp-2) 0 0; padding: 0; list-style: none; }
-.gchip { display: inline-flex; align-items: center; gap: 4px; padding: 0; font: inherit; font-size: var(--fs-xs); line-height: 1.35; color: var(--lv-ink); opacity: .8; }
+.gchip { display: inline-flex; align-items: center; gap: 4px; padding: 0; font: inherit; font-size: var(--fs-xs); line-height: 1.35; color: var(--lv-ink); }
 button.gchip { min-height: 44px; padding: 0 var(--sp-3); border: 1px solid color-mix(in srgb, var(--lv-ink) 22%, transparent); border-radius: var(--r-pill); background: none; opacity: 1; cursor: pointer; text-align: left; }
 button.gchip .ic { width: 16px; height: 16px; opacity: .7; }
 button.gchip:focus-visible { outline-color: var(--focus); }
@@ -628,3 +628,19 @@ ion-button.small-btn { height: 44px; margin: 0; font-size: var(--fs-sm); --color
 .share-act .ic { width: 22px; height: 22px; color: var(--brand); }
 #shareSheet .note { text-align: center; }
 #todayTitle { scroll-margin-top: 72px; }
+
+/* "Di balik asap" sheet */
+.why-open { gap: 6px; }
+.why-arrow { font-size: var(--fs-lg); line-height: 1; }
+.why-intro { margin: var(--sp-3) 0; color: var(--ink-2); }
+.why-card { padding: var(--sp-3) 0; border-top: 1px solid var(--line); }
+.why-statement { margin: 0 0 var(--sp-1); font-weight: var(--fw-strong); overflow-wrap: anywhere; }
+.why-attr { margin: 0; font-size: var(--fs-sm); color: var(--ink-2); overflow-wrap: anywhere; }
+.why-more summary { cursor: pointer; display: inline-flex; align-items: center; min-height: 44px; font-weight: var(--fw-label); }
+.why-more summary::after { content: "›"; margin-inline-start: 6px; font-size: var(--fs-lg); transition: transform .15s; }
+.why-more[open] summary::after { transform: rotate(90deg); }
+.why-more p { margin: 0 0 var(--sp-2); overflow-wrap: anywhere; }
+.why-link { display: flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration: underline; overflow-wrap: anywhere; }
+.why-h { margin: var(--sp-4) 0 var(--sp-1); font-size: var(--fs-md, 1rem); }
+.why-monitor { list-style: none; margin: 0 0 var(--sp-3); padding: 0; }
+.why-monitor li { display: flex; flex-direction: column; padding-bottom: var(--sp-2); }
