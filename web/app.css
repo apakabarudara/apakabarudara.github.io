@@ -90,6 +90,10 @@ ion-card {
 .lvl { margin: 0; padding-right: 84px; font-size: var(--fs-sm); font-weight: var(--fw-display); color: var(--lv-label); }
 .headline { margin: var(--sp-1) 0 0; font-size: clamp(var(--fs-xl), 7.6vw, var(--fs-2xl)); font-weight: var(--fw-display); line-height: 1.12; letter-spacing: -.015em; }
 .quip { margin: var(--sp-2) 0 0; font-size: var(--fs-sm); }
+.meaning { margin: var(--sp-1) 0 0; font-size: var(--fs-xs); color: var(--lv-ink); opacity: .75; }
+.meaning .tag { white-space: nowrap; }
+.meaning .tag::before { content: "— "; }
+.scale-ends { display: flex; justify-content: space-between; width: 146px; margin-top: 2px; font-size: var(--fs-xs); font-weight: var(--fw-body, 400); line-height: 1.2; color: var(--lv-ink); opacity: .7; }
 .trend { display: flex; align-items: center; gap: 6px; margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--lv-ink); opacity: .8; }
 .trend .ic { width: 16px; height: 16px; }
 .trend[hidden], .glance[hidden] { display: none; }
