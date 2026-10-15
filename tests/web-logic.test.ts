@@ -93,11 +93,16 @@ describe('bestWindow', () => {
 describe('todayCards', () => {
   const ids = (level: number, laundry = 'ok', windows = 'ok', rain = 0, win = true) => todayCards(level, { laundry, windows }, rain, 1, win);
   it('picks the cards by level', () => {
-    assert.deepEqual(ids(1).map(c => c.id), ['terrace', 'exercise', 'laundry', 'sky']);
-    assert.deepEqual(ids(2).map(c => c.id), ['terrace', 'exercise', 'laundry', 'sky']);
-    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.id), ['laundry', 'windows', 'outdoor']);
+    assert.deepEqual(ids(1).map(c => c.id), ['terrace', 'laundry', 'exercise']);
+    assert.deepEqual(ids(2).map(c => c.id), ['terrace', 'laundry', 'exercise']);
+    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.id), ['windows', 'laundry', 'outdoor']); // window card first
     assert.deepEqual(ids(4, 'no', 'no').map(c => c.id), ['windows', 'laundry', 'kidsHigh']);
     assert.deepEqual(ids(5, 'no', 'no').map(c => c.id), ['windows', 'laundry', 'kidsHigh']);
+  });
+  it('shows three cards at most at every level and puts the window card first', () => {
+    for (let level = 1; level <= 5; level++) assert.equal(ids(level).length, 3);
+    assert.equal(ids(3, 'ok', 'no').at(0)?.id, 'laundry');
+    assert.equal(ids(3, 'no', 'caution').at(0)?.id, 'windows');
   });
   it('lets rain override laundry at every level, then smoke, else clear', () => {
     const laundry = (level: number, la: string, rain: number) => ids(level, la, 'ok', rain).find(c => c.id === 'laundry')?.variant;
@@ -107,9 +112,9 @@ describe('todayCards', () => {
     assert.equal(laundry(3, 'no', 0), 'smoke');
   });
   it('shows the best window only where it helps, never on ISPU quotes', () => {
-    assert.deepEqual(ids(1).map(c => c.window), [true, false, true, true]);
-    assert.deepEqual(ids(1, 'ok', 'ok', 5).map(c => c.window), [true, false, false, true]);
-    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.window), [false, true, false]);
+    assert.deepEqual(ids(1).map(c => c.window), [true, true, false]);
+    assert.deepEqual(ids(1, 'ok', 'ok', 5).map(c => c.window), [true, false, false]);
+    assert.deepEqual(ids(3, 'no', 'caution').map(c => c.window), [true, false, false]);
     assert.deepEqual(ids(4, 'no', 'no').map(c => c.window), [false, false, false]);
     assert.ok(ids(1, 'ok', 'ok', 0, false).every(c => !c.window));
   });

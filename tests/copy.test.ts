@@ -153,11 +153,20 @@ describe('today cards', () => {
   const BANNED = /\b(akurat|valid|pasti|gratis|boleh|harus|aman)\b/i;
   const strings = (v: unknown): string[] => (typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(strings) : []);
   it('has no banned word in any card, encouragement or lead-in string', () => {
-    for (const line of [...strings(TODAY_CARDS), ...strings(ENCOURAGE), UI.ispuLead, UI.ispuTag]) assert.doesNotMatch(line, BANNED, line);
+    for (const line of [...strings(TODAY_CARDS), ...strings(ENCOURAGE), UI.ispuLead, UI.ispuBadge, UI.ispuTag]) assert.doesNotMatch(line, BANNED, line);
   });
-  it('says "kamu" only in the light encouragement, and has three variants per group', () => {
+  it('has three encouragement variants per group, none for levels 1–2', () => {
+    assert.deepEqual(Object.keys(ENCOURAGE).sort(), ['gentle', 'quiet']);
     for (const lines of Object.values(ENCOURAGE)) assert.equal(lines.length, 3);
     for (const line of [...ENCOURAGE.gentle, ...ENCOURAGE.quiet, ...strings(TODAY_CARDS.laundry), ...strings(TODAY_CARDS.windows), UI.ispuLead]) assert.doesNotMatch(line, KAMU, line);
+  });
+  it('makes no sky, weather or yesterday claim on any card or encouragement line (ISPU quotes exempt)', () => {
+    for (const line of [...strings(TODAY_CARDS), ...strings(ENCOURAGE), UI.ispuLead, UI.ispuBadge]) assert.doesNotMatch(line, /langit|cerah|bersih|kemarin|berkabut|kapas/i, line);
+    assert.equal(UI.ispuLead, 'Menurut ISPU:');
+    assert.ok(!('sky' in TODAY_CARDS));
+  });
+  it('shows three cards at most at every level', () => {
+    for (let level = 1; level <= 5; level++) assert.ok(todayCards(level, LEVELS[level as 1].activities, 0, 1, true).length <= 3);
   });
   it('keeps jokes and exclamations out of the quiet group', () => {
     for (const line of ENCOURAGE.quiet) assert.doesNotMatch(line, /!/, line);
