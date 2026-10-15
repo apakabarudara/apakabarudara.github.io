@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { LEVELS, OFFICIAL_ISPU, STORY, UI } from '../web/copy.js';
 import {
-  pmRounded,
+  pmApprox,
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, feedbackUrl, freshness, gibsTileUrl, mapBounds, greeting, hourBands, improvedFrom, improvement, firstWetDay, rainOutlook, installMode, isIosSafari, levelRange, mapsSearchUrl, nearest, normalizeWatch,
   icsReminder, outlookLines, previewOverride, rainKind, worldviewUrl, rankByLevel, rankRowHeight, rankingLines, followsOtherIndex, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, worsenedFrom, whatsappUrl, orderShareActions, trend, glanceChips
 } from '../web/logic.js';
@@ -701,22 +701,28 @@ describe('firstWetDay / rainOutlook ("Hujan pertama")', () => {
   });
 });
 
-describe('pmRounded', () => {
+describe('pmApprox', () => {
   const id = new Intl.NumberFormat('id-ID').format;
-  it('rounds to whole numbers, never decimals', () => {
-    assert.equal(pmRounded(37.5), '38');
-    assert.equal(pmRounded(0.4), '0');
-    assert.equal(pmRounded(172.4), '172');
-    assert.equal(pmRounded(1234.6, id), '1.235');
+  it('rounds to the nearest 5, ties half up', () => {
+    const table: Array<[number, string]> = [
+      [172.4, 'sekitar 170'], [37.5, 'sekitar 40'], [8, 'sekitar 10'], [2, 'kurang dari 5'], [0, 'kurang dari 5'], [0.4, 'kurang dari 5'],
+      [4.9, 'sekitar 5'], [5, 'sekitar 5'], [12.4, 'sekitar 10'], [12.5, 'sekitar 15']
+    ];
+    for (const [v, want] of table) assert.equal(pmApprox(v), want, String(v));
+    assert.equal(pmApprox(1234.6, id), 'sekitar 1.235');
   });
-  it('is null for missing, NaN or negative values', () => {
-    for (const v of [undefined, null, NaN, -1, Infinity, '12']) assert.equal(pmRounded(v as number), null);
+  it('is null for missing, NaN, negative or infinite values', () => {
+    for (const v of [undefined, null, NaN, -1, Infinity, -Infinity, '12']) assert.equal(pmApprox(v as number), null);
   });
-  it('pill strings carry the number, the unit and no banned words', () => {
-    assert.equal(UI.pmPill('172'), 'PM2,5 ≈ 172 µg/m³ · model');
-    for (const t of [UI.pmPill('9'), UI.pmPillLabel('9')]) {
-      assert.doesNotMatch(t, /akurat|valid|pasti|gratis|aman|boleh|harus|kali batas|ISPU/i);
+  it('the card line is plain: no decimals, no approx sign, no model, no banned words', () => {
+    assert.equal(UI.pmLine('sekitar 170'), 'PM2,5 sekitar 170 µg/m³');
+    assert.equal(UI.pmLine('kurang dari 5'), 'PM2,5 kurang dari 5 µg/m³');
+    for (const t of [UI.pmLine('sekitar 170'), UI.pmLine('kurang dari 5')]) {
+      assert.doesNotMatch(t, /akurat|valid|pasti|gratis|aman|boleh|harus|kali batas|ISPU|≈|model|·/i);
       assert.doesNotMatch(t.replace('PM2,5', ''), /\d[.,]\d/);
     }
+  });
+  it('the sheet paragraph carries the same phrase as the card', () => {
+    assert.match(UI.explain('sekitar 170')[2], /Rata-rata 24 jam terakhir: sekitar 170 µg\/m³/);
   });
 });

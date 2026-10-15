@@ -421,7 +421,10 @@ export const hazeEnabled = (stored, saveData) => (stored === '1' ? true : stored
 /** The string to remember for the switch. */
 export const hazeStored = on => (on ? '1' : '0');
 
-// Rounded whole µg/m³ as a formatted string, or null when the model value is missing, NaN or negative.
-export function pmRounded(value, format = String) {
-  return Number.isFinite(value) && value >= 0 ? format(Math.round(value)) : null;
+// The PM2,5 value as a phrase rounded to the nearest 5 µg/m³ (ties round half up): "sekitar 170", or "kurang dari 5" when it rounds to 0.
+// Null when the model value is missing, NaN, negative or infinite. A ~40 km model does not earn more precision.
+export function pmApprox(value, format = String) {
+  if (!Number.isFinite(value) || value < 0) return null;
+  const n = Math.round(value / 5) * 5;
+  return n === 0 ? 'kurang dari 5' : `sekitar ${format(n)}`;
 }
