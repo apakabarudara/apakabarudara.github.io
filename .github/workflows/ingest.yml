@@ -32,6 +32,8 @@ jobs:
         run: |
           git fetch --depth=1 origin data
           git checkout FETCH_HEAD -- data/latest.json data/hotspots.json
+          # Absent until the first run that records the daily history; best effort.
+          git checkout FETCH_HEAD -- data/history.json || true
       - run: npm ci
       - run: npm test
       # Exits non-zero without touching data/latest.json or data/hotspots.json when any source fails or validation rejects the report.
@@ -52,9 +54,11 @@ jobs:
           git fetch --depth=1 origin data
           git worktree add "$RUNNER_TEMP/data-branch" FETCH_HEAD
           cp data/latest.json data/hotspots.json "$RUNNER_TEMP/data-branch/data/"
+          if [ -f data/history.json ]; then cp data/history.json "$RUNNER_TEMP/data-branch/data/"; fi
           cd "$RUNNER_TEMP/data-branch"
           git add data/latest.json data/hotspots.json
-          git diff --cached --quiet || { git commit -m "data: refresh latest.json and hotspots.json" && git push origin HEAD:data; }
+          if [ -f data/history.json ]; then git add data/history.json; fi
+          git diff --cached --quiet || { git commit -m "data: refresh latest.json, hotspots.json and history.json" && git push origin HEAD:data; }
       # Per-city true-colour photos (web/public/sat, gitignored, regenerated every run). Never blocks the deploy.
       - id: satellite
         run: npm run satellite

@@ -14,6 +14,7 @@ Developer detail moved out of the README. For the short, public page see [../REA
 - [Behaviour](#behaviour)
 - [data/latest.json](#datalatestjson)
 - [data/hotspots.json](#datahotspotsjson)
+- [Daily history](#daily-history)
 - [Sources and required credit](#sources-and-required-credit)
 - [Setup](#setup)
 
@@ -112,6 +113,19 @@ Cities are in `ingest/locations.ts` (Kuala Lumpur is the one outside Indonesia; 
 ## data/hotspots.json
 
 Shape `{ generated_at, source, points: [[lat, lon], ...] }` (`HotspotsFile` in `ingest/types.ts`). Built by `buildHotspotsFile()` in `ingest/build.ts` from the same fires `latest.json` counts: coordinates rounded to 3 decimals (about 110 m), de-duplicated and sorted, so a re-run with no new fires gives the same file. Optional for the page.
+
+## Daily history
+
+`data/history.json` (`History` in `ingest/types.ts`, built by `updateHistory()` in `ingest/history.ts`) records one compact line per city per day, so later features (day-N of smoke, monthly recap, comparison with ISPU, open data) have data. It cannot be backfilled, so it starts now. It lives on the `data` branch next to the other data files and is restored/committed by the same workflow steps; it is not published to the site.
+
+```json
+{ "version": 1, "generated_at": "2026-10-15T05:17:00.000Z", "tz": "UTC+7 day boundaries", "days": {
+  "pontianak": { "2026-10-14": [88.1, 3, 12], "2026-10-15": [null, null, 7] } } }
+```
+
+- Each day is `[mean PM2.5 (1 decimal), band 1..5, max hotspots_24h count]`. The mean covers all 24 hours of the day and is written once, when the day is complete (Open-Meteo hourly series, `past_days: 1`), then never changed. Today's entry is `[null, null, running max]` and the max is updated every run. A day with a missing hour is not recorded; the count is `null` if no run saw that day.
+- Day boundary: calendar day in UTC+7 for every city, Kuala Lumpur included, so days stay comparable. Keys are sorted; the last 800 days per city are kept.
+- Best effort: a missing or malformed previous file starts fresh, and any failure only logs a warning. It never fails the run or holds back `latest.json` (it is written after those are validated).
 
 ## Sources and required credit
 

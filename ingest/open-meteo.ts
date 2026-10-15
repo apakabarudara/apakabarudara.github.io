@@ -67,6 +67,11 @@ function hourToUtc(response: AirQualityResponse, index: number): string {
   return new Date(Date.parse(`${response.hourly.time[index]}:00Z`) - response.utc_offset_seconds * 1000).toISOString();
 }
 
+/** Every hourly PM2.5 value with its UTC timestamp (null where the model has a gap). */
+export function hourlySeries(response: AirQualityResponse): { time: string; pm25: number | null }[] {
+  return response.hourly.time.map((_, i) => ({ time: hourToUtc(response, i), pm25: response.hourly.pm2_5[i] }));
+}
+
 /** Mean PM2.5 over the 24 hours ending with the current hour, the averaging ISPU uses, and that hour in UTC. */
 export function trailingDayMean(response: AirQualityResponse, now: Date): { value: number; hourUtc: string } {
   const end = currentHourIndex(response, now);
