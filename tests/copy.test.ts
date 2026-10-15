@@ -278,7 +278,17 @@ describe('all copy', () => {
 
 describe('estimates and suggestions', () => {
   it('words the overview line as agreed', () => {
-    assert.equal(UI.overviewSub(12), '12 kota di Sumatera dan Kalimantan, diurutkan dari perkiraan asap paling tebal. Pilih kota.');
+    assert.equal(UI.overviewSub(14), '14 kota di Sumatera, Kalimantan, dan Kuala Lumpur, diurutkan dari perkiraan asap paling tebal. Pilih kota.');
+  });
+
+  it('counts the cities in the ranking card choice instead of hard-coding them', () => {
+    assert.equal(UI.storyChoiceRank(14), 'Peringkat 14 kota');
+    assert.equal(UI.storyChoiceRank(3), 'Peringkat 3 kota');
+  });
+
+  it('words the non-Indonesian index note humbly and without banned words', () => {
+    assert.match(UI.guideOtherIndex, /ISPU Indonesia.*Malaysia punya indeks sendiri \(API\)/);
+    assert.doesNotMatch(UI.guideOtherIndex, /\b(akurat|valid|pasti|gratis|aman|boleh|harus)\b/i);
   });
 
   it('keeps the estimate marker in the expired-report share fallback', () => {
@@ -351,7 +361,7 @@ describe('UI', () => {
       UI.shareText('Palembang', 'Rabu 10.00', 1, 'Kabar baik: udara lagi ramah.'),
       'Udara Palembang Rabu 10.00 (perkiraan): Baik, level 1 dari 5.\nKabar baik: udara lagi ramah.\nBukan angka resmi. Panduan ISPU ada di link.\nApa Kabar Udara'
     );
-    assert.equal(UI.shareOverview, 'Perkiraan asap hari ini di Sumatera dan Kalimantan. Cek kota sebelum keluar.\nBukan angka resmi.\nApa Kabar Udara');
+    assert.equal(UI.shareOverview, 'Perkiraan asap hari ini di Sumatera, Kalimantan, dan Kuala Lumpur. Cek kota sebelum keluar.\nBukan angka resmi.\nApa Kabar Udara');
   });
 
   it('words the new lines as agreed', () => {

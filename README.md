@@ -2,13 +2,13 @@
 
 Perkiraan asap dan kualitas udara hari ini, dengan gaya santai.
 
-*A playful, non-profit page that estimates smoke and air quality for 13 cities in Sumatra and Kalimantan.*
+*A playful, non-profit page that estimates smoke and air quality for 14 cities in Sumatra, Kalimantan and Kuala Lumpur.*
 
 Buka: https://apakabarudara.github.io/
 
 ## Apa ini?
 
-Halaman kecil yang memberi gambaran asap dan kualitas udara di 13 kota di Sumatra dan Kalimantan. Angkanya **perkiraan dari model** (CAMS, lewat Open-Meteo), bukan hasil alat ukur. Panduan resmi tetap ISPU dari Kementerian Lingkungan Hidup. Proyek ini bukan dokter dan tidak memberi saran kesehatan sendiri.
+Halaman kecil yang memberi gambaran asap dan kualitas udara di 14 kota di Sumatera, Kalimantan, dan Kuala Lumpur. Angkanya **perkiraan dari model** (CAMS, lewat Open-Meteo), bukan hasil alat ukur. Panduan resmi tetap ISPU dari Kementerian Lingkungan Hidup. Proyek ini bukan dokter dan tidak memberi saran kesehatan sendiri.
 
 ## Isinya
 

@@ -3,7 +3,7 @@ import { cleanPoints, compassName, FAR_KM, nearestHotspot } from './nearby.js';
 import { EMERGENCY_NUMBER, ENCOURAGE, FACTS, GLOSSARY, LEVELS, OFFICIAL_ISPU, RAIN, STORY, TODAY_CARDS, UI } from './copy.js';
 import {
   ago, bestWindow, cityLink, dailyQuip, dayPartOf, daySegments, isFlatDay, nowIndex, presentBands, tickIndexes, segmentTags, icsReminder, feedbackUrl, freshness, greeting, hourBands, improvedFrom, improvement, installMode, isIosSafari, levelRange, localDate, mapsSearchUrl,
-  glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, WATCH_MAX, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM
+  glanceChips, trend, nearest, normalizeWatch, previewOverride, rainKind, outlookLines, orderShareActions, followsOtherIndex, rankByLevel, rankingLines, relativeDay, resolveCity, storyKey, storyLines, todayCards, toggleWatch, upcomingDays, watchRow, WATCH_MAX, whatsappUrl, worldviewUrl, worsenedFrom, WET_DAY_MM
 } from './logic.js';
 
 const DATA_URL = './data/latest.json';
@@ -196,6 +196,7 @@ function renderAnswer(loc, level) {
   $('guideTitle').textContent = guidance ? UI.guideTitle : UI.guideTitleMeaning;
   $('guideDesc').textContent = official.description;
   $('guideDesc').hidden = guidance;
+  $('guideNote').hidden = !followsOtherIndex(loc.id);
   $('guideSensitive').hidden = !guidance || !official.sensitive;
   $('guideSensitive').lastElementChild.textContent = official.sensitive ?? '';
   $('guideEveryone').hidden = !guidance;
@@ -611,7 +612,7 @@ function storyCards(loc) {
     });
   }
   cards.push({
-    label: UI.storyChoiceRank,
+    label: UI.storyChoiceRank(report.locations.length),
     lines: rankingLines({ locations: report.locations, currentId: loc.id, levelName: band => LEVELS[band].name, cityName, story: STORY, day })
   });
   return cards.map(card => ({ ...card, key: storyKey(card.lines) }));
