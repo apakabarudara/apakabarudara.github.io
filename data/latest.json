@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-25T19:01:38.614Z",
+  "generated_at": "2026-10-25T21:44:58.722Z",
   "locations": [
     {
       "id": "pekanbaru",
@@ -12,17 +12,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 16.3,
+        "value": 15.4,
         "unit": "ug/m3",
-        "band": 2,
+        "band": 1,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
       "wind_dir": "Barat daya",
       "outlook": [
@@ -30,36 +30,28 @@
           "date": "2026-10-26",
           "pm25_mean": 17.3,
           "band": 2,
-          "rain_mm": 5.7
+          "rain_mm": 3.2
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 15.7,
           "band": 2,
-          "rain_mm": 4.5
+          "rain_mm": 13.4
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 10.2,
           "band": 1,
-          "rain_mm": 18.7
+          "rain_mm": 11.1
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 10.6,
           "band": 1,
-          "rain_mm": 23.7
+          "rain_mm": 14.8
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 15.5
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 14.3
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 14.4
@@ -147,6 +139,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 17.5
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 4.8
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 4.5
         }
       ]
     },
@@ -161,17 +161,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 6.9,
+        "value": 6.6,
         "unit": "ug/m3",
         "band": 1,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
       "wind_dir": "Barat daya",
       "outlook": [
@@ -179,36 +179,28 @@
           "date": "2026-10-26",
           "pm25_mean": 9.1,
           "band": 1,
-          "rain_mm": 6.7
+          "rain_mm": 5.3
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 9.5,
           "band": 1,
-          "rain_mm": 17.4
+          "rain_mm": 26
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 5.6,
           "band": 1,
-          "rain_mm": 14.4
+          "rain_mm": 10.2
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 5.2,
           "band": 1,
-          "rain_mm": 20.9
+          "rain_mm": 17
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 8
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 7.9
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 7.8
@@ -296,6 +288,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 10.8
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 8.4
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 7.3
         }
       ]
     },
@@ -310,54 +310,46 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 26.8,
+        "value": 20.7,
         "unit": "ug/m3",
         "band": 2,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
-      "wind_dir": "Barat daya",
+      "wind_dir": "Barat",
       "outlook": [
         {
           "date": "2026-10-26",
           "pm25_mean": 121.4,
           "band": 3,
-          "rain_mm": 1.2
+          "rain_mm": 11.2
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 203.3,
           "band": 4,
-          "rain_mm": 10
+          "rain_mm": 2.2
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 124.8,
           "band": 3,
-          "rain_mm": 32.8
+          "rain_mm": 11.9
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 101.3,
           "band": 3,
-          "rain_mm": 12.2
+          "rain_mm": 10
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 5.4
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 5.2
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 4.4
@@ -445,6 +437,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 353.9
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 335.3
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 317.6
         }
       ]
     },
@@ -459,54 +459,46 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 85.4,
+        "value": 87.9,
         "unit": "ug/m3",
         "band": 3,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 7,
+        "count": 8,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
-      "wind_dir": "Selatan",
+      "wind_dir": "Barat daya",
       "outlook": [
         {
           "date": "2026-10-26",
           "pm25_mean": 87.7,
           "band": 3,
-          "rain_mm": 1.6
+          "rain_mm": 3.7
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 117.2,
           "band": 3,
-          "rain_mm": 9.3
+          "rain_mm": 1.2
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 95.2,
           "band": 3,
-          "rain_mm": 25.1
+          "rain_mm": 23.6
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 95.6,
           "band": 3,
-          "rain_mm": 11.9
+          "rain_mm": 7.5
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 100.8
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 97.3
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 91
@@ -594,6 +586,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 119.7
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 127.1
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 140.2
         }
       ]
     },
@@ -608,54 +608,46 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 93.7,
+        "value": 91,
         "unit": "ug/m3",
         "band": 3,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 1,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
-      "wind_dir": "Timur",
+      "wind_dir": "Utara",
       "outlook": [
         {
           "date": "2026-10-26",
           "pm25_mean": 32.7,
           "band": 2,
-          "rain_mm": 19.9
+          "rain_mm": 13.6
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 25.3,
           "band": 2,
-          "rain_mm": 3.1
+          "rain_mm": 4.2
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 20,
           "band": 2,
-          "rain_mm": 11.5
+          "rain_mm": 15.3
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 11.8,
           "band": 1,
-          "rain_mm": 16.5
+          "rain_mm": 18.1
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 38.9
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 40.7
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 34.6
@@ -743,6 +735,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 29.7
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 27.8
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 28.5
         }
       ]
     },
@@ -757,17 +757,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 212.8,
+        "value": 208.4,
         "unit": "ug/m3",
         "band": 4,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 42,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
       "wind_dir": "Timur laut",
       "outlook": [
@@ -775,36 +775,28 @@
           "date": "2026-10-26",
           "pm25_mean": 313.1,
           "band": 5,
-          "rain_mm": 12.9
+          "rain_mm": 14.8
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 372.6,
           "band": 5,
-          "rain_mm": 9.6
+          "rain_mm": 6.1
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 333.2,
           "band": 5,
-          "rain_mm": 8
+          "rain_mm": 13.5
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 269.9,
           "band": 5,
-          "rain_mm": 5.4
+          "rain_mm": 11.1
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 118
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 128.5
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 129.9
@@ -892,6 +884,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 247.7
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 253.3
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 251.5
         }
       ]
     },
@@ -906,17 +906,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 1179.9,
+        "value": 1167.6,
         "unit": "ug/m3",
         "band": 5,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 0,
+        "count": 173,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
       "wind_dir": "Utara",
       "outlook": [
@@ -924,36 +924,28 @@
           "date": "2026-10-26",
           "pm25_mean": 892,
           "band": 5,
-          "rain_mm": 8.4
+          "rain_mm": 17.3
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 874.1,
           "band": 5,
-          "rain_mm": 2.5
+          "rain_mm": 12.3
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 747.9,
           "band": 5,
-          "rain_mm": 6.5
+          "rain_mm": 2.4
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 724.7,
           "band": 5,
-          "rain_mm": 9.3
+          "rain_mm": 13.4
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 318.5
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 278.5
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 244.9
@@ -1041,6 +1033,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 386.5
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 379
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 282.2
         }
       ]
     },
@@ -1055,54 +1055,46 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 324.5,
+        "value": 317.4,
         "unit": "ug/m3",
         "band": 5,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 0,
+        "count": 10,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
-      "wind_dir": "Barat laut",
+      "wind_dir": "Utara",
       "outlook": [
         {
           "date": "2026-10-26",
           "pm25_mean": 348.9,
           "band": 5,
-          "rain_mm": 19.2
+          "rain_mm": 11.1
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 251.4,
           "band": 5,
-          "rain_mm": 13.8
+          "rain_mm": 10.2
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 264.5,
           "band": 5,
-          "rain_mm": 9.2
+          "rain_mm": 6.4
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 196.7,
           "band": 4,
-          "rain_mm": 2.8
+          "rain_mm": 5.6
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 119.2
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 112.5
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 120.6
@@ -1190,6 +1182,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 491.7
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 416.3
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 309.2
         }
       ]
     },
@@ -1204,54 +1204,46 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 263,
+        "value": 263.2,
         "unit": "ug/m3",
         "band": 5,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 9,
+        "count": 116,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
-      "wind_dir": "Barat laut",
+      "wind_dir": "Timur",
       "outlook": [
         {
           "date": "2026-10-26",
           "pm25_mean": 187,
           "band": 4,
-          "rain_mm": 7.8
+          "rain_mm": 10.3
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 183.1,
           "band": 4,
-          "rain_mm": 4.4
+          "rain_mm": 5.4
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 223.5,
           "band": 4,
-          "rain_mm": 4.6
+          "rain_mm": 3.7
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 127.3,
           "band": 3,
-          "rain_mm": 1.2
+          "rain_mm": 0.5
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 144.4
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 159.3
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 160.7
@@ -1339,6 +1331,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 156
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 116.4
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 98.3
         }
       ]
     },
@@ -1353,54 +1353,46 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 67.3,
+        "value": 65.3,
         "unit": "ug/m3",
         "band": 3,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 15,
+        "count": 39,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
-      "wind_dir": "Timur laut",
+      "wind_dir": "Timur",
       "outlook": [
         {
           "date": "2026-10-26",
           "pm25_mean": 48.3,
           "band": 2,
-          "rain_mm": 6.8
+          "rain_mm": 16.1
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 32.2,
           "band": 2,
-          "rain_mm": 3.6
+          "rain_mm": 8
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 43.9,
           "band": 2,
-          "rain_mm": 2.3
+          "rain_mm": 5.1
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 57.2,
           "band": 3,
-          "rain_mm": 0.6
+          "rain_mm": 0.2
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 59.6
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 38.5
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 41.1
@@ -1488,6 +1480,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 34.6
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 38.2
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 33.5
         }
       ]
     },
@@ -1502,17 +1502,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 48.8,
+        "value": 45.8,
         "unit": "ug/m3",
         "band": 2,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 23,
+        "count": 38,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
       "wind_dir": "Utara",
       "outlook": [
@@ -1520,36 +1520,28 @@
           "date": "2026-10-26",
           "pm25_mean": 25.4,
           "band": 2,
-          "rain_mm": 1.2
+          "rain_mm": 2.7
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 14.1,
           "band": 1,
-          "rain_mm": 3.4
+          "rain_mm": 8.5
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 12.2,
           "band": 1,
-          "rain_mm": 3.5
+          "rain_mm": 2
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 15.9,
           "band": 2,
-          "rain_mm": 3.2
+          "rain_mm": 3.9
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 24.6
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 24.1
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 24.1
@@ -1637,6 +1629,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 21.8
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 20.7
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 18.7
         }
       ]
     },
@@ -1651,54 +1651,46 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 30.4,
+        "value": 30,
         "unit": "ug/m3",
         "band": 2,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
-        "count": 0,
+        "count": 9,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
-      "wind_dir": "Utara",
+      "wind_dir": "Barat laut",
       "outlook": [
         {
           "date": "2026-10-26",
           "pm25_mean": 23.6,
           "band": 2,
-          "rain_mm": 3.1
+          "rain_mm": 4.2
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 10.3,
           "band": 1,
-          "rain_mm": 12
+          "rain_mm": 14.7
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 12.1,
           "band": 1,
-          "rain_mm": 1
+          "rain_mm": 0.9
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 15,
           "band": 1,
-          "rain_mm": 3.9
+          "rain_mm": 4.1
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 17.8
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 20.3
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 21.7
@@ -1786,6 +1778,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 9.3
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 10.7
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 10.2
         }
       ]
     },
@@ -1800,17 +1800,17 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 23.2,
+        "value": 23.3,
         "unit": "ug/m3",
         "band": 2,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
       "wind_dir": "Barat",
       "outlook": [
@@ -1818,36 +1818,28 @@
           "date": "2026-10-26",
           "pm25_mean": 18.2,
           "band": 2,
-          "rain_mm": 1.4
+          "rain_mm": 2.3
         },
         {
           "date": "2026-10-27",
           "pm25_mean": 7.6,
           "band": 1,
-          "rain_mm": 3.5
+          "rain_mm": 5.2
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 2.4,
           "band": 1,
-          "rain_mm": 5.7
+          "rain_mm": 3.6
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 3.6,
           "band": 1,
-          "rain_mm": 4.7
+          "rain_mm": 2.7
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 24.6
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 25
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 24.9
@@ -1935,6 +1927,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 5.4
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 6.4
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 7.7
         }
       ]
     },
@@ -1949,19 +1949,19 @@
         "source_url": "https://ispu.kemenlh.go.id/app/#/"
       },
       "pm25_model": {
-        "value": 17,
+        "value": 14.9,
         "unit": "ug/m3",
-        "band": 2,
+        "band": 1,
         "source": "CAMS global via Open-Meteo",
-        "updated_at": "2026-10-25T19:00:00.000Z"
+        "updated_at": "2026-10-25T21:00:00.000Z"
       },
       "hotspots_24h": {
         "count": 0,
         "radius_km": 100,
         "source": "NASA FIRMS VIIRS NOAA-20 NRT",
-        "updated_at": "2026-10-25T19:01:38.614Z"
+        "updated_at": "2026-10-25T21:44:58.722Z"
       },
-      "wind_dir": "Barat laut",
+      "wind_dir": "Utara",
       "outlook": [
         {
           "date": "2026-10-26",
@@ -1973,30 +1973,22 @@
           "date": "2026-10-27",
           "pm25_mean": 40,
           "band": 2,
-          "rain_mm": 9
+          "rain_mm": 15.6
         },
         {
           "date": "2026-10-28",
           "pm25_mean": 38.7,
           "band": 2,
-          "rain_mm": 10
+          "rain_mm": 20.2
         },
         {
           "date": "2026-10-29",
           "pm25_mean": 27,
           "band": 2,
-          "rain_mm": 16.6
+          "rain_mm": 14.5
         }
       ],
       "next_hours": [
-        {
-          "time": "2026-10-25T19:00:00.000Z",
-          "pm25": 8.1
-        },
-        {
-          "time": "2026-10-25T20:00:00.000Z",
-          "pm25": 4.9
-        },
         {
           "time": "2026-10-25T21:00:00.000Z",
           "pm25": 2.7
@@ -2084,6 +2076,14 @@
         {
           "time": "2026-10-26T18:00:00.000Z",
           "pm25": 48.3
+        },
+        {
+          "time": "2026-10-26T19:00:00.000Z",
+          "pm25": 35.6
+        },
+        {
+          "time": "2026-10-26T20:00:00.000Z",
+          "pm25": 29.6
         }
       ]
     }
